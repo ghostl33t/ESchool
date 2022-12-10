@@ -62,6 +62,47 @@ namespace server.Migrations.DBRegistriesMigrations
 
                     b.ToTable("SchoolList");
                 });
+
+            modelBuilder.Entity("server.Models.Domain.Subject", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CreatedById")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<short>("Deleted")
+                        .HasColumnType("smallint");
+
+                    b.Property<long>("DeletedById")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar");
+
+                    b.Property<short>("SchoolType")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("SerialNumber")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Subjects");
+                });
 #pragma warning restore 612, 618
         }
     }

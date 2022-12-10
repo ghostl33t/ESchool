@@ -9,6 +9,7 @@ namespace server.Database
 
         }
         public DbSet<Models.Domain.SchoolList> SchoolList { get; set; }
+        public DbSet<Models.Domain.Subject> Subjects { get; set; }
 
     }
 }

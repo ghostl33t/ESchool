@@ -39,7 +39,7 @@ namespace server.Validations
         }
         public async Task<bool> ValidateCreateUserByType(int creatorType, int creationType)
         {
-            if (creatorType <= creationType && (creatorType != 3 && creationType != 3) )
+            if (creatorType <= creationType && (creatorType != 0 && creationType != 0) )
             {
                 return await Task.FromResult(false);
             }

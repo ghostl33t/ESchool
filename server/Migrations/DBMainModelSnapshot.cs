@@ -73,6 +73,47 @@ namespace server.Migrations
                     b.ToTable("ClassDepartments");
                 });
 
+            modelBuilder.Entity("server.Models.Domain.ClassDepartmentSubjectProfessor", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("ClassDepartmentID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CreatedById")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<short>("Deleted")
+                        .HasColumnType("smallint");
+
+                    b.Property<long>("DeletedById")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<long>("SubjectID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("UserProfessorId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassDepartmentID");
+
+                    b.HasIndex("UserProfessorId");
+
+                    b.ToTable("ClassDepartmentSubjectProfessors");
+                });
+
             modelBuilder.Entity("server.Models.Domain.User", b =>
                 {
                     b.Property<long>("Id")
@@ -146,6 +187,21 @@ namespace server.Migrations
                     b.Navigation("CreatedBy");
 
                     b.Navigation("LeaderProfessor");
+                });
+
+            modelBuilder.Entity("server.Models.Domain.ClassDepartmentSubjectProfessor", b =>
+                {
+                    b.HasOne("server.Models.Domain.ClassDepartment", "ClassDepartment")
+                        .WithMany()
+                        .HasForeignKey("ClassDepartmentID");
+
+                    b.HasOne("server.Models.Domain.User", "UserProfessor")
+                        .WithMany()
+                        .HasForeignKey("UserProfessorId");
+
+                    b.Navigation("ClassDepartment");
+
+                    b.Navigation("UserProfessor");
                 });
 
             modelBuilder.Entity("server.Models.Domain.User", b =>
