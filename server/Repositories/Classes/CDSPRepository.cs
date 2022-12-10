@@ -58,5 +58,38 @@ namespace server.Repositories.Classes
             }
             return classDetails;
         }
+        public async Task<List<server.Models.DTOs.ClassDepartmentSubjectProfessor.ProfesorSubjectDetails>> GetProfessorSubjectDetails(long professorId)
+        {
+            var professorExist = await this.DbMain.Users.FirstOrDefaultAsync(s => s.Id == professorId);
+            if(professorExist == null)
+            {
+                return null;
+            } 
+            if(professorExist.UserType != 1)
+            {
+                return null;
+            }
+            var subjectsList = await DbRegistries.Subjects.Where(s => s.Deleted == 0).ToListAsync();
+            var classDepList = await DbMain.ClassDepartments.Where(s => s.Deleted == 0).ToListAsync();
+            var cdspList = await DbMain.ClassDepartmentSubjectProfessors.Where(s=> s.UserProfessor.Id == professorId && s.Deleted == 0).ToListAsync();
+            var query = from cdsp
+                        in cdspList
+                        join subject in subjectsList on cdsp.SubjectID equals subject.Id
+                        join classdep in classDepList on cdsp.ClassDepartment.ID equals classdep.ID
+                        select new
+                        {
+                            ClassDepartmentDetails = classdep.SerialNumber + ' ' + classdep.Name,
+                            SubjectDetails = subject.SerialNumber + ' ' + subject.Name
+                        };
+            List<ProfesorSubjectDetails> ProfesorSubjectDetailsList = new List<ProfesorSubjectDetails>();
+            foreach(var row in query)
+            {
+                ProfesorSubjectDetails profsubjobj = new ProfesorSubjectDetails();
+                profsubjobj.SubjectDetails = row.SubjectDetails;
+                profsubjobj.ClassDetails = row.ClassDepartmentDetails;
+                ProfesorSubjectDetailsList.Add(profsubjobj);
+            }
+            return ProfesorSubjectDetailsList;
+        }
     }
 }

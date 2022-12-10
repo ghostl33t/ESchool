@@ -19,5 +19,12 @@ namespace server.Controllers
         {
             return Ok(await this.ICDSP.GetClassDetails(Id));
         }
+        //vraca listu predmeta i razreda kojima profesor predaje
+        [HttpGet]
+        [Route("get-professor-subject-details/{Id}")]
+        public async Task<IActionResult> GetProfessorSubjectDetails(long Id)
+        {
+            return Ok(await this.ICDSP.GetProfessorSubjectDetails(Id));
+        }
     }
 }

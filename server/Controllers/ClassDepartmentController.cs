@@ -40,6 +40,12 @@ namespace server.Controllers
             }
             return BadRequest();
         }
+        [Route("get-students-inclass/{Id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetStudentsInClassAsync(long Id)
+        {
+            return Ok(await IClassDepartment.GetStudentsPerClassDetilsAsync(Id));
+        }
         [Route("create-department")]
         [HttpPost]
         public async Task<IActionResult> Create(Models.DTOs.ClassDepartment.Create newClass)
