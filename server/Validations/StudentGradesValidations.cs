@@ -45,6 +45,14 @@ namespace server.Validations
             }
             return false;
         }
+        public bool CheckIfGradeIsValidated(int validatedGrade)
+        {
+            if(validatedGrade == 0)
+            {
+                return true;
+            }
+            return false;
+        }
         public async Task<string> Validations(server.Models.DTOs.StudentGrades.Create create) //TODO Model koji ce se prosljedjivati ovisno da li je Create/Update
         {
             string message = "";
@@ -64,6 +72,38 @@ namespace server.Validations
             }
             if (message != "")
                 return message;
+            else
+            {
+                validationResult = true;
+                message = "Grade to student added succesfuly!";
+            }
+            return message;
+        }
+        public  async Task<string> Validations(server.Models.DTOs.StudentGrades.Update Update) //TODO Model koji ce se prosljedjivati ovisno da li je Create/Update
+        {
+            string message = "";
+            if (await StudentExist(Update.UserStudent.Id) == false)
+            {
+                message = "Student is not valid!";
+                validationResult = false;
+            }
+            else if (await StudentSubject(Update.UserStudent.Id, Update.ClassDepartmentSubjectProfessor.SubjectID) == false)
+            {
+                message = "Student doesn't have this subject!";
+                validationResult = false;
+            }
+            else if (await ValidateProfessor(Update.UserStudent.Id, Update.ClassDepartmentSubjectProfessor.UserProfessor.Id) == false)
+            {
+                message = "Professor is invalid!";
+                validationResult = false;
+            }
+            if (message != "")
+                return message;
+            else if (CheckIfGradeIsValidated(Update.Validated) == false)
+            {
+                message = "Unable to edit this grade(it is verified)";
+                validationResult = false;
+            }
             else
             {
                 validationResult = true;

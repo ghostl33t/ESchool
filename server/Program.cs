@@ -54,6 +54,9 @@ builder.Services.AddScoped<server.Validations.IClassDepartmentValidations, serve
 /* CDSP */
 builder.Services.AddScoped<server.Repositories.Interfaces.ICDSP, server.Repositories.Classes.CDSPRepository>();
 builder.Services.AddScoped<server.Validations.ICDSP, server.Validations.CDSP>();
+/* STUDENT GRADES */
+builder.Services.AddScoped<server.Repositories.Interfaces.IStudentGrades, server.Repositories.Classes.StudentGrades>();
+builder.Services.AddScoped<server.Validations.IStudentGradesValidations, server.Validations.StudentGradesValidations>();
 /* AUTOMAPPER */
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 /* TOKEN */
