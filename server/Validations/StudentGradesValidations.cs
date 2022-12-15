@@ -56,16 +56,16 @@ namespace server.Validations
         public async Task<string> Validations(server.Models.DTOs.StudentGrades.Create create) //TODO Model koji ce se prosljedjivati ovisno da li je Create/Update
         {
             string message = "";
-            if( await StudentExist(create.UserStudent.Id) == false)
+            if( await StudentExist(create.Student.Id) == false)
             {
                 message = "Student is not valid!";
                 validationResult = false;
             }
-            else if (await StudentSubject(create.UserStudent.Id, create.ClassDepartmentSubjectProfessor.SubjectID) == false){
+            else if (await StudentSubject(create.Student.Id, create.ClassDepartmentSubjectProfessor.SubjectID) == false){
                 message = "Student doesn't have this subject!";
                 validationResult = false;
             }
-            else if (await ValidateProfessor(create.UserStudent.Id, create.ClassDepartmentSubjectProfessor.UserProfessor.Id) == false)
+            else if (await ValidateProfessor(create.Student.Id, create.ClassDepartmentSubjectProfessor.UserProfessor.Id) == false)
             {
                 message = "Professor is invalid!";
                 validationResult = false;

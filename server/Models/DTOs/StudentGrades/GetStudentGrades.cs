@@ -2,7 +2,7 @@
 {
     public class GetStudentGrades
     {
-        public string StudentNameAndSurname { get; set; }
+        public string? StudentNameAndSurname { get; set; }
         public string Subject { get; set; }
         public DateTime GradeDate { get; set; }
         public int Grade { get; set; }

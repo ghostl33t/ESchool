@@ -27,6 +27,8 @@ namespace server.Repositories.Classes
         {
             try
             {
+                create.ClassDepartmentSubjectProfessor = await this.DbMain.ClassDepartmentSubjectProfessors.FirstOrDefaultAsync(s => s.Id == create.ClassDepartmentSubjectProfessorId);
+                create.Student = await this.DbMain.Users.FirstOrDefaultAsync(s => s.Id == create.StudentId);
                 var grade = mapper.Map<server.Models.Domain.StudentGrades>(create);
                 await DbMain.AddAsync(grade);
                 await DbMain.SaveChangesAsync();
@@ -79,17 +81,20 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<GetStudentGrades> GetGradesForStudent(long StudentId)
+        public async Task<List<GetStudentGrades>> GetGradesForStudent(long StudentId)
         {
-            // pokupi predmete, profesore, vezuidmedjuistih
-            var studentDetails = await DbMain.StudentsDetails.FirstOrDefaultAsync(s => s.Student.Id == StudentId);
+            //List obj
+            List<server.Models.Domain.StudentGrades> studentGrades = await DbMain.StudentsGrades.Where(s => s.Student.Id == StudentId && s.Deleted == 0).ToListAsync();
             List<ClassDepartmentSubjectProfessor> CDSP = new List<ClassDepartmentSubjectProfessor>();
             List<Subject> Subjects = new List<Subject>();
             List<long> subjectsId = new List<long>();
             List<Subject> StudentSubjects = new List<Subject>();
-            List<User> Professors = new List<User>();
-            CDSP = await DbMain.ClassDepartmentSubjectProfessors.Where(s=> s.ClassDepartment.ID == studentDetails.ClassDepartment.ID).ToListAsync();
-            Subjects = await DbRegistries.Subjects.ToListAsync();
+            List<GetStudentGrades> StudentGradesInfo = new List<GetStudentGrades>();
+            List<server.Models.Domain.User> Professors = await DbMain.Users.Where(s => s.Deleted == 0 && s.UserType == 1).ToListAsync();
+            // assign value
+            var studentDetails = await DbMain.StudentsDetails.FirstOrDefaultAsync(s => s.Student.Id == StudentId && s.Deleted == 0);            // assing value
+            CDSP = await DbMain.ClassDepartmentSubjectProfessors.Where(s=> s.ClassDepartment.ID == studentDetails.ClassDepartment.ID && s.Deleted == 0).ToListAsync();
+            Subjects = await DbRegistries.Subjects.Where(s=> s.Deleted == 0).ToListAsync();
             foreach(var cdspst in CDSP)
             {
                 long tmpsubjid = cdspst.SubjectID;
@@ -102,12 +107,46 @@ namespace server.Repositories.Classes
             {
                 StudentSubjects.Add(subject);
             }
-            //napisi query;
-            var query = ""
-            //mapiraj podatke sa maperom a ne for petljom (lista podataka)
+
+            var query = from sg in studentGrades
+                        join sb in StudentSubjects on sg.Id equals sb.Id
+                        join cdsp in CDSP on sg.ClassDepartmentSubjectProfessor.Id equals cdsp.Id
+                        join prof in Professors on sg.ClassDepartmentSubjectProfessor.UserProfessor.Id equals prof.Id
+                        orderby sb.Name, sg.CreatedDate descending
+                        select new
+                        {
+                            Subject = sb.Name,
+                            Grade = sg.Grade,
+                            Description = sg.Description,
+                            ProfessorNameAndSurname = prof.Name + " " + prof.LastName,
+                            GradeDate = sg.CreatedDate,
+                            Verified = (
+                                sg.Validated == 1 ? "YES" :
+                                sg.Validated == 0 ? "NO" : "Undefined"
+                            )
+                            
+                        };
+            foreach(var row in query)
+            {
+                GetStudentGrades newGrade = new GetStudentGrades();
+                newGrade.StudentNameAndSurname = studentDetails.Student.Name + " " + studentDetails.Student.LastName;
+                newGrade.Subject = row.Subject;
+                newGrade.GradeDate = row.GradeDate;
+                newGrade.Grade = row.Grade;
+                newGrade.ProfessorNameAndSurname = row.ProfessorNameAndSurname;
+                newGrade.Verified = row.Verified;
+                StudentGradesInfo.Add(newGrade);
+            }
+            return StudentGradesInfo;
         }
-        public Task<GetStudentGrades> GetGradesForClass(long ClassId);
-        public Task<GetStudentGrades> ValidateStudentGrades(long StudentGradeId);
+        public Task<GetStudentGrades> GetGradesForClass(long ClassId)
+        {
+            return null;
+        }
+        public Task<GetStudentGrades> ValidateStudentGrades(long StudentGradeId)
+        {
+            return null;
+        }
 
         private async Task<GetStudentGrades> mappedGrade (server.Models.Domain.StudentGrades src)
         {
