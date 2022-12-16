@@ -96,10 +96,6 @@ namespace server.Repositories.Classes
                     subjectExist.SerialNumber = classdep.SerialNumber;
                     subjectExist.Name = classdep.Name;
                     subjectExist.SchoolType = classdep.SchoolType;
-                    //var leadprofmap = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == classdep.LeaderProfessorId);
-                    //subjectExist.LeaderProfessor = leadprofmap;//classdep.LeaderProfessorId;
-                    //subjectExist.Year = classdep.Year;
-
                     await this.DBRegistries.SaveChangesAsync();
                     var subjectsDTO = IMapper.Map<SubjectDTO>(subjectExist);
                     return subjectsDTO;

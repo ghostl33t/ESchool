@@ -48,15 +48,6 @@ namespace server.Validations
             }
             return await Task.FromResult(true);
         }
-        //public async Task<bool> ValidateSchoolListId(long schoollistId) //TODO ovdje kontrolisati da li tip skole postoji u registrima
-        //{
-        //    var schoollist = await DBRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == schoollistId);
-        //    if (schoollist == null)
-        //    {
-        //        return await Task.FromResult(false);
-        //    }
-        //    return await Task.FromResult(true);
-        //}
         public async Task<string> Validation(Models.DTOs.Subject.Create subject)
         {
             validationResult = false;
@@ -77,10 +68,6 @@ namespace server.Validations
             {
                 return await Task.FromResult("Class name is invalid");
             }
-            //if (await ValidateSchoolListId(classDepartment.SchoolListId) == false)
-            //{
-            //    return await Task.FromResult("School list ID is invalid!");
-            //}
             validationResult = true;
             return await Task.FromResult("School added succesfuly!");
         }

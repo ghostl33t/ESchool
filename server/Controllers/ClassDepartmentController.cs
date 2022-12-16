@@ -16,12 +16,10 @@ namespace server.Controllers
             this.IClassDepartment = IClassDepartment;
             this.IClassDepartmentValidations = IClassDepartmentValidations;
         }
-        //TODO napravit kontroler
         [Route("get-all")]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            //if(this.IClassDepartmentValidations.Validation())
             var classList = await IClassDepartment.GetSchoolsList();
             if(classList != null)
             {
