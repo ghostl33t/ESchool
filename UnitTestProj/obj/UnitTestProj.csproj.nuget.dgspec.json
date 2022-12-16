@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\UnitTestProj\\UnitTestProj.csproj": {}
+    "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\UnitTestProj\\UnitTestProj.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\server\\server.csproj": {
+    "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\server\\server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\server\\server.csproj",
+        "projectUniqueName": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\server\\server.csproj",
         "projectName": "server",
-        "projectPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\server\\server.csproj",
+        "projectPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\server\\server.csproj",
         "packagesPath": "C:\\Users\\Jasim\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\server\\obj\\",
+        "outputPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Jasim\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -94,14 +94,14 @@
         }
       }
     },
-    "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\UnitTestProj\\UnitTestProj.csproj": {
+    "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\UnitTestProj\\UnitTestProj.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\UnitTestProj\\UnitTestProj.csproj",
+        "projectUniqueName": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\UnitTestProj\\UnitTestProj.csproj",
         "projectName": "UnitTestProj",
-        "projectPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\UnitTestProj\\UnitTestProj.csproj",
+        "projectPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\UnitTestProj\\UnitTestProj.csproj",
         "packagesPath": "C:\\Users\\Jasim\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\UnitTestProj\\obj\\",
+        "outputPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\UnitTestProj\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Jasim\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -118,8 +118,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\server\\server.csproj": {
-                "projectPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\server\\server.csproj"
+              "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\server\\server.csproj": {
+                "projectPath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\server\\server.csproj"
               }
             }
           }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KvZyt6Lj9kweu2bkW9vLFRi8m/cpUYI+tTNZx0gzRw+8If1nsRVtaia444wXt75+lsHsMh13NtO7h2PGQhLWYw==",
+  "dgSpecHash": "X15aFextgc+JVroglrwaZd1d4rPkV4h7yEGHrN0h5UPNonn243jh+o/SfM0xtEv0eZdkvuIjE/c3DFCPRWQ1Nw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\ESchool\\server\\server.csproj",
+  "projectFilePath": "C:\\Users\\Jasim\\Desktop\\E-SCHOOL Application\\bugfix\\app\\server\\server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jasim\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
     "C:\\Users\\Jasim\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",
