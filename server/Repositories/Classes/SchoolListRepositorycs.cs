@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using server.Database;
 using server.Repositories.Interfaces;
+using server.Validations.Interfaces;
 
 namespace server.Repositories.Classes
 {
@@ -9,9 +10,9 @@ namespace server.Repositories.Classes
     {
         private readonly DBRegistries DBRegistries;
         private readonly DBMain DbMain;
-        private readonly Validations.ISchoolListValidations ISchoolListValidations;
+        private readonly ISchoolListValidations ISchoolListValidations;
         private readonly IMapper Mapper;
-        public SchoolListRepositorycs(DBRegistries DBRegistries, Validations.ISchoolListValidations iSchoolListValidations, IMapper mapper,DBMain DbMain)
+        public SchoolListRepositorycs(DBRegistries DBRegistries, ISchoolListValidations iSchoolListValidations, IMapper mapper,DBMain DbMain)
         {
             this.DbMain = DbMain;
             this.DBRegistries = DBRegistries;
@@ -82,12 +83,13 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> DeleteSchoolAsync(long Id)
+        public async Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> DeleteSchoolAsync(long SchoolId, long AdministratorId)
         {
             try
             {
-                var school = await DBRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == Id);
+                var school = await DBRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == SchoolId);
                 school.Deleted = 1;
+                school.DeletedById = AdministratorId;
                 school.DeletedDate = DateTime.Today;
                 await DBRegistries.SaveChangesAsync();
                 return Mapper.Map<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO>(school);

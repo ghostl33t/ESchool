@@ -49,7 +49,7 @@ builder.Services.AddScoped<server.Repositories.Interfaces.ILogin, server.Reposit
 builder.Services.AddScoped<IUserValidations, UserValidations>();
 /* SCHOOL LIST */
 builder.Services.AddScoped<server.Repositories.Interfaces.ISchoolList, server.Repositories.Classes.SchoolListRepositorycs>();
-builder.Services.AddScoped<server.Validations.ISchoolListValidations, server.Validations.SchoolListValidations>();
+builder.Services.AddScoped<ISchoolListValidations, SchoolListValidations>();
 /* CLASS DEPARTMENTS */
 builder.Services.AddScoped<server.Repositories.Interfaces.IClassDepartment, server.Repositories.Classes.ClassDepartmentRepository>();
 builder.Services.AddScoped<server.Validations.IClassDepartmentValidations, server.Validations.ClassDepartmentValidations>();

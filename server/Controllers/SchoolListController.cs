@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using server.Other;
 using server.Repositories.Interfaces;
-using server.Validations;
+using server.Validations.Interfaces;
 
 namespace server.Controllers
 {
@@ -10,11 +11,13 @@ namespace server.Controllers
     public class SchoolListController : Controller
     {
         private readonly Repositories.Interfaces.ISchoolList ISchoolList;
-        private readonly Validations.ISchoolListValidations ISchoolListValidations;
-        public SchoolListController(ISchoolList ISchoolList, Validations.ISchoolListValidations iSchoolListValidations)
+        private readonly ISchoolListValidations ISchoolListValidations;
+        private readonly IFunctions functions;
+        public SchoolListController(ISchoolList ISchoolList, ISchoolListValidations iSchoolListValidations, IFunctions functions)
         {
             this.ISchoolList = ISchoolList;
             this.ISchoolListValidations = iSchoolListValidations;
+            this.functions = functions;
         }
         [Authorize]
         [HttpGet]
@@ -37,25 +40,35 @@ namespace server.Controllers
         public async Task<IActionResult> CreateUserAsync(Models.DTOs.SchoolList.Create newschool)
         {
             string message = await ISchoolListValidations.Validation(newschool);
-            if (ISchoolListValidations.validationResult == false)
+            if (ISchoolListValidations.validationResult == true)
             {
-                return BadRequest(message);
+                await ISchoolList.CreateSchoolAsync(newschool);
             }
-            return Ok(await ISchoolList.CreateSchoolAsync(newschool));
+            return await functions.Response(ISchoolListValidations.code, message);
         }
         [Authorize]
         [HttpPatch]
         [Route("update-school")]
         public async Task<IActionResult> UpdateUserAsync(Models.DTOs.SchoolList.Update school)
         {
-            return Ok(await ISchoolList.ModifySchoolAsync(school));
+            string message = await ISchoolListValidations.Validation(school);
+            if (ISchoolListValidations.validationResult == true)
+            {
+                await ISchoolList.ModifySchoolAsync(school);
+            }
+            return await functions.Response(ISchoolListValidations.code, message);
         }
         [Authorize]
         [HttpPatch]
-        [Route("delete-user")]
-        public async Task<IActionResult> DeleteUserAsync(long Id)
+        [Route("delete-user/{SchoolId}/{AdministratorId}")]
+        public async Task<IActionResult> DeleteUserAsync(long SchoolId,long AdministratorId)
         {
-            return Ok(await ISchoolList.DeleteSchoolAsync(Id));
+            string message = await ISchoolListValidations.Validation(SchoolId, AdministratorId);
+            if (ISchoolListValidations.validationResult == true)
+            {
+                await ISchoolList.DeleteSchoolAsync(SchoolId,AdministratorId);
+            }
+            return await functions.Response(ISchoolListValidations.code, message);
         }
     }
 }

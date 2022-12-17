@@ -6,6 +6,6 @@
         public Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> GetSchoolById(long Id);
         public Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> CreateSchoolAsync(Models.DTOs.SchoolList.Create newSchool);
         public Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> ModifySchoolAsync(Models.DTOs.SchoolList.Update school);
-        public Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> DeleteSchoolAsync(long Id);
+        public Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> DeleteSchoolAsync(long SchoolId, long AdministratorId);
     }
 }
