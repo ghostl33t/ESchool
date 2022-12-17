@@ -14,5 +14,6 @@ namespace server.Models.DTOs.UsersDTO
         public string? Phone { get; set; }
         public long CreatedById { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public string Email { get; set; }
     }
 }

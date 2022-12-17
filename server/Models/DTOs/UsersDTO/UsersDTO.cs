@@ -17,5 +17,6 @@ namespace server.Models.DTOs.UsersDTO
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public DateTime? DeletedDate { get; set; } = DateTime.Now;
         public int? Deleted { get; set; }
+        public string Email { get; set; }
     }
 }

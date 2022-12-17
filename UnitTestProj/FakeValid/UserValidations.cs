@@ -1,10 +1,11 @@
 ﻿
 
 using server.Models.DTOs.UsersDTO;
+using server.Validations.Interfaces;
 
 namespace UnitTestProj.FakeValid
 {
-    public class UserValidations : server.Validations.IUserValidations
+    public class UserValidations : IUserValidations
     {
         public bool Validated { get; set; }
         public UserValidations()

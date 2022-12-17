@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using server.Models.DTOs.UsersDTO;
 using server.Repositories.Interfaces;
+using server.Validations.Interfaces;
 using System.Security.Cryptography;
 
 namespace UnitTestProj
@@ -9,7 +10,7 @@ namespace UnitTestProj
     public class UsersUnitTest
     {
         private  server.Repositories.Interfaces.IUser fakeuserrepository { get; set; }
-        private  server.Validations.IUserValidations fakeuservalidations { get; set; }
+        private  IUserValidations fakeuservalidations { get; set; }
         private  server.Controllers.UserController userscontroller { get; set; }
         public UsersUnitTest()
         {

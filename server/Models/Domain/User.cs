@@ -48,5 +48,8 @@ namespace server.Models.Domain
         public DateTime? DeletedDate { get; set; } = DateTime.Now;
         [Column(TypeName ="smallint")]
         public int? Deleted { get; set; }
+
+        [Column(TypeName ="nvarchar")]
+        public string Email { get; set; }
     }
 }

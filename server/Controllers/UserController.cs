@@ -1,24 +1,30 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using server.Models.Domain;
+using server.Other;
+using server.Validations.Interfaces;
+
 namespace server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private readonly Repositories.Interfaces.IUser IUser;
-        private readonly Validations.IUserValidations IUserValidations;
-        public UserController(Repositories.Interfaces.IUser _IUser, Validations.IUserValidations iUserValidations)
+        private readonly Repositories.Interfaces.IUser userrepo;
+        private readonly IUserValidations userValidations;
+        private readonly IFunctions functions;
+        public UserController(Repositories.Interfaces.IUser _IUser, IUserValidations iUserValidations, IFunctions functions)
         {
-            this.IUser = _IUser;
-            this.IUserValidations = iUserValidations;
+            this.userrepo = _IUser;
+            this.userValidations = iUserValidations;
+            this.functions = functions;
         }
         [Authorize]
         [HttpGet]
         [Route("get-all")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var listOfUsers = await this.IUser.GetAllAsync();
+            var listOfUsers = await this.userrepo.GetAllAsync();
             return Ok(listOfUsers);
         }
         [Authorize]
@@ -26,33 +32,45 @@ namespace server.Controllers
         [Route("get-user/{Id}")]
         public async Task<IActionResult> GetUserAsync(long id)
         {
-            return Ok(await IUser.GetUserAsync(id));
+            return Ok(await userrepo.GetUserAsync(id));
         }
         [Authorize]
         [HttpPost]
         [Route("create-user")]
         public async Task<IActionResult> CreateUserAsync(Models.DTOs.UsersDTO.Create newUser)
         {
-            string message = await IUserValidations.CheckUserOnCreation(newUser);
-            if(IUserValidations.Validated == false)
+            string message = await userValidations.Validate(newUser);
+            if(userValidations.Validated == true)
             {
-                return BadRequest(message);
+                await userrepo.CreateUserAsync(newUser);
+                return await functions.Response(userValidations.code, newUser);
             }
-            return Ok(await IUser.CreateUserAsync(newUser));
+            return await functions.Response(userValidations.code, message);
         }
         [Authorize]
         [HttpPatch]
         [Route("update-user")]
         public async Task<IActionResult> UpdateUserAsync(Models.DTOs.UsersDTO.Update user)
         {
-            return Ok(await IUser.UpdateUserAsync(user));
+            string message = await userValidations.Validate(user);
+            if (userValidations.Validated == true)
+            {
+                await userrepo.UpdateUserAsync(user);
+            }
+            return await functions.Response(userValidations.code, message);
         }
         [Authorize]
         [HttpPatch]
-        [Route("delete-user")]
-        public async Task<IActionResult> DeleteUserAsync(Models.DTOs.UsersDTO.Delete user)
+        [Route("delete-user/{UserId}/{AdministratorId}")]
+        public async Task<IActionResult> DeleteUserAsync(long UserId, long AdministratorId)
         {
-            return Ok(await IUser.DeleteUserAsync(user));
+            string message = await userValidations.Validate(UserId, AdministratorId);
+            if (userValidations.Validated == true)
+            {
+                await userrepo.DeleteUserAsync(UserId,AdministratorId);
+            }
+            return await functions.Response(userValidations.code, message);
+            
         }
     }
 }

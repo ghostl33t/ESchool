@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using server.Database;
+using server.Models.Domain;
+using server.Repositories.Interfaces;
 using System.Globalization;
 
 namespace server.Repositories.Classes
@@ -60,7 +62,7 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<string> UpdateUserAsync(Models.DTOs.UsersDTO.Update user)
+        public async Task<Models.DTOs.UsersDTO.Update> UpdateUserAsync(Models.DTOs.UsersDTO.Update user)
         {
             var userExist = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == user.Id);
             if(userExist != null)
@@ -74,24 +76,26 @@ namespace server.Repositories.Classes
                 //DbMain.Entry(userExist).State = EntityState.Modified;
                 await DbMain.SaveChangesAsync();
             }
-            return String.Format("User with ID: {0} updated succesfuly!",userExist.Id);
+            return user;
         }
-        public async Task<string> DeleteUserAsync(Models.DTOs.UsersDTO.Delete user)
+        public async Task<bool> DeleteUserAsync(long UserId, long AdministratorId)
         {
             try
             {
-                var userExist = DbMain.Users.FirstOrDefault(s => s.Id == user.Id);
-                if (userExist != null)
+                var userForDelete = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == UserId);
+                var Administrator = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == AdministratorId);
+                if (userForDelete != null && Administrator != null)
                 {
-                    userExist.Deleted = user.Deleted;
-                    userExist.DeletedDate = user.DeletedDate;
+                    userForDelete.Deleted = 1;
+                    userForDelete.DeletedDate = DateTime.Today;
+                    userForDelete.DeletedById = AdministratorId;
                     await DbMain.SaveChangesAsync();
+                    return true;
                 }
-                return String.Format("User with ID: {0} deleted succesfuly!", user.Id);
+                else return false;
             }
             catch (Exception)
             {
-
                 throw;
             } 
         }
