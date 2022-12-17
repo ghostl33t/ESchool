@@ -49,7 +49,8 @@ namespace server.Models.Domain
         [Column(TypeName ="smallint")]
         public int? Deleted { get; set; }
 
-        [Column(TypeName ="nvarchar")]
-        public string Email { get; set; }
+        [Column(TypeName = "nvarchar")]
+        [MaxLength(30)]
+        public string? Email { get; set; } = "";
     }
 }

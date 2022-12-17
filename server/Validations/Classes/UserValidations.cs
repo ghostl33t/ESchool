@@ -85,83 +85,36 @@ namespace server.Validations.Classes
         {
             var creatorType = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == user.CreatedById);
             Validated = false;
-            if (user == null)
+            if (creatorType == null)
             {
-                return await Task.FromResult("User is not defined!");
-            }
-            if (await ValidateUserNameLength(user.UserName) == false)
-            {
-                return await Task.FromResult("Length of username is incorrect!");
-            }
-            if (await ValidateUserNameUnique(user.UserName) == false)
-            {
-                return await Task.FromResult(string.Format("User with {0} already exists in database!", user.UserName));
-            }
-            if (await ValidateUserPassword(user.Password) == false)
-            {
-                return await Task.FromResult("Password field is incorrect");
-            }
-            if (await ValidateCreateUserByType(creatorType.UserType, user.UserType) == false)
-            {
+                code = 401;
                 return await Task.FromResult("You don't have permission to create new user!");
-            }
-            if (await ValidateUserNameAndLastName(user.Name) == false)
-            {
-                return await Task.FromResult("Name is in incorrect format!");
-            }
-            if (await ValidateUserNameAndLastName(user.LastName) == false)
-            {
-                return await Task.FromResult("Last name is in incorrect format!");
-            }
-            if (await ValidateUserOIB(user.OIB) == false)
-            {
-                return await Task.FromResult("OIB is in incorrect format!");
-            }
-            if (await ValidateUserOIBUnique(user.OIB) == false)
-            {
-                return await Task.FromResult("User with typed OIB already exists in database!");
-            }
-            if (await ValidateUserPhone(user.Phone) == false)
-            {
-                return await Task.FromResult("Phone is in incorrect format!");
-            }
-            if (await ValidateUserPhoneUnique(user.Phone) == false)
-            {
-                return await Task.FromResult("User with typed phone number already exists in database!");
-            }
-            Validated = true;
-            return await Task.FromResult("User added to database succesfuly!");
-        }
-
-        public async Task<string> Validate(Models.DTOs.UsersDTO.Update user)
-        {
-            var creatorType = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == user.UpdatedById);
-            Validated = false;
-            if (user == null)
-            {
-                code = 400;
-                return await Task.FromResult("User is not defined!");
-            }
-            if (await ValidateUserNameLength(user.UserName) == false)
-            {
-                code = 400;
-                return await Task.FromResult("Length of username is incorrect!");
-            }
-            if (await ValidateUserNameUnique(user.UserName) == false)
-            {
-                code = 400;
-                return await Task.FromResult(string.Format("User with {0} already exists in database!", user.UserName));
-            }
-            if (await ValidateUserPassword(user.Password) == false)
-            {
-                code = 400;
-                return await Task.FromResult("Password field is incorrect");
             }
             if (await ValidateCreateUserByType(creatorType.UserType, user.UserType) == false)
             {
                 code = 401;
                 return await Task.FromResult("You don't have permission to create new user!");
             }
+            if (user == null)
+            {
+                code = 400;
+                return await Task.FromResult("User is not defined!");
+            }
+            if (await ValidateUserNameLength(user.UserName) == false)
+            {
+                code = 400;
+                return await Task.FromResult("Length of username is incorrect!");
+            }
+            if (await ValidateUserNameUnique(user.UserName) == false)
+            {
+                code = 400;
+                return await Task.FromResult(string.Format("User with {0} already exists in database!", user.UserName));
+            }
+            if (await ValidateUserPassword(user.Password) == false)
+            {
+                code = 400;
+                return await Task.FromResult("Password field is incorrect");
+            }
             if (await ValidateUserNameAndLastName(user.Name) == false)
             {
                 code = 400;
@@ -192,7 +145,92 @@ namespace server.Validations.Classes
                 code = 400;
                 return await Task.FromResult("User with typed phone number already exists in database!");
             }
+            Validated = true;
             code = 201;
+            return await Task.FromResult("User added to database succesfuly!");
+        }
+
+        public async Task<string> Validate(Models.DTOs.UsersDTO.Update user)
+        {
+            var creatorType = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == user.UpdatedById);
+            var userExist = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == user.Id);
+            Validated = false;
+            if(creatorType == null)
+            {
+                code = 401;
+                return await Task.FromResult("You don't have permission to create new user!");
+            }
+            if (await ValidateCreateUserByType(creatorType.UserType, user.UserType) == false)
+            {
+                code = 401;
+                return await Task.FromResult("You don't have permission to create new user!");
+            }
+            if (user == null || userExist == null)
+            {
+                code = 400;
+                return await Task.FromResult("User is not defined!");
+            }
+            if(userExist.UserName != user.UserName) { 
+                if (await ValidateUserNameLength(user.UserName) == false)
+                {
+                    code = 400;
+                    return await Task.FromResult("Length of username is incorrect!");
+                }
+                if (await ValidateUserNameUnique(user.UserName) == false)
+                {
+                    code = 400;
+                    return await Task.FromResult(string.Format("User with {0} already exists in database!", user.UserName));
+                }
+            }
+            
+            if (await ValidateUserPassword(user.Password) == false)
+            {
+                code = 400;
+                return await Task.FromResult("Password field is incorrect");
+            }
+            if(userExist.Name != user.Name)
+            {
+                if (await ValidateUserNameAndLastName(user.Name) == false)
+                {
+                    code = 400;
+                    return await Task.FromResult("Name is in incorrect format!");
+                }
+            }
+            if (userExist.LastName != user.LastName)
+            {
+                if (await ValidateUserNameAndLastName(user.LastName) == false)
+                {
+                    code = 400;
+                    return await Task.FromResult("Last name is in incorrect format!");
+                }
+            }
+            if (userExist.OIB != user.OIB)
+            {
+                if (await ValidateUserOIB(user.OIB) == false)
+                {
+                    code = 400;
+                    return await Task.FromResult("OIB is in incorrect format!");
+                }
+                if (await ValidateUserOIBUnique(user.OIB) == false)
+                {
+                    code = 400;
+                    return await Task.FromResult("User with typed OIB already exists in database!");
+                }
+            }
+            if(userExist.Phone != user.Phone)
+            {
+                if (await ValidateUserPhone(user.Phone) == false)
+                {
+                    code = 400;
+                    return await Task.FromResult("Phone is in incorrect format!");
+                }
+                if (await ValidateUserPhoneUnique(user.Phone) == false)
+                {
+                    code = 400;
+                    return await Task.FromResult("User with typed phone number already exists in database!");
+                }
+            }
+            code = 204;
             Validated = true;
             return await Task.FromResult("User updated succesfuly!");
         }
