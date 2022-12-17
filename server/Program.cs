@@ -59,7 +59,10 @@ builder.Services.AddScoped<server.Validations.ICDSP, server.Validations.CDSP>();
 /* STUDENT GRADES */
 builder.Services.AddScoped<server.Repositories.Interfaces.IStudentGrades, server.Repositories.Classes.StudentGrades>();
 builder.Services.AddScoped<server.Validations.IStudentGradesValidations, server.Validations.StudentGradesValidations>();
-
+/* SUBJECTS */
+builder.Services.AddScoped<server.Repositories.Interfaces.ISubjects, server.Repositories.Classes.SubjectRepository>();
+builder.Services.AddScoped<server.Validations.Interfaces.ISubjectValidations, server.Validations.Classes.SubjectValidations>();
+ 
 /* FUNKCIJE */
 builder.Services.AddSingleton<server.Other.IFunctions,server.Other.Functions>(); 
 /* AUTOMAPPER */

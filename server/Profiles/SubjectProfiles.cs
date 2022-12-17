@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 namespace server.Profiles
 {
-    public class CDSPProfiles : Profile
+    public class SubjectProfiles : Profile
     {
-        public CDSPProfiles()
+        public SubjectProfiles()
         {
-            CreateMap<Models.Domain.ClassDepartmentSubjectProfessor, Models.DTOs.ClassDepartmentSubjectProfessor.ClassDepartmentSubjectProfessorDTO>();
-            CreateMap<Models.Domain.ClassDepartmentSubjectProfessor, Models.DTOs.ClassDepartmentSubjectProfessor.Create>().ReverseMap();
-            CreateMap<Models.Domain.ClassDepartmentSubjectProfessor, Models.DTOs.ClassDepartmentSubjectProfessor.Update>();
+            CreateMap<Models.Domain.Subject, Models.DTOs.Subject.SubjectDTO>();
+            CreateMap<Models.Domain.Subject, Models.DTOs.Subject.Create>().ReverseMap();
+            CreateMap<Models.Domain.Subject, Models.DTOs.Subject.Update>();
         }
     }
 }

@@ -19,32 +19,36 @@ namespace server.Repositories.Classes
         }
         public async Task<Models.DTOs.Subject.Create> CreateSubjectAsync(Models.DTOs.Subject.Create newSubject)
         {
-            var classDep = IMapper.Map<Models.Domain.Subject>(newSubject);
-            await DBRegistries.Subjects.AddAsync(classDep);
-            await DbMain.SaveChangesAsync();
-            return newSubject;
-        }
-
-        public async Task<SubjectDTO> DeleteSubjectAsync(long Id)
-        {
             try
             {
-                var subject = await DbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == Id);
-                var subjectDTO = IMapper.Map<Models.DTOs.Subject.SubjectDTO>(subject);
-                if (subject != null)
-                {
-                    subject.Deleted = 1;
-                    subject.DeletedDate = DateTime.Today;
-                    await this.DBRegistries.SaveChangesAsync();
-                    return subjectDTO;
-                }
+                var subject = IMapper.Map<Models.Domain.Subject>(newSubject);
+                await DBRegistries.Subjects.AddAsync(subject);
+                await DBRegistries.SaveChangesAsync();
+                return newSubject;
             }
             catch (Exception)
             {
 
                 throw;
             }
-            return null;
+        }
+
+        public async Task<SubjectDTO> DeleteSubjectAsync(long SubjectId, long AdministratorId)
+        {
+            try
+            {
+                var subject = await this.DBRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == SubjectId);
+                subject.Deleted = 1;
+                subject.DeletedDate = DateTime.Today;
+                subject.DeletedById = AdministratorId;
+                await this.DBRegistries.SaveChangesAsync();
+                var subjectDTO = IMapper.Map<SubjectDTO>(subject);
+                return subjectDTO;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async  Task<SubjectDTO> GetSubjectById(long Id)
@@ -61,7 +65,6 @@ namespace server.Repositories.Classes
             }
             catch (Exception)
             {
-
                 throw;
             }
             return null;
@@ -71,9 +74,9 @@ namespace server.Repositories.Classes
         {
             try
             {
-                var subjects = await this.DBRegistries.Subjects.ToListAsync();
+                var subjects = await this.DBRegistries.Subjects.Where(s=>s.Deleted == 0).ToListAsync();
                 var subjectDTO = IMapper.Map<List<Models.DTOs.Subject.SubjectDTO>>(subjects);
-                if(subjectDTO != null)
+                if (subjectDTO != null)
                 {
                     return subjectDTO;
                 }
@@ -85,17 +88,15 @@ namespace server.Repositories.Classes
             }
             return null;
         }
-
-        public async Task<SubjectDTO> ModifySubject(Update classdep)
+        public async Task<SubjectDTO> ModifySubject(Update subject)
         {
             try
             {
-                var subjectExist = await this.DBRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == classdep.ID);
+                var subjectExist = await this.DBRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == subject.Id);
                 if(subjectExist != null)
                 {
-                    subjectExist.SerialNumber = classdep.SerialNumber;
-                    subjectExist.Name = classdep.Name;
-                    subjectExist.SchoolType = classdep.SchoolType;
+                    subjectExist.SerialNumber = subject.SerialNumber;
+                    subjectExist.Name = subject.Name;
                     await this.DBRegistries.SaveChangesAsync();
                     var subjectsDTO = IMapper.Map<SubjectDTO>(subjectExist);
                     return subjectsDTO;

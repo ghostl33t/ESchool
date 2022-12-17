@@ -5,20 +5,14 @@ namespace server.Models.DTOs.Subject
 {
     public class SubjectDTO
     {
-        public long ID { get; set; }
-        public string SerialNumber { get; set; }
-        public string Name { get; set; }
-        public long SchoolListId { get; set; }
-
-        public int Year { get; set; }
-        public long LeaderProfessorId { get; set; }
-
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public long Id { get; set; }
+        public string SerialNumber { get; set; } = "";
+        public string Name { get; set; } = "";
         public long CreatedById { get; set; }
-
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public int Deleted { get; set; } = 0;
+        public DateTime? DeletedDate { get; set; }
         public long DeletedById { get; set; }
-        public DateTime? DeletedDate { get; set; } = DateTime.Now;
-        public int? Deleted { get; set; }
 
     }
 }

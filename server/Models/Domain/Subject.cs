@@ -8,17 +8,14 @@ namespace server.Models.Domain
     {
         [Key]
         [Column(TypeName = "bigint")]
-        public long Id { get; set; }
+        public long Id { get; set; } 
         [Column(TypeName = "nvarchar")]
         [MinLength(3)]
         [MaxLength(5)]
-        public string SerialNumber { get; set; }
+        public string SerialNumber { get; set; } = "";
         [Column(TypeName = "nvarchar")]
         [MaxLength(15)]
-        public string Name { get; set; }
-        [Column(TypeName = "smallint")]
-        public int SchoolType { get; set; }
-
+        public string Name { get; set; } = "";
         [Column(TypeName = "bigint")]
         public long CreatedById { get; set; }
 

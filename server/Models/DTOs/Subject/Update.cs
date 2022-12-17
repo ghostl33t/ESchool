@@ -5,10 +5,10 @@ namespace server.Models.DTOs.Subject
 {
     public class Update
     {
-        public long ID { get; set; }
-        public string SerialNumber { get; set; }
-        public string Name { get; set; }
-        public int SchoolType { get; set; }
+        public long Id { get; set; }
+        public string SerialNumber { get; set; } = "";
+        public string Name { get; set; } = "";
+        public long UpdatedById { get; set; }
 
     }
 }

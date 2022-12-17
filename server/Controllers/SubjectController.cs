@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using server.Database;
 using server.Models.Domain;
+using server.Other;
 using server.Repositories.Interfaces;
-using server.Validations;
+using server.Validations.Interfaces;
 
 namespace server.Controllers
 {
@@ -11,17 +13,19 @@ namespace server.Controllers
     public class SubjectController : Controller
     {
         private readonly ISubjects ISubject;
-        private readonly ISubjectValidations ISubjectValidations;
-        public SubjectController(ISubjects ISubject, ISubjectValidations ISubjectValidations)
+        private readonly ISubjectValidations subvalidations;
+        private readonly IFunctions functions;
+        public SubjectController(ISubjects ISubject, ISubjectValidations ISubjectValidations, IFunctions functions)
         {
             this.ISubject = ISubject;
-            this.ISubjectValidations = ISubjectValidations;
+            this.subvalidations = ISubjectValidations;
+            this.functions = functions;
         }
+        [Authorize]
         [Route("get-all")]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            //if(this.IClassDepartmentValidations.Validation())
             var subjects = await ISubject.GetSubjectsList();
             if(subjects != null)
             {
@@ -29,7 +33,8 @@ namespace server.Controllers
             }
             return BadRequest();
         }
-        [Route("get-by-id")]
+        [Authorize]
+        [Route("get-by-id/{Id}")]
         [HttpGet]
         public async Task<IActionResult> GetByIdAsync(long Id )
         {
@@ -40,33 +45,42 @@ namespace server.Controllers
             }
             return BadRequest();
         }
+        [Authorize]
         [Route("create-subject")]
         [HttpPost]
         public async Task<IActionResult> Create(Models.DTOs.Subject.Create newSubject)
         {
-
-            await ISubjectValidations.Validation(newSubject);
-            if (ISubjectValidations.validationResult == true)
+            var message = await subvalidations.Validation(newSubject);
+            if (subvalidations.validationResult == true)
             {
-                return Ok(ISubject.CreateSubjectAsync(newSubject));
+                await ISubject.CreateSubjectAsync(newSubject);
             }
-            else
-            {
-                return BadRequest();
-            }     
+            return await functions.Response(subvalidations.code, message);
         }
+        [Authorize]
         [Route("update-subject")]
         [HttpPatch]
         public async Task<IActionResult> Update(Models.DTOs.Subject.Update subject)
         {
-            return Ok(await ISubject.ModifySubject(subject));
+            var message = await subvalidations.Validation(subject);
+            if (subvalidations.validationResult == true)
+            {
+                await ISubject.ModifySubject(subject);
+            }
+            return await functions.Response(subvalidations.code, message);
 
         }
-        [Route("delete-subject")]
+        [Authorize]
         [HttpPatch]
-        public async Task<IActionResult> Delete(long Id)
+        [Route("delete-subject/{SubjectId}/{AdministratorId}")]
+        public async Task<IActionResult> Delete(long SubjectId, long AdministratorId)
         {
-            return Ok(await ISubject.DeleteSubjectAsync(Id));
+            var message = await subvalidations.Validation(SubjectId,AdministratorId);
+            if (subvalidations.validationResult == true)
+            {
+                await ISubject.DeleteSubjectAsync(SubjectId,AdministratorId);
+            }
+            return await functions.Response(subvalidations.code, message);
         }
 }
 }
