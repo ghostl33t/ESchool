@@ -19,8 +19,8 @@ namespace server.Validations.Classes
 
         public async Task<bool> ValidateSchoolCreator(long CreatedById)
         {
-            var creator = DbMain.Users.FirstOrDefault(s => s.Id == CreatedById && s.Deleted == 0);
-            if (creator == null || creator.UserType != 3)
+            var creator = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == CreatedById && s.Deleted == 0);
+            if (creator == null || creator.UserType != 0)
             {
                 return await Task.FromResult(false);
             }
@@ -131,7 +131,7 @@ namespace server.Validations.Classes
             }
             code = 201;
             validationResult = true;
-            return await Task.FromResult("School added succesfuly!");
+            return await Task.FromResult("School updated succesfuly!");
         }
         public async Task<string> Validation(long schoolId, long AdministratorId)
         {

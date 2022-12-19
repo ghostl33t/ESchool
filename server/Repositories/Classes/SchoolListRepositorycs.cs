@@ -19,12 +19,12 @@ namespace server.Repositories.Classes
             this.ISchoolListValidations = iSchoolListValidations;
             this.Mapper = mapper;
         }
-        public async Task<List<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO>> GetSchoolsList()
+        public async Task<List<Models.DTOs.SchoolList.SchoolList>> GetSchoolsList()
         {
             try
             {
                 var schoolList = await DBRegistries.SchoolList.Where(s => s.Deleted == 0).ToListAsync();
-                var schoolListDTO = Mapper.Map<List<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO>>(schoolList);
+                var schoolListDTO = Mapper.Map<List<Models.DTOs.SchoolList.SchoolList>>(schoolList);
                 return schoolListDTO;
             }
             catch (Exception)
@@ -35,12 +35,12 @@ namespace server.Repositories.Classes
             
             
         }
-        public async Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> GetSchoolById(long Id)
+        public async Task<Models.DTOs.SchoolList.SchoolList> GetSchoolById(long Id)
         {
             try
             {
                 var school = await DBRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == Id);
-                var schoolDTO = Mapper.Map<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO>(school);
+                var schoolDTO = Mapper.Map<Models.DTOs.SchoolList.SchoolList>(school);
                 return schoolDTO;
 
             }
@@ -50,23 +50,24 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> CreateSchoolAsync(Models.DTOs.SchoolList.Create newSchool)
+        public async Task<Models.DTOs.SchoolList.SchoolList> CreateSchoolAsync(Models.DTOs.SchoolList.Create newSchool)
         {
             try
             {
                 var school = Mapper.Map<Models.Domain.SchoolList>(newSchool);
+                school.CreatedDate = DateTime.Today;
                 await DBRegistries.SchoolList.AddAsync(school);
                 await DBRegistries.SaveChangesAsync();
-                var schoolForReturn = Mapper.Map<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO>(school);
+                var schoolForReturn = Mapper.Map<Models.DTOs.SchoolList.SchoolList>(school);
                 return schoolForReturn;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
         }
-        public async Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> ModifySchoolAsync(Models.DTOs.SchoolList.Update schoolDTO)
+        public async Task<Models.DTOs.SchoolList.SchoolList> ModifySchoolAsync(Models.DTOs.SchoolList.Update schoolDTO)
         {
             try
             {
@@ -75,7 +76,7 @@ namespace server.Repositories.Classes
                     school.Name = schoolDTO.Name;
                     school.SchoolType = schoolDTO.SchoolType;
                 await DBRegistries.SaveChangesAsync();
-                return Mapper.Map<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO>(school);
+                return Mapper.Map<Models.DTOs.SchoolList.SchoolList>(school);
             }
             catch (Exception)
             {
@@ -83,7 +84,7 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO> DeleteSchoolAsync(long SchoolId, long AdministratorId)
+        public async Task<Models.DTOs.SchoolList.SchoolList> DeleteSchoolAsync(long SchoolId, long AdministratorId)
         {
             try
             {
@@ -92,7 +93,7 @@ namespace server.Repositories.Classes
                 school.DeletedById = AdministratorId;
                 school.DeletedDate = DateTime.Today;
                 await DBRegistries.SaveChangesAsync();
-                return Mapper.Map<Models.DTOs.SchoolList.ClassDepartmentSubjectProfessorDTO>(school);
+                return Mapper.Map<Models.DTOs.SchoolList.SchoolList>(school);
             }
             catch (Exception)
             {

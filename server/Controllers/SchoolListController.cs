@@ -60,7 +60,7 @@ namespace server.Controllers
         }
         [Authorize]
         [HttpPatch]
-        [Route("delete-user/{SchoolId}/{AdministratorId}")]
+        [Route("delete-school/{SchoolId}/{AdministratorId}")]
         public async Task<IActionResult> DeleteUserAsync(long SchoolId,long AdministratorId)
         {
             string message = await ISchoolListValidations.Validation(SchoolId, AdministratorId);
