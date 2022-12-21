@@ -1,8 +1,8 @@
 #ignore vs
-.vs/
+server/.vs/
 
 #ignore obj
-server/obj
+server/obj/
 
 #ignore bin
-server/bin
+server/bin/
