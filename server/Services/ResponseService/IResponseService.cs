@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-namespace server.Other
+
+namespace server.Services.ResponseService
 {
-    public interface IFunctions 
+    public interface IResponseService
     {
         public Task<IActionResult> Response(int code, object returnobj);
-        
+
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using server.Other;
 using server.Repositories.Interfaces;
+using server.Services.ResponseService;
 using server.Validations.Interfaces;
 
 namespace server.Controllers
@@ -12,8 +12,8 @@ namespace server.Controllers
     {
         private readonly Repositories.Interfaces.ISchoolList ISchoolList;
         private readonly ISchoolListValidations ISchoolListValidations;
-        private readonly IFunctions functions;
-        public SchoolListController(ISchoolList ISchoolList, ISchoolListValidations iSchoolListValidations, IFunctions functions)
+        private readonly IResponseService functions;
+        public SchoolListController(ISchoolList ISchoolList, ISchoolListValidations iSchoolListValidations, IResponseService functions)
         {
             this.ISchoolList = ISchoolList;
             this.ISchoolListValidations = iSchoolListValidations;

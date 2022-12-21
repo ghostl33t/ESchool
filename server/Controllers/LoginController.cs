@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using server.Repositories.Interfaces;
+using server.Services.LoginService;
 
 namespace server.Controllers
 {
@@ -7,20 +8,20 @@ namespace server.Controllers
     [Route("Login")]
     public class LoginController : Controller
     {
-        private readonly ILogin ILogin;
-        private readonly ITokenHandler ITokenHandler;
-        public LoginController(ILogin ILogin, ITokenHandler ITokenHandler)
+        private readonly ILoginService _loginService;
+        private readonly ITokenHandler _tokenHandler;
+        public LoginController(ILoginService loginService, ITokenHandler tokenHandler)
         {
-            this.ILogin = ILogin;
-            this.ITokenHandler = ITokenHandler;
+            this._loginService = loginService;
+            this._tokenHandler = tokenHandler;
         }
         [HttpPost]
         public async Task<IActionResult> LoginAsync(Models.DTOs.UsersDTO.Login user)
         {
-            var validUser = await ILogin.Login(user);
+            var validUser = await _loginService.Login(user);
             if(validUser != null)
             {
-                return Ok(await ITokenHandler.CreateTokenAsync(validUser));
+                return Ok(await _tokenHandler.CreateTokenAsync(validUser));
             }
             else
             {

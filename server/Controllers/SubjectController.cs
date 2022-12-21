@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using server.Database;
 using server.Models.Domain;
-using server.Other;
 using server.Repositories.Interfaces;
+using server.Services.ResponseService;
 using server.Validations.Interfaces;
 
 namespace server.Controllers
@@ -14,8 +14,8 @@ namespace server.Controllers
     {
         private readonly ISubjects ISubject;
         private readonly ISubjectValidations subvalidations;
-        private readonly IFunctions functions;
-        public SubjectController(ISubjects ISubject, ISubjectValidations ISubjectValidations, IFunctions functions)
+        private readonly IResponseService functions;
+        public SubjectController(ISubjects ISubject, ISubjectValidations ISubjectValidations, IResponseService functions)
         {
             this.ISubject = ISubject;
             this.subvalidations = ISubjectValidations;

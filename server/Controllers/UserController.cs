@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.Models.Domain;
-using server.Other;
+using server.Services.ResponseService;
 using server.Validations.Interfaces;
 
 namespace server.Controllers
@@ -12,8 +12,8 @@ namespace server.Controllers
     {
         private readonly Repositories.Interfaces.IUser userrepo;
         private readonly IUserValidations userValidations;
-        private readonly IFunctions functions;
-        public UserController(Repositories.Interfaces.IUser _IUser, IUserValidations iUserValidations, IFunctions functions)
+        private readonly IResponseService functions;
+        public UserController(Repositories.Interfaces.IUser _IUser, IUserValidations iUserValidations, IResponseService functions)
         {
             this.userrepo = _IUser;
             this.userValidations = iUserValidations;

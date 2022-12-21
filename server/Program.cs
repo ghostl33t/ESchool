@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using server.Database;
+using server.Services.LoginService;
+using server.Services.ResponseService;
 using server.Validations.Classes;
 using server.Validations.Interfaces;
 using System.Reflection;
@@ -45,7 +47,7 @@ builder.Services.AddDbContext<DBRegistries>(options =>
 });
 /* MODEL USERS */
 builder.Services.AddScoped<server.Repositories.Interfaces.IUser, server.Repositories.Classes.UserRepository>();
-builder.Services.AddScoped<server.Repositories.Interfaces.ILogin, server.Repositories.Classes.LoginRepository>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserValidations, UserValidations>();
 /* SCHOOL LIST */
 builder.Services.AddScoped<server.Repositories.Interfaces.ISchoolList, server.Repositories.Classes.SchoolListRepositorycs>();
@@ -64,7 +66,7 @@ builder.Services.AddScoped<server.Repositories.Interfaces.ISubjects, server.Repo
 builder.Services.AddScoped<server.Validations.Interfaces.ISubjectValidations, server.Validations.Classes.SubjectValidations>();
  
 /* FUNKCIJE */
-builder.Services.AddSingleton<server.Other.IFunctions,server.Other.Functions>(); 
+builder.Services.AddSingleton<IResponseService, ResponseService>(); 
 /* AUTOMAPPER */
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 /* TOKEN */
