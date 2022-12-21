@@ -1,0 +1,8 @@
+#ignore vs
+.vs/
+
+#ignore obj
+server/obj
+
+#ignore bin
+server/bin
