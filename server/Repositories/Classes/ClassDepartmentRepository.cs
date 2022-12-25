@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using server.Database;
-using server.Models.DTOs.ClassDepartment;
+using server.Models.Domain;
 using server.Models.DTOs.StudentDetails;
 using server.Repositories.Interfaces;
 
@@ -9,56 +8,58 @@ namespace server.Repositories.Classes
 {
     public class ClassDepartmentRepository : IClassDepartment
     {
-        private readonly DBMain DbMain;
-        private readonly DBRegistries DbRegistries;
-        private readonly IMapper IMapper;
+        private readonly DBMain _dbMain;
+        private readonly DBRegistries _dbRegistries;
         
-        public ClassDepartmentRepository(DBMain DbMain, DBRegistries DbRegistries, IMapper IMapper)
+        public ClassDepartmentRepository(DBMain dbMain, DBRegistries dbRegistries)
         {
-            this.DbMain = DbMain;
-            this.DbRegistries = DbRegistries;
-            this.IMapper = IMapper;
+            this._dbMain = dbMain;
+            this._dbRegistries = dbRegistries;
         }
-        public async Task<Models.DTOs.ClassDepartment.Create> CreateSchoolAsync(Models.DTOs.ClassDepartment.Create newclassdepp)
-        {
-            var classDep = IMapper.Map<Models.Domain.ClassDepartment>(newclassdepp);
-            await DbMain.ClassDepartments.AddAsync(classDep);
-            await DbMain.SaveChangesAsync();
-            return newclassdepp;
-        }
-
-        public async Task<ClassDepartmentDTO> DeleteSchoolAsync(long Id)
+        public async Task<long> CreateClassDepartmentAsync(ClassDepartment newclassdepp)
         {
             try
             {
-                var classdep = await DbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == Id);
-                var classdepDTO = IMapper.Map<Models.DTOs.ClassDepartment.ClassDepartmentDTO>(classdep);
-                if (classdep != null)
-                {
-                    classdep.Deleted = 1;
-                    classdep.DeletedDate = DateTime.Today;
-                    await DbMain.SaveChangesAsync();
-                    return classdepDTO;
-                }
+                newclassdepp.CreatedBy = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newclassdepp.CreatorId);
+                newclassdepp.LeaderProfessor = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newclassdepp.ProfessorId);
+                await _dbMain.ClassDepartments.AddAsync(newclassdepp);
+
+                await _dbMain.SaveChangesAsync();
+                return newclassdepp.ID;
             }
             catch (Exception)
             {
 
                 throw;
             }
-            return null;
+            
         }
-
-        public async  Task<ClassDepartmentDTO> GetSchoolById(long Id)
+        public async Task<long> DeleteClassDepartmentAsync(long Id, long AdministratorId)
         {
             try
             {
-                var classDep = await DbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == Id);
-                var classDepDTO = IMapper.Map<ClassDepartmentDTO>(classDep);
-                if(classDepDTO != null)
+                var classdep = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == Id);
+                if (classdep != null)
                 {
-                    return  classDepDTO;
+                    classdep.DeletedById = AdministratorId;
+                    classdep.Deleted = 1;
+                    classdep.DeletedDate = DateTime.Today;
+                    await _dbMain.SaveChangesAsync();
+                    return classdep.ID;
                 }
+                return 0;
+            }
+            catch (Exception)
+            { 
+                throw;
+            }
+        }
+        public async Task<ClassDepartment> GetClassDepartmentByIdAsync(long Id)
+        {
+            try
+            {
+                var classDep = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == Id);
+                return classDep;
                 
             }
             catch (Exception)
@@ -66,60 +67,43 @@ namespace server.Repositories.Classes
 
                 throw;
             }
-            return null;
         }
 
-        public async Task<List<ClassDepartmentDTO>> GetSchoolsList()
+        public async Task<List<ClassDepartment>> GetAllClassDepartmentsAsync()
         {
             try
             {
-                var classDeps = await DbMain.ClassDepartments.ToListAsync();
-                var classDepsDTO = IMapper.Map<List<Models.DTOs.ClassDepartment.ClassDepartmentDTO>>(classDeps);
-                if(classDepsDTO != null)
-                {
-                    return classDepsDTO;
-                }
+                var classDeps = await _dbMain.ClassDepartments.ToListAsync();
+                return classDeps;
             }
             catch (Exception)
             {
 
                 throw;
             }
-            return null;
+            
         }
 
-        public async Task<ClassDepartmentDTO> ModifySchoolAsync(server.Models.DTOs.ClassDepartment.Update classdep)
+        public async Task<ClassDepartment> ModifyClassDepartmentAsync(ClassDepartment updatedclassdep)
         {
             try
             {
-                var classDepExist = await DbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == classdep.ID);
-                if(classDepExist != null)
-                {
-                    classDepExist.SerialNumber = classdep.SerialNumber;
-                    classDepExist.Name = classdep.Name;
-                    classDepExist.SchoolListId = classdep.SchoolListId;
-                    var leadprofmap = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == classdep.LeaderProfessorId);
-                    classDepExist.LeaderProfessor = leadprofmap;//classdep.LeaderProfessorId;
-                    classDepExist.Year = classdep.Year;
-
-                    await DbMain.SaveChangesAsync();
-                    var classDepDTO = IMapper.Map<ClassDepartmentDTO>(classDepExist);
-                    return classDepDTO;
-                }
+                _dbMain.ClassDepartments.Update(updatedclassdep);
+                return updatedclassdep;
             }
             catch (Exception)
             {
                 throw;
             }
-            return null;
+            
         }
 
         //d)	Kreirati metodu koja ce za odredjeni razred vratiti listu svih studenata koji se nalaze u njemu
         // Ime (ime roditelja) Prezime | Vrsta skole | Razred | 
 
-        public async Task<List<server.Models.DTOs.StudentDetails.StudentDetailsDTO>> GetStudentsPerClassDetilsAsync(long id)
+        public async Task<List<StudentDetailsDTO>> GetStudentsPerClassDetailsAsync(long id)
         {
-            var classExist = await this.DbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == id && s.Deleted == 0);
+            var classExist = await this._dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == id && s.Deleted == 0);
             if (classExist == null)
             {
                 return null;
@@ -142,9 +126,9 @@ namespace server.Repositories.Classes
                 default:
                     break ;
             }
-            var studentsFromClassList = await this.DbMain.StudentsDetails.Where(s => s.ClassDepartment.ID == id && s.Deleted == 0).ToListAsync();
-            var usersList = await this.DbMain.Users.Where(s => s.Deleted == 0 && s.UserType == 2).ToListAsync();
-            var schoolsType = await this.DbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Deleted == 0 && s.Id == classExist.SchoolListId);
+            var studentsFromClassList = await this._dbMain.StudentsDetails.Where(s => s.ClassDepartment.ID == id && s.Deleted == 0).ToListAsync();
+            var usersList = await this._dbMain.Users.Where(s => s.Deleted == 0 && s.UserType == 2).ToListAsync();
+            var schoolsType = await this._dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Deleted == 0 && s.Id == classExist.SchoolListId);
             var query = from students in studentsFromClassList
                         join users in usersList on students.Student.Id equals users.Id
                         select new

@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using server.Database;
+using server.Services.DataService;
 using server.Services.LoginService;
 using server.Services.ResponseService;
 using server.Validations.Classes;
 using server.Validations.Interfaces;
-using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +30,6 @@ builder.Services.AddDbContext<DBMain>(options =>
     {
         Console.WriteLine("ERROR: Unable to connect to SQL server(Main)");
     }
-    
 });
 builder.Services.AddDbContext<DBRegistries>(options =>
 {
@@ -45,6 +44,7 @@ builder.Services.AddDbContext<DBRegistries>(options =>
         Console.WriteLine("ERROR: Unable to connect to SQL server(Registries)");
     }
 });
+
 /* MODEL USERS */
 builder.Services.AddScoped<server.Repositories.Interfaces.IUser, server.Repositories.Classes.UserRepository>();
 builder.Services.AddScoped<ILoginService, LoginService>();
@@ -54,10 +54,10 @@ builder.Services.AddScoped<server.Repositories.Interfaces.ISchoolList, server.Re
 builder.Services.AddScoped<ISchoolListValidations, SchoolListValidations>();
 /* CLASS DEPARTMENTS */
 builder.Services.AddScoped<server.Repositories.Interfaces.IClassDepartment, server.Repositories.Classes.ClassDepartmentRepository>();
-builder.Services.AddScoped<server.Validations.IClassDepartmentValidations, server.Validations.ClassDepartmentValidations>();
+builder.Services.AddScoped<IClassDepartmentValidations, ClassDepartmentValidations>();
 /* CDSP */
 builder.Services.AddScoped<server.Repositories.Interfaces.ICDSP, server.Repositories.Classes.CDSPRepository>();
-builder.Services.AddScoped<server.Validations.ICDSP, server.Validations.CDSP>();
+builder.Services.AddScoped<ICDSPValidations, CDSPValidations>();
 /* STUDENT GRADES */
 builder.Services.AddScoped<server.Repositories.Interfaces.IStudentGrades, server.Repositories.Classes.StudentGrades>();
 builder.Services.AddScoped<server.Validations.IStudentGradesValidations, server.Validations.StudentGradesValidations>();
@@ -65,7 +65,7 @@ builder.Services.AddScoped<server.Validations.IStudentGradesValidations, server.
 builder.Services.AddScoped<server.Repositories.Interfaces.ISubjects, server.Repositories.Classes.SubjectRepository>();
 builder.Services.AddScoped<server.Validations.Interfaces.ISubjectValidations, server.Validations.Classes.SubjectValidations>();
  
-/* FUNKCIJE */
+/* FUNCTIONS */
 builder.Services.AddSingleton<IResponseService, ResponseService>(); 
 /* AUTOMAPPER */
 builder.Services.AddAutoMapper(typeof(Program).Assembly);

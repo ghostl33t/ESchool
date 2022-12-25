@@ -1,15 +1,16 @@
 ﻿using server.Models.DTOs.ClassDepartment;
 using server.Models.DTOs.Subject;
 using server.Models.DTOs.UsersDTO;
+using server.Validations.Interfaces;
 
-namespace server.Validations
+namespace server.Validations.Classes
 {
-    public class CDSP : ICDSP
+    public class CDSPValidations : ICDSPValidations
     {
         public bool validationResult { get; set; }
         public async Task<bool> ValidateCreator(UsersDTO CreatedBy)
         {
-            if(CreatedBy.UserType != 0 || CreatedBy.UserType != 1)
+            if (CreatedBy.UserType != 0 || CreatedBy.UserType != 1)
             {
                 return false;
             }
@@ -17,7 +18,7 @@ namespace server.Validations
         }
         public async Task<bool> ValidateSubject(SubjectDTO Subject)
         {
-            if(Subject == null)
+            if (Subject == null)
             {
                 return false;
             }
@@ -25,13 +26,13 @@ namespace server.Validations
         }
         public async Task<bool> ValidateProfessor(UsersDTO User)
         {
-            if(User == null || User.UserType != 1)
+            if (User == null || User.UserType != 1)
             {
                 return false;
             }
             return true;
         }
-        public async Task<bool> ValidateClassDepartment(ClassDepartmentDTO ClassDepDTO)
+        public async Task<bool> ValidateClassDepartment(GetClassDepartment ClassDepDTO)
         {
             if (ClassDepDTO == null)
             {
@@ -39,7 +40,7 @@ namespace server.Validations
             }
             return true;
         }
-        public async Task<string> Validate(SubjectDTO subject, UsersDTO prof, UsersDTO creator, ClassDepartmentDTO classdepdto)
+        public async Task<string> Validate(SubjectDTO subject, UsersDTO prof, UsersDTO creator, GetClassDepartment classdepdto)
         {
             string message = "";
             validationResult = false;
@@ -48,7 +49,7 @@ namespace server.Validations
                 message = "Creator is not valid";
                 return message;
             }
-            if(await ValidateSubject(subject) == false)
+            if (await ValidateSubject(subject) == false)
             {
                 message = "Subject is not Valid";
                 return message;
@@ -58,7 +59,7 @@ namespace server.Validations
                 message = "Professor is not Valid";
                 return message;
             }
-            if(await ValidateClassDepartment(classdepdto) == false)
+            if (await ValidateClassDepartment(classdepdto) == false)
             {
                 message = "Class department is not valid";
                 return message;

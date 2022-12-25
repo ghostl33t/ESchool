@@ -6,3 +6,6 @@ server/obj/
 
 #ignore bin
 server/bin/
+
+#ignore migrations
+server/Migrations/

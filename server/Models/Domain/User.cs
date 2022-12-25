@@ -45,7 +45,7 @@ namespace server.Models.Domain
         public User? CreatedBy { get; set; }
 
         public long DeletedById { get; set; }
-        public DateTime? DeletedDate { get; set; } = DateTime.Now;
+        public DateTime? DeletedDate { get; set; } 
         [Column(TypeName ="smallint")]
         public int? Deleted { get; set; }
 

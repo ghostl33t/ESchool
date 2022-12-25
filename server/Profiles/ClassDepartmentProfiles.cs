@@ -5,9 +5,9 @@ namespace server.Profiles
     {
         public ClassDepartmentProfiles()
         {
-            CreateMap<Models.Domain.ClassDepartment, Models.DTOs.ClassDepartment.ClassDepartmentDTO>();
-            CreateMap<Models.Domain.ClassDepartment, Models.DTOs.ClassDepartment.Create>().ReverseMap();
-            CreateMap<Models.Domain.ClassDepartment, Models.DTOs.ClassDepartment.Update>();
+            CreateMap<Models.Domain.ClassDepartment, Models.DTOs.ClassDepartment.GetClassDepartment>();
+            CreateMap<Models.Domain.ClassDepartment, Models.DTOs.ClassDepartment.PostClassDepartment>().ReverseMap();
+            CreateMap<Models.Domain.ClassDepartment, Models.DTOs.ClassDepartment.PatchClassDepartment>().ReverseMap();
         }
     }
 }
