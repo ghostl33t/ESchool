@@ -1,6 +1,6 @@
 ﻿namespace server.Models.DTOs.UsersDTO
 {
-    public class Update
+    public class PatchUser
     {
         public long Id { get; set; }
         public string? UserName { get; set; }

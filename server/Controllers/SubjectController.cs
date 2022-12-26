@@ -32,7 +32,7 @@ namespace server.Controllers
             var subjects = await _subjectRepo.GetSubjectsList();
             if(subjects != null)
             {
-                var subjectsDTO = _mapper.Map<List<SubjectDTO>>(subjects);
+                var subjectsDTO = _mapper.Map<List<GetSubject>>(subjects);
                 return await _functions.Response(200,subjectsDTO);
             }
             return await _functions.Response(401,"Data not found");
@@ -44,14 +44,14 @@ namespace server.Controllers
             var subject = await _subjectRepo.GetSubjectById(Id);
             if(subject != null)
             {
-                var subjectDTO = _mapper.Map<SubjectDTO>(subject);
+                var subjectDTO = _mapper.Map<GetSubject>(subject);
                 return await _functions.Response(200, subjectDTO);
             }
             return await _functions.Response(401, "Data not found");
         }
         [Route("create-subject")]
         [HttpPost]
-        public async Task<IActionResult> Create(Models.DTOs.Subject.Create newSubjectDto)
+        public async Task<IActionResult> Create(Models.DTOs.Subject.PostSubject newSubjectDto)
         {
             if(newSubjectDto != null)
             {
@@ -65,7 +65,7 @@ namespace server.Controllers
         }
         [Route("update-subject")]
         [HttpPatch]
-        public async Task<IActionResult> Update(Models.DTOs.Subject.Update subjectDto)
+        public async Task<IActionResult> Update(Models.DTOs.Subject.PatchSubject subjectDto)
         {
             if (subjectDto != null)
             {

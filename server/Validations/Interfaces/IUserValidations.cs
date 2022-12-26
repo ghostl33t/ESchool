@@ -13,8 +13,8 @@ public interface IUserValidations
     public Task<bool> ValidateUserOIBUnique(string OIB);
     public Task<bool> ValidateUserPhone(string phone);
     public Task<bool> ValidateUserPhoneUnique(string phone);
-    public Task<bool> Validate(Models.DTOs.UsersDTO.Create user);
+    public Task<bool> Validate(Models.DTOs.UsersDTO.PostUser user);
 
-    public Task<bool> Validate(Models.DTOs.UsersDTO.Update user);
+    public Task<bool> Validate(Models.DTOs.UsersDTO.PatchUser user);
     public Task<bool> Validate(long UserId, long AdministratorId);
 }

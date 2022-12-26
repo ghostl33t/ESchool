@@ -6,8 +6,8 @@ namespace server.Profiles
         public StudentGradesProfiles()
         {
             CreateMap<Models.Domain.StudentGrades, Models.DTOs.StudentGrades.GetStudentGrades>();
-            CreateMap<Models.Domain.StudentGrades, Models.DTOs.StudentGrades.Create>().ReverseMap();
-            CreateMap<Models.Domain.StudentGrades, Models.DTOs.StudentGrades.Update>();
+            CreateMap<Models.Domain.StudentGrades, Models.DTOs.StudentGrades.PostStudentGrades>().ReverseMap();
+            CreateMap<Models.Domain.StudentGrades, Models.DTOs.StudentGrades.PatchStudentGrades>().ReverseMap();
         }
     }
 }

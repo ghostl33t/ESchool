@@ -6,9 +6,9 @@ namespace server.Profiles
     {
         public UserProfiles()
         {
-            CreateMap<Models.Domain.User, Models.DTOs.UsersDTO.UsersDTO>();
-            CreateMap<Models.Domain.User, Models.DTOs.UsersDTO.Create>().ReverseMap();
-            CreateMap<Models.Domain.User, Models.DTOs.UsersDTO.Update>();
+            CreateMap<Models.Domain.User, Models.DTOs.UsersDTO.GetUser>();
+            CreateMap<Models.Domain.User, Models.DTOs.UsersDTO.PostUser>().ReverseMap();
+            CreateMap<Models.Domain.User, Models.DTOs.UsersDTO.PatchUser>().ReverseMap();
         }
     }
 }

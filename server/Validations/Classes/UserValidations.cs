@@ -76,7 +76,7 @@ public class UserValidations : IUserValidations
         }
         return await Task.FromResult(true);
     }
-    public async Task<bool> Validate(Models.DTOs.UsersDTO.Create user)
+    public async Task<bool> Validate(Models.DTOs.UsersDTO.PostUser user)
     {
         code = 0;
         if (user != null)
@@ -149,7 +149,7 @@ public class UserValidations : IUserValidations
         return true;
     }
 
-    public async Task<bool> Validate(Models.DTOs.UsersDTO.Update user)
+    public async Task<bool> Validate(Models.DTOs.UsersDTO.PatchUser user)
     {
         var creatorType = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == user.UpdatedById);
         var userExist = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == user.Id);
@@ -162,30 +162,30 @@ public class UserValidations : IUserValidations
         if (await ValidateCreateUserByType(creatorType.UserType, user.UserType) == false)
         {
             code = 401;
-            return await Task.FromResult("You don't have permission to create new user!";
+            validationMessage = "You don't have permission to create new user!";
         }
         if (user == null || userExist == null)
         {
             code = 400;
-            return await Task.FromResult("User is not defined!";
+            validationMessage = "User is not defined!";
         }
         if(userExist.UserName != user.UserName) { 
             if (await ValidateUserNameLength(user.UserName) == false)
             {
                 code = 400;
-                return await Task.FromResult("Length of username is incorrect!";
+                validationMessage = "Length of username is incorrect!";
             }
             if (await ValidateUserNameUnique(user.UserName) == false)
             {
                 code = 400;
-                return await Task.FromResult(string.Format("User with {0} already exists in database!", user.UserName);
+                validationMessage = string.Format("User with {0} already exists in database!", user.UserName);
             }
         }
         
         if (await ValidateUserPassword(user.Password) == false)
         {
             code = 400;
-            return await Task.FromResult("Password field is incorrect";
+            validationMessage = "Password field is incorrect";
         }
         if(userExist.Name != user.Name)
         {
@@ -231,7 +231,7 @@ public class UserValidations : IUserValidations
         }
         if(code != 0) { return false; }
         code = 204;
-        validationMessage = "User updated successfuly!");
+        validationMessage = "User updated successfuly!";
         return true;
     }
     public  async Task<bool> Validate(long UserId, long AdministratorId)

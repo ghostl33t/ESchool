@@ -1,6 +1,6 @@
 ﻿namespace server.Models.DTOs.StudentGrades
 {
-    public class Update
+    public class PatchStudentGrades
     {
         public server.Models.Domain.User UserStudent { get; set; }
         public int Grade { get; set; }

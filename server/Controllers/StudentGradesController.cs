@@ -25,7 +25,7 @@ namespace server.Controllers
         }
         [HttpPost]
         [Route("add-student-grade")]
-        public async Task<IActionResult> CreateGradeAsync(server.Models.DTOs.StudentGrades.Create create)
+        public async Task<IActionResult> CreateGradeAsync(server.Models.DTOs.StudentGrades.PostStudentGrades create)
         {
             await studentGrades.CreateGradeAsync(create);
             return Ok();

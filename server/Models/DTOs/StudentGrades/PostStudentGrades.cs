@@ -2,7 +2,7 @@
 
 namespace server.Models.DTOs.StudentGrades
 {
-    public class Create
+    public class PostStudentGrades
     {
         public long Id { get; set; }
         public server.Models.Domain.User? Student { get; set; }

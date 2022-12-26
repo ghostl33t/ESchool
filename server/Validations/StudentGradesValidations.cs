@@ -53,7 +53,7 @@ namespace server.Validations
             }
             return false;
         }
-        public async Task<string> Validations(server.Models.DTOs.StudentGrades.Create create) //TODO Model koji ce se prosljedjivati ovisno da li je Create/Update
+        public async Task<string> Validations(server.Models.DTOs.StudentGrades.PostStudentGrades create) //TODO Model koji ce se prosljedjivati ovisno da li je Create/Update
         {
             string message = "";
             if( await StudentExist(create.Student.Id) == false)
@@ -79,7 +79,7 @@ namespace server.Validations
             }
             return message;
         }
-        public  async Task<string> Validations(server.Models.DTOs.StudentGrades.Update Update) //TODO Model koji ce se prosljedjivati ovisno da li je Create/Update
+        public  async Task<string> Validations(server.Models.DTOs.StudentGrades.PatchStudentGrades Update) //TODO Model koji ce se prosljedjivati ovisno da li je Create/Update
         {
             string message = "";
             if (await StudentExist(Update.UserStudent.Id) == false)

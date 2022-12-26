@@ -5,9 +5,9 @@ namespace server.Profiles
     {
         public SubjectProfiles()
         {
-            CreateMap<Models.Domain.Subject, Models.DTOs.Subject.SubjectDTO>();
-            CreateMap<Models.Domain.Subject, Models.DTOs.Subject.Create>().ReverseMap();
-            CreateMap<Models.Domain.Subject, Models.DTOs.Subject.Update>();
+            CreateMap<Models.Domain.Subject, Models.DTOs.Subject.GetSubject>();
+            CreateMap<Models.Domain.Subject, Models.DTOs.Subject.PostSubject>().ReverseMap();
+            CreateMap<Models.Domain.Subject, Models.DTOs.Subject.PatchSubject>().ReverseMap();
         }
     }
 }

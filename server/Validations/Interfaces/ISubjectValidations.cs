@@ -8,8 +8,8 @@
         public Task<bool> ValidateSerialUnique(string serialNumber);
         public Task<bool> ValidateSerialNumberLength(string serialNumber);
         public Task<bool> ValidateSubjectName(string name);
-        public Task<bool> Validation(Models.DTOs.Subject.Create school);
-        public Task<bool> Validation(Models.DTOs.Subject.Update school);
+        public Task<bool> Validation(Models.DTOs.Subject.PostSubject school);
+        public Task<bool> Validation(Models.DTOs.Subject.PatchSubject school);
         public Task<bool> Validation(long SubjectId, long AdministratorId);
     }
 }

@@ -23,7 +23,7 @@ namespace server.Repositories.Classes
             this.mapper = mapper;
         }
     
-        public async Task<GetStudentGrades> CreateGradeAsync(Create create)
+        public async Task<GetStudentGrades> CreateGradeAsync(PostStudentGrades create)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<GetStudentGrades> UpdateGradeAsync(long id, Update update)
+        public async Task<GetStudentGrades> UpdateGradeAsync(long id, PatchStudentGrades update)
         {
             try
             {

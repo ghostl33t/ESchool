@@ -34,7 +34,7 @@ namespace server.Controllers
             
             if(listOfUsers != null)
             {
-                var listOfUsersDTO = _mapper.Map<List<UsersDTO>>(listOfUsers);
+                var listOfUsersDTO = _mapper.Map<List<GetUser>>(listOfUsers);
                 return await _functions.Response(200, listOfUsersDTO);
             }
             return await _functions.Response(400, "Users not found");
@@ -46,14 +46,14 @@ namespace server.Controllers
            var user = await _userrepo.GetUserAsync(id);
            if(user != null)
             {
-                var userdto = _mapper.Map<UsersDTO>(user);
+                var userdto = _mapper.Map<GetUser>(user);
                 return await _functions.Response(200,userdto);
             }
             return await _functions.Response(400, "User not found");
         }
         [HttpPost]
         [Route("create-user")]
-        public async Task<IActionResult> CreateUserAsync(Models.DTOs.UsersDTO.Create newUser)
+        public async Task<IActionResult> CreateUserAsync(Models.DTOs.UsersDTO.PostUser newUser)
         {
 
             if(await _userValidations.Validate(newUser) == true)
@@ -65,7 +65,7 @@ namespace server.Controllers
         }
         [HttpPatch]
         [Route("update-user")]
-        public async Task<IActionResult> UpdateUserAsync(Models.DTOs.UsersDTO.Update userDto)
+        public async Task<IActionResult> UpdateUserAsync(Models.DTOs.UsersDTO.PatchUser userDto)
         {
             if (await _userValidations.Validate(userDto) == true)
             {

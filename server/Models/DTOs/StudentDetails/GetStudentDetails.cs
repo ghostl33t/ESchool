@@ -5,11 +5,10 @@ using server.Models.Domain;
 
 namespace server.Models.DTOs.StudentDetails
 {
-    public class Update
+    public class GetStudentDetails
     {
-        public long Id { get; set; }
-        public User? Student { get; set; }
-        public server.Models.Domain.ClassDepartment? ClassDepartment { get; set; }
-        public int? StudentDiscipline { get; set; }
+        public string Name { get; set; }
+        public string SchoolType { get; set; }
+        public string ClassGrade { get; set; }
     }
 }

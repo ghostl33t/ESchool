@@ -51,7 +51,7 @@ namespace server.Validations.Classes
             }
             return await Task.FromResult(true);
         }
-        public async Task<bool> Validation(Models.DTOs.Subject.Create subject)
+        public async Task<bool> Validation(Models.DTOs.Subject.PostSubject subject)
         {
             code = 0;
             
@@ -80,7 +80,7 @@ namespace server.Validations.Classes
             validationMessage = await Task.FromResult("Subject added successfuly!");
             return true;
         }
-        public async Task<bool> Validation(Models.DTOs.Subject.Update subject)
+        public async Task<bool> Validation(Models.DTOs.Subject.PatchSubject subject)
         {
             code = 0;
             var subjectExist = await this._dbRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == subject.Id);

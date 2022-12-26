@@ -101,7 +101,7 @@ namespace server.Repositories.Classes
         //d)	Kreirati metodu koja ce za odredjeni razred vratiti listu svih studenata koji se nalaze u njemu
         // Ime (ime roditelja) Prezime | Vrsta skole | Razred | 
 
-        public async Task<List<StudentDetailsDTO>> GetStudentsPerClassDetailsAsync(long id)
+        public async Task<List<GetStudentDetails>> GetStudentsPerClassDetailsAsync(long id)
         {
             var classExist = await this._dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == id && s.Deleted == 0);
             if (classExist == null)
@@ -137,10 +137,10 @@ namespace server.Repositories.Classes
                             SchoolType = schoolsType.Name,
                             ClassGrade = classGrade 
                         };
-            List<StudentDetailsDTO> studentsList = new List<StudentDetailsDTO>();
+            List<GetStudentDetails> studentsList = new List<GetStudentDetails>();
             foreach(var row in query)
             {
-                StudentDetailsDTO student = new StudentDetailsDTO();
+                GetStudentDetails student = new GetStudentDetails();
                 student.Name = row.Name;
                 student.SchoolType = row.SchoolType;
                 student.ClassGrade = row.ClassGrade;

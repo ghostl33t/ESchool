@@ -11,6 +11,6 @@ namespace server.Repositories.Interfaces
         public Task<ClassDepartment> ModifyClassDepartmentAsync(ClassDepartment updatedclassdep);
         public Task<long> DeleteClassDepartmentAsync(long Id, long AdministratorId);
 
-        public Task<List<StudentDetailsDTO>> GetStudentsPerClassDetailsAsync(long id);
+        public Task<List<GetStudentDetails>> GetStudentsPerClassDetailsAsync(long id);
     }
 }

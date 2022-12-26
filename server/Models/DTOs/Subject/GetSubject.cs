@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace server.Models.DTOs.Subject
 {
-    public class SubjectDTO
+    public class GetSubject
     {
         public long Id { get; set; }
         public string SerialNumber { get; set; } = "";
