@@ -1,6 +1,6 @@
 ﻿namespace server.Models.DTOs.SchoolList
 {
-    public class Update
+    public class PatchUpdate
     {
         public long Id { get; set; }
         public string SerialNumber { get; set; } = "";

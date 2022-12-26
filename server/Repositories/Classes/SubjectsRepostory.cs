@@ -1,112 +1,91 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using server.Database;
-using server.Models.DTOs.Subject;
+using server.Models.Domain;
 using server.Repositories.Interfaces;
 
-namespace server.Repositories.Classes
+namespace server.Repositories.Classes;
+
+public class SubjectRepository : ISubjects
 {
-    public class SubjectRepository : ISubjects
+    private readonly DBMain _dbMain;
+    private readonly DBRegistries _dbRegistries;
+    public SubjectRepository(DBMain dbMain,DBRegistries dbRegistries)
     {
-        private readonly DBMain DbMain;
-        private readonly IMapper IMapper;
-        private readonly DBRegistries DBRegistries;
-        public SubjectRepository(DBMain DbMain,DBRegistries DBRegistries, IMapper IMapper)
+        this._dbMain = dbMain;
+        this._dbRegistries = dbRegistries;
+    }
+    public async Task<long> CreateSubjectAsync(Subject newSubject)
+    {
+        try
         {
-            this.DbMain = DbMain;
-            this.IMapper = IMapper;
-            this.DBRegistries = DBRegistries;
+            await _dbRegistries.Subjects.AddAsync(newSubject);
+            await _dbRegistries.SaveChangesAsync();
+            return newSubject.Id;
         }
-        public async Task<Models.DTOs.Subject.Create> CreateSubjectAsync(Models.DTOs.Subject.Create newSubject)
+        catch (Exception)
         {
-            try
-            {
-                var subject = IMapper.Map<Models.Domain.Subject>(newSubject);
-                await DBRegistries.Subjects.AddAsync(subject);
-                await DBRegistries.SaveChangesAsync();
-                return newSubject;
-            }
-            catch (Exception)
-            {
 
-                throw;
-            }
+            throw;
         }
+    }
 
-        public async Task<SubjectDTO> DeleteSubjectAsync(long SubjectId, long AdministratorId)
+    public async Task<long> DeleteSubjectAsync(long SubjectId, long AdministratorId)
+    {
+        try
         {
-            try
-            {
-                var subject = await this.DBRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == SubjectId);
-                subject.Deleted = 1;
-                subject.DeletedDate = DateTime.Today;
-                subject.DeletedById = AdministratorId;
-                await this.DBRegistries.SaveChangesAsync();
-                var subjectDTO = IMapper.Map<SubjectDTO>(subject);
-                return subjectDTO;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var subject = await this._dbRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == SubjectId);
+            subject.Deleted = 1;
+            subject.DeletedDate = DateTime.Today;
+            subject.DeletedById = AdministratorId;
+            await this._dbRegistries.SaveChangesAsync();
+            return subject.Id;
         }
-
-        public async  Task<SubjectDTO> GetSubjectById(long Id)
+        catch (Exception)
         {
-            try
-            {
-                var subject = await this.DBRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == Id);
-                var subjectDTO = IMapper.Map<SubjectDTO>(subject);
-                if(subjectDTO != null)
-                {
-                    return subjectDTO;
-                }
-                
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return null;
+            throw;
         }
+    }
 
-        public async Task<List<SubjectDTO>> GetSubjectsList()
+    public async  Task<Subject> GetSubjectById(long Id)
+    {
+        try
         {
-            try
-            {
-                var subjects = await this.DBRegistries.Subjects.Where(s=>s.Deleted == 0).ToListAsync();
-                var subjectDTO = IMapper.Map<List<Models.DTOs.Subject.SubjectDTO>>(subjects);
-                if (subjectDTO != null)
-                {
-                    return subjectDTO;
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            return null;
+            var subject = await this._dbRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == Id);
+            return subject;
         }
-        public async Task<SubjectDTO> ModifySubject(Update subject)
+        catch (Exception)
         {
-            try
+            throw;
+        }
+    }
+
+    public async Task<List<Subject>> GetSubjectsList()
+    {
+        try
+        {
+            var subjects = await this._dbRegistries.Subjects.Where(s=>s.Deleted == 0).ToListAsync();
+            return subjects;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    public async Task<long> ModifySubject(Subject subject)
+    {
+        try
+        {
+            var subjectExist = await this._dbRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == subject.Id);
+            if(subjectExist != null)
             {
-                var subjectExist = await this.DBRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == subject.Id);
-                if(subjectExist != null)
-                {
-                    subjectExist.SerialNumber = subject.SerialNumber;
-                    subjectExist.Name = subject.Name;
-                    await this.DBRegistries.SaveChangesAsync();
-                    var subjectsDTO = IMapper.Map<SubjectDTO>(subjectExist);
-                    return subjectsDTO;
-                }
+                _dbRegistries.Subjects.Update(subject);
+                await this._dbRegistries.SaveChangesAsync();
             }
-            catch (Exception)
-            {
-                throw;
-            }
-            return null;
+            return subjectExist.Id;
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 }

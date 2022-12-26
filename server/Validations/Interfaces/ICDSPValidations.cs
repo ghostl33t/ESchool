@@ -7,11 +7,13 @@ namespace server.Validations.Interfaces
 {
     public interface ICDSPValidations
     {
-        public bool validationResult { get; set; }
-        public Task<bool> ValidateCreator(UsersDTO CreatedBy);
-        public Task<bool> ValidateSubject(SubjectDTO Subject);
-        public Task<bool> ValidateProfessor(UsersDTO User);
-        public Task<bool> ValidateClassDepartment(GetClassDepartment ClassDepDTO);
-        public Task<string> Validate(SubjectDTO subject, UsersDTO prof, UsersDTO creator, GetClassDepartment classdepdto);
+        public string validationMessage { get; set; }
+        public int code { get; set; }
+        public Task<bool> ValidateCreator(long createdById);
+        public Task<bool> ValidateSubject(long subjectId);
+        public Task<bool> ValidateProfessor(long professorId);
+        public Task<bool> ValidateClassDepartment(long classDepId);
+        public Task<bool> Validate(long creatorId, long subjectId, long professorId, long classDepId);
+        public Task<bool> Validate(long Id, long administratorId);
     }
 }

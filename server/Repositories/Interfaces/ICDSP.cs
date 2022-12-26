@@ -1,9 +1,15 @@
-﻿namespace server.Repositories.Interfaces
+﻿using server.Models.Domain;
+using server.Models.DTOs.ClassDepartmentSubjectProfessor;
+
+namespace server.Repositories.Interfaces
 {
     public interface ICDSP
     {
-        public Task<List<server.Models.DTOs.ClassDepartmentSubjectProfessor.ClassDetails>> GetClassDetails(long classdepid);
-        public Task<List<server.Models.DTOs.ClassDepartmentSubjectProfessor.ProfesorSubjectDetails>> GetProfessorSubjectDetails(long professorId);
+        public Task<long> CreateCDSP(ClassDepartmentSubjectProfessor newcdsp);
+        public Task<long> ModifyCDSP(ClassDepartmentSubjectProfessor newcdsp);
+        public Task<long> DeleteCDSP(long cdspId, long administratorId);
+        public Task<List<GetClassDetails>> GetClassDetails(long classdepid);
+        public Task<List<GetProfesorSubjectDetails>> GetProfessorSubjectDetails(long professorId);
 
     }
 }

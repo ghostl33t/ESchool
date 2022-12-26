@@ -1,86 +1,92 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using server.Database;
 using server.Models.Domain;
+using server.Models.DTOs.Subject;
 using server.Repositories.Interfaces;
 using server.Services.ResponseService;
 using server.Validations.Interfaces;
 
 namespace server.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class SubjectController : Controller
     {
-        private readonly ISubjects ISubject;
-        private readonly ISubjectValidations subvalidations;
-        private readonly IResponseService functions;
-        public SubjectController(ISubjects ISubject, ISubjectValidations ISubjectValidations, IResponseService functions)
+        private readonly ISubjects _subjectRepo;
+        private readonly ISubjectValidations _subjectValidations;
+        private readonly IResponseService _functions;
+        private readonly IMapper _mapper;
+        public SubjectController(ISubjects subjectRepo, ISubjectValidations subjectValidations, IResponseService functions, IMapper mapper)
         {
-            this.ISubject = ISubject;
-            this.subvalidations = ISubjectValidations;
-            this.functions = functions;
+            this._subjectRepo = subjectRepo;
+            this._subjectValidations = subjectValidations;
+            this._functions = functions;
+            this._mapper = mapper;
         }
-        [Authorize]
         [Route("get-all")]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            var subjects = await ISubject.GetSubjectsList();
+            var subjects = await _subjectRepo.GetSubjectsList();
             if(subjects != null)
             {
-                return Ok(subjects);
+                var subjectsDTO = _mapper.Map<List<SubjectDTO>>(subjects);
+                return await _functions.Response(200,subjectsDTO);
             }
-            return BadRequest();
+            return await _functions.Response(401,"Data not found");
         }
-        [Authorize]
         [Route("get-by-id/{Id}")]
         [HttpGet]
         public async Task<IActionResult> GetByIdAsync(long Id )
         {
-            var subject = await ISubject.GetSubjectById(Id);
+            var subject = await _subjectRepo.GetSubjectById(Id);
             if(subject != null)
             {
-                return Ok(subject);
+                var subjectDTO = _mapper.Map<SubjectDTO>(subject);
+                return await _functions.Response(200, subjectDTO);
             }
-            return BadRequest();
+            return await _functions.Response(401, "Data not found");
         }
-        [Authorize]
         [Route("create-subject")]
         [HttpPost]
-        public async Task<IActionResult> Create(Models.DTOs.Subject.Create newSubject)
+        public async Task<IActionResult> Create(Models.DTOs.Subject.Create newSubjectDto)
         {
-            var message = await subvalidations.Validation(newSubject);
-            if (subvalidations.validationResult == true)
+            if(newSubjectDto != null)
             {
-                await ISubject.CreateSubjectAsync(newSubject);
+                if(await _subjectValidations.Validation(newSubjectDto) == true)
+                {
+                    var subject = _mapper.Map<Subject>(newSubjectDto);
+                    await _subjectRepo.CreateSubjectAsync(subject);
+                }
             }
-            return await functions.Response(subvalidations.code, message);
+            return await _functions.Response(_subjectValidations.code, _subjectValidations.validationMessage);
         }
-        [Authorize]
         [Route("update-subject")]
         [HttpPatch]
-        public async Task<IActionResult> Update(Models.DTOs.Subject.Update subject)
+        public async Task<IActionResult> Update(Models.DTOs.Subject.Update subjectDto)
         {
-            var message = await subvalidations.Validation(subject);
-            if (subvalidations.validationResult == true)
+            if (subjectDto != null)
             {
-                await ISubject.ModifySubject(subject);
+                if (await _subjectValidations.Validation(subjectDto) == true)
+                {
+                    var subject = _mapper.Map<Subject>(subjectDto);
+                    await _subjectRepo.ModifySubject(subject);
+                }
             }
-            return await functions.Response(subvalidations.code, message);
+            return await _functions.Response(_subjectValidations.code, _subjectValidations.validationMessage);
 
         }
-        [Authorize]
         [HttpPatch]
         [Route("delete-subject/{SubjectId}/{AdministratorId}")]
         public async Task<IActionResult> Delete(long SubjectId, long AdministratorId)
         {
-            var message = await subvalidations.Validation(SubjectId,AdministratorId);
-            if (subvalidations.validationResult == true)
-            {
-                await ISubject.DeleteSubjectAsync(SubjectId,AdministratorId);
-            }
-            return await functions.Response(subvalidations.code, message);
+          if (await _subjectValidations.Validation(SubjectId, AdministratorId) == true)
+          {
+              await _subjectRepo.DeleteSubjectAsync(SubjectId,AdministratorId);
+          }
+            return await _functions.Response(_subjectValidations.code, _subjectValidations.validationMessage);
         }
 }
 }

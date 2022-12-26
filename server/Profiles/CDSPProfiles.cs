@@ -5,9 +5,9 @@ namespace server.Profiles
     {
         public CDSP()
         {
-            CreateMap<Models.Domain.ClassDepartmentSubjectProfessor, Models.DTOs.ClassDepartmentSubjectProfessor.ClassDepartmentSubjectProfessorDTO>();
+            CreateMap<Models.Domain.ClassDepartmentSubjectProfessor, Models.DTOs.ClassDepartmentSubjectProfessor.PostCDSP>();
             CreateMap<Models.Domain.ClassDepartmentSubjectProfessor, Models.DTOs.ClassDepartmentSubjectProfessor.Create>().ReverseMap();
-            CreateMap<Models.Domain.ClassDepartmentSubjectProfessor, Models.DTOs.ClassDepartmentSubjectProfessor.Update>();
+            CreateMap<Models.Domain.ClassDepartmentSubjectProfessor, Models.DTOs.ClassDepartmentSubjectProfessor.PatchCDSP>().ReverseMap();
         }
     }
 }

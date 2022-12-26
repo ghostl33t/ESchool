@@ -9,10 +9,14 @@ namespace server.Models.Domain
         [Key]
         [Column(TypeName = "bigint")]
         public long Id { get; set; }
+        [NotMapped]
+        public long ClassDepId { get; set; }
         public ClassDepartment? ClassDepartment { get; set; }
         [Column(TypeName = "bigint")]
         public long SubjectID { get; set; }
-        
+
+        [NotMapped]
+        public long ProfessorId { get; set; }
         public User? UserProfessor  { get; set; }
 
         [Column(TypeName = "bigint")]

@@ -1,31 +1,28 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using server.Database;
+using server.Models.Domain;
 using server.Repositories.Interfaces;
-using server.Validations.Interfaces;
 
 namespace server.Repositories.Classes
 {
     public class SchoolListRepositorycs : ISchoolList
     {
-        private readonly DBRegistries DBRegistries;
-        private readonly DBMain DbMain;
-        private readonly ISchoolListValidations ISchoolListValidations;
-        private readonly IMapper Mapper;
-        public SchoolListRepositorycs(DBRegistries DBRegistries, ISchoolListValidations iSchoolListValidations, IMapper mapper,DBMain DbMain)
+        private readonly DBRegistries _dbRegistries;
+        private readonly DBMain _dbMain;
+        private readonly IMapper _mapper;
+        public SchoolListRepositorycs(DBRegistries dbRegistries, IMapper mapper,DBMain dbMain)
         {
-            this.DbMain = DbMain;
-            this.DBRegistries = DBRegistries;
-            this.ISchoolListValidations = iSchoolListValidations;
-            this.Mapper = mapper;
+            this._dbMain = dbMain;
+            this._dbRegistries = dbRegistries;
+            this._mapper = mapper;
         }
-        public async Task<List<Models.DTOs.SchoolList.SchoolList>> GetSchoolsList()
+        public async Task<List<SchoolList>> GetSchoolsList()
         {
             try
             {
-                var schoolList = await DBRegistries.SchoolList.Where(s => s.Deleted == 0).ToListAsync();
-                var schoolListDTO = Mapper.Map<List<Models.DTOs.SchoolList.SchoolList>>(schoolList);
-                return schoolListDTO;
+                var schoolList = await _dbRegistries.SchoolList.Where(s => s.Deleted == 0).ToListAsync();
+                return schoolList;
             }
             catch (Exception)
             {
@@ -35,13 +32,12 @@ namespace server.Repositories.Classes
             
             
         }
-        public async Task<Models.DTOs.SchoolList.SchoolList> GetSchoolById(long Id)
+        public async Task<SchoolList> GetSchoolById(long Id)
         {
             try
             {
-                var school = await DBRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == Id);
-                var schoolDTO = Mapper.Map<Models.DTOs.SchoolList.SchoolList>(school);
-                return schoolDTO;
+                var school = await _dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == Id);
+                return school;
 
             }
             catch (Exception)
@@ -50,33 +46,14 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<Models.DTOs.SchoolList.SchoolList> CreateSchoolAsync(Models.DTOs.SchoolList.Create newSchool)
+        public async Task<long> CreateSchoolAsync(SchoolList newSchool)
         {
             try
             {
-                var school = Mapper.Map<Models.Domain.SchoolList>(newSchool);
-                school.CreatedDate = DateTime.Today;
-                await DBRegistries.SchoolList.AddAsync(school);
-                await DBRegistries.SaveChangesAsync();
-                var schoolForReturn = Mapper.Map<Models.DTOs.SchoolList.SchoolList>(school);
-                return schoolForReturn;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-        public async Task<Models.DTOs.SchoolList.SchoolList> ModifySchoolAsync(Models.DTOs.SchoolList.Update schoolDTO)
-        {
-            try
-            {
-                var school = await DBRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == schoolDTO.Id);
-                    school.SerialNumber = schoolDTO.SerialNumber;
-                    school.Name = schoolDTO.Name;
-                    school.SchoolType = schoolDTO.SchoolType;
-                await DBRegistries.SaveChangesAsync();
-                return Mapper.Map<Models.DTOs.SchoolList.SchoolList>(school);
+                newSchool.CreatedDate = DateTime.Today;
+                await _dbRegistries.SchoolList.AddAsync(newSchool);
+                await _dbRegistries.SaveChangesAsync();
+                return newSchool.Id;
             }
             catch (Exception)
             {
@@ -84,16 +61,30 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<Models.DTOs.SchoolList.SchoolList> DeleteSchoolAsync(long SchoolId, long AdministratorId)
+        public async Task<long> ModifySchoolAsync(SchoolList school)
         {
             try
             {
-                var school = await DBRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == SchoolId);
+                _dbRegistries.SchoolList.Update(school);
+                await _dbRegistries.SaveChangesAsync();
+                return school.Id;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<long> DeleteSchoolAsync(long SchoolId, long AdministratorId)
+        {
+            try
+            {
+                var school = await _dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == SchoolId);
                 school.Deleted = 1;
                 school.DeletedById = AdministratorId;
                 school.DeletedDate = DateTime.Today;
-                await DBRegistries.SaveChangesAsync();
-                return Mapper.Map<Models.DTOs.SchoolList.SchoolList>(school);
+                await _dbRegistries.SaveChangesAsync();
+                return school.Id;
             }
             catch (Exception)
             {

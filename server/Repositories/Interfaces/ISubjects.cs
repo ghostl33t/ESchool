@@ -1,15 +1,13 @@
-﻿using AutoMapper;
-using server.Database;
-using server.Models.DTOs.Subject;
+﻿using server.Models.Domain;
+namespace server.Repositories.Interfaces;
 
-namespace server.Repositories.Interfaces
+public interface ISubjects
 {
-    public interface ISubjects
-    {
-        public Task<Models.DTOs.Subject.Create> CreateSubjectAsync(Models.DTOs.Subject.Create newSubject);
-        public Task<Models.DTOs.Subject.SubjectDTO> DeleteSubjectAsync(long SubjectId, long AdministratorId);
-        public Task<SubjectDTO> GetSubjectById(long Id);
-        public Task<List<SubjectDTO>> GetSubjectsList();
-        public Task<SubjectDTO> ModifySubject(Update classdep);
-    }
+    public Task<Subject> GetSubjectById(long Id);
+    public Task<List<Subject>> GetSubjectsList();
+    public Task<long> CreateSubjectAsync(Subject  newSubject);
+    public Task<long> ModifySubject(Subject classdep);
+    public Task<long> DeleteSubjectAsync(long SubjectId, long AdministratorId);
+    
+    
 }

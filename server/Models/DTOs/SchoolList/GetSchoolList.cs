@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace server.Models.DTOs.SchoolList
 {
-    public class SchoolList
+    public class GetSchoolList
     {
         public long Id { get; set; }
         public string SerialNumber { get; set; } = "";

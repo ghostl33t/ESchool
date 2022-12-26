@@ -6,9 +6,9 @@ namespace server.Profiles
     {
         public SchoolListProfiles()
         {
-            CreateMap<Models.Domain.SchoolList, Models.DTOs.SchoolList.SchoolList>();
-            CreateMap<Models.Domain.SchoolList, Models.DTOs.SchoolList.Create>().ReverseMap();
-            CreateMap<Models.Domain.SchoolList, Models.DTOs.SchoolList.Update>();
+            CreateMap<Models.Domain.SchoolList, Models.DTOs.SchoolList.GetSchoolList>();
+            CreateMap<Models.Domain.SchoolList, Models.DTOs.SchoolList.PostSchoolList>().ReverseMap();
+            CreateMap<Models.Domain.SchoolList, Models.DTOs.SchoolList.PatchUpdate>();
         }
     }
 }

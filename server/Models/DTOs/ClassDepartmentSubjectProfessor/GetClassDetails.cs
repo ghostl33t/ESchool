@@ -1,6 +1,6 @@
 ﻿namespace server.Models.DTOs.ClassDepartmentSubjectProfessor
 {
-    public class ClassDetails
+    public class GetClassDetails
     {
         public string ProfessorNameSurname { get; set; }
         public string SubjectSerial { get; set; }

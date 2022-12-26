@@ -7,19 +7,19 @@ namespace server.Validations.Classes
 {
     public class SchoolListValidations : ISchoolListValidations
     {
-        private readonly DBMain DbMain;
-        private readonly DBRegistries DBRegistries;
-        public bool validationResult { get; set; }
+        private readonly DBMain _dbMain;
+        private readonly DBRegistries _dbRegistries;
+        public string validationMessage { get; set; } = String.Empty;
         public int code { get; set; }
-        public SchoolListValidations(DBMain DbMain, DBRegistries dBRegistries)
+        public SchoolListValidations(DBMain dbMain, DBRegistries dbRegistries)
         {
-            this.DbMain = DbMain;
-            DBRegistries = dBRegistries;
+            this._dbMain = dbMain;
+            this._dbRegistries = dbRegistries;
         }
 
         public async Task<bool> ValidateSchoolCreator(long CreatedById)
         {
-            var creator = await DbMain.Users.FirstOrDefaultAsync(s => s.Id == CreatedById && s.Deleted == 0);
+            var creator = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == CreatedById && s.Deleted == 0);
             if (creator == null || creator.UserType != 0)
             {
                 return await Task.FromResult(false);
@@ -28,7 +28,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> ValidateSerialUnique(string serialNumber)
         {
-            var schoolExists = DBRegistries.SchoolList.FirstOrDefault(s => s.SerialNumber == serialNumber && s.Deleted == 0);
+            var schoolExists = _dbRegistries.SchoolList.FirstOrDefault(s => s.SerialNumber == serialNumber && s.Deleted == 0);
             if (schoolExists != null)
             {
                 return await Task.FromResult(false);
@@ -59,100 +59,109 @@ namespace server.Validations.Classes
             }
             return await Task.FromResult(true);
         }
-        public async Task<string> Validation(Models.DTOs.SchoolList.Create school)
+        public async Task<bool> Validation(Models.DTOs.SchoolList.PostSchoolList school)
         {
-            validationResult = false;
+            code = 0;
             if (await ValidateSchoolCreator(school.CreatedById) == false)
             {
                 code = 401;
-                return await Task.FromResult("You don't have permision to create school!");
+                validationMessage =  await Task.FromResult("You don't have permision to create school!");
             }
             if (await ValidateSerialUnique(school.SerialNumber) == false)
             {
                 code = 400;
-                return await Task.FromResult("School with this serial number already exists in database!");
+                validationMessage = await Task.FromResult("School with this serial number already exists in database!");
             }
             if (await ValidateSchoolSerialNumber(school.SerialNumber) == false)
             {
                 code = 400;
-                return await Task.FromResult("Schools serial number is invalid!");
+                validationMessage = await Task.FromResult("Schools serial number is invalid!");
             }
             if (await ValidateSchoolName(school.Name) == false)
             {
                 code = 400;
-                return await Task.FromResult("School name is invalid");
+                validationMessage = await Task.FromResult("School name is invalid");
             }
             if (await ValidateSchoolType(school.SchoolType) == false)
             {
-                return await Task.FromResult("School type is invalid!");
+                validationMessage = await Task.FromResult("School type is invalid!");
             }
+            if (code != 0) { return false; }
+
             code = 201;
-            validationResult = true;
-            return await Task.FromResult("School added succesfuly!");
+            validationMessage = "School added succesfuly!";
+            return true;
         }
-        public async Task<string> Validation(Models.DTOs.SchoolList.Update school)
+        public async Task<bool> Validation(Models.DTOs.SchoolList.PatchUpdate school)
         {
-            var schoolexist = await DBRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == school.Id);
-            validationResult = false;
+            var schoolexist = await _dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == school.Id);
+            code = 0;
             if (await ValidateSchoolCreator(school.UpdatedById) == false)
             {
                 code = 401;
-                return await Task.FromResult("You don't have permision to create school!");
+                validationMessage = await Task.FromResult("You don't have permision to create school!");
             }
             if(schoolexist == null)
             {
                 code = 400;
-                return await Task.FromResult("School doesn't exist!");
+                validationMessage = await Task.FromResult("School doesn't exist!");
             }
-            if(schoolexist.SerialNumber != school.SerialNumber)
+            else
             {
-                if (await ValidateSerialUnique(school.SerialNumber) == false)
+                if (schoolexist.SerialNumber != school.SerialNumber)
                 {
-                    code = 400;
-                    return await Task.FromResult("School with this serial number already exists in database!");
-                }
-                if (await ValidateSchoolSerialNumber(school.SerialNumber) == false)
-                {
-                    code = 400;
-                    return await Task.FromResult("Schools serial number is invalid!");
+                    if (await ValidateSerialUnique(school.SerialNumber) == false)
+                    {
+                        code = 400;
+                        validationMessage = await Task.FromResult("School with this serial number already exists in database!");
+                    }
+                    if (await ValidateSchoolSerialNumber(school.SerialNumber) == false)
+                    {
+                        code = 400;
+                        validationMessage = await Task.FromResult("Schools serial number is invalid!");
+                    }
+                    if (schoolexist.Name != school.Name)
+                    {
+                        if (await ValidateSchoolName(school.Name) == false)
+                        {
+                            code = 400;
+                            validationMessage = await Task.FromResult("School name is invalid");
+                        }
+                    }
+                    if (await ValidateSchoolType(school.SchoolType) == false)
+                    {
+                        validationMessage = await Task.FromResult("School type is invalid!");
+                    }
                 }
             }
-            if(schoolexist.Name != school.Name)
-            {
-                if (await ValidateSchoolName(school.Name) == false)
-                {
-                    code = 400;
-                    return await Task.FromResult("School name is invalid");
-                }
-            }
-            if (await ValidateSchoolType(school.SchoolType) == false)
-            {
-                return await Task.FromResult("School type is invalid!");
-            }
+            if (code != 0) { return false; }
             code = 201;
-            validationResult = true;
-            return await Task.FromResult("School updated succesfuly!");
+            
+            validationMessage ="School updated succesfuly!";
+            return true;
         }
-        public async Task<string> Validation(long schoolId, long AdministratorId)
+        public async Task<bool> Validation(long schoolId, long AdministratorId)
         {
-            var school = await this.DBRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == schoolId);
-            var Administrator = await this.DbMain.Users.FirstOrDefaultAsync(s => s.Id == AdministratorId);
+            var school = await this._dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == schoolId);
+            var Administrator = await this._dbMain.Users.FirstOrDefaultAsync(s => s.Id == AdministratorId);
+            code = 0;
             if (Administrator != null)
             {
                 if (Administrator.UserType != 0)
                 {
                     code = 401;
-                    return await Task.FromResult("Unauthorized!");
+                    validationMessage = await Task.FromResult("Unauthorized!");
                 }
                 if (school == null)
                 {
                     code = 400;
-                    return await Task.FromResult("School not found!");
+                    validationMessage = await Task.FromResult("School not found!");
                 }
             }
-            validationResult = true;
+            if(code != 0) { return false; }
+            validationMessage = "School deleted succesfuly!";
             code = 204;
-            return await Task.FromResult("School deleted succesfuly!");
+            return true;
 
         }
     }
