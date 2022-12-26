@@ -1,76 +1,88 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.Models.Domain;
+using server.Models.DTOs.UsersDTO;
+using server.Repositories.Interfaces;
 using server.Services.ResponseService;
 using server.Validations.Interfaces;
 
 namespace server.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private readonly Repositories.Interfaces.IUser userrepo;
-        private readonly IUserValidations userValidations;
-        private readonly IResponseService functions;
-        public UserController(Repositories.Interfaces.IUser _IUser, IUserValidations iUserValidations, IResponseService functions)
+        private readonly Repositories.Interfaces.IUser _userrepo;
+        private readonly IUserValidations _userValidations;
+        private readonly IResponseService _functions;
+        private readonly IMapper _mapper;
+        public UserController(IUser userrepo, IUserValidations userValidations, IResponseService functions, IMapper mapper)
         {
-            this.userrepo = _IUser;
-            this.userValidations = iUserValidations;
-            this.functions = functions;
+            this._userrepo = userrepo;
+            this._userValidations = userValidations;
+            this._functions = functions;
+            this._mapper = mapper;
         }
-        [Authorize]
+        
         [HttpGet]
         [Route("get-all")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var listOfUsers = await this.userrepo.GetAllAsync();
-            return Ok(listOfUsers);
+            var listOfUsers = await _userrepo.GetAllAsync();
+            
+            if(listOfUsers != null)
+            {
+                var listOfUsersDTO = _mapper.Map<List<UsersDTO>>(listOfUsers);
+                return await _functions.Response(200, listOfUsersDTO);
+            }
+            return await _functions.Response(400, "Users not found");
         }
-        [Authorize]
         [HttpGet]
         [Route("get-user/{Id}")]
         public async Task<IActionResult> GetUserAsync(long id)
         {
-            return Ok(await userrepo.GetUserAsync(id));
+           var user = await _userrepo.GetUserAsync(id);
+           if(user != null)
+            {
+                var userdto = _mapper.Map<UsersDTO>(user);
+                return await _functions.Response(200,userdto);
+            }
+            return await _functions.Response(400, "User not found");
         }
-        [Authorize]
         [HttpPost]
         [Route("create-user")]
         public async Task<IActionResult> CreateUserAsync(Models.DTOs.UsersDTO.Create newUser)
         {
-            string message = await userValidations.Validate(newUser);
-            if(userValidations.Validated == true)
+
+            if(await _userValidations.Validate(newUser) == true)
             {
-                await userrepo.CreateUserAsync(newUser);
-                return await functions.Response(userValidations.code, newUser);
+                var user = _mapper.Map<User>(newUser);
+                await _userrepo.CreateUserAsync(user);
             }
-            return await functions.Response(userValidations.code, message);
+            return await _functions.Response(_userValidations.code, _userValidations.validationMessage);
         }
-        [Authorize]
         [HttpPatch]
         [Route("update-user")]
-        public async Task<IActionResult> UpdateUserAsync(Models.DTOs.UsersDTO.Update user)
+        public async Task<IActionResult> UpdateUserAsync(Models.DTOs.UsersDTO.Update userDto)
         {
-            string message = await userValidations.Validate(user);
-            if (userValidations.Validated == true)
+            if (await _userValidations.Validate(userDto) == true)
             {
-                await userrepo.UpdateUserAsync(user);
+                var user = _mapper.Map<User>(userDto);
+                await _userrepo.UpdateUserAsync(user);
             }
-            return await functions.Response(userValidations.code, message);
+            return await _functions.Response(_userValidations.code, _userValidations.validationMessage);
         }
-        [Authorize]
         [HttpPatch]
-        [Route("delete-user/{UserId}/{AdministratorId}")]
-        public async Task<IActionResult> DeleteUserAsync(long UserId, long AdministratorId)
+        [Route("delete-user/{userId}/{administratorId}")]
+        public async Task<IActionResult> DeleteUserAsync(long userId, long administratorId)
         {
-            string message = await userValidations.Validate(UserId, AdministratorId);
-            if (userValidations.Validated == true)
+            if (await _userValidations.Validate(userId, administratorId) == true)
             {
-                await userrepo.DeleteUserAsync(UserId,AdministratorId);
+                await _userrepo.DeleteUserAsync(userId,administratorId);
             }
-            return await functions.Response(userValidations.code, message);
-            
+            return await _functions.Response(_userValidations.code, _userValidations.validationMessage);
         }
     }
 }

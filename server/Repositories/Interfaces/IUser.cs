@@ -1,11 +1,13 @@
-﻿namespace server.Repositories.Interfaces
+﻿using server.Models.Domain;
+
+namespace server.Repositories.Interfaces
 {
     public interface IUser
     {
-        public Task<IEnumerable<Models.DTOs.UsersDTO.UsersDTO>> GetAllAsync();
-        public Task<Models.DTOs.UsersDTO.UsersDTO> GetUserAsync(long id);
-        public Task<Models.DTOs.UsersDTO.Create> CreateUserAsync(Models.DTOs.UsersDTO.Create newUser);
-        public Task<Models.DTOs.UsersDTO.Update> UpdateUserAsync(Models.DTOs.UsersDTO.Update user);
+        public Task<IEnumerable<User>> GetAllAsync();
+        public Task<User> GetUserAsync(long id);
+        public Task<long> CreateUserAsync(User newUser);
+        public Task<long> UpdateUserAsync(User user);
         public Task<bool> DeleteUserAsync(long UserId, long AdministratorId);
 
     }

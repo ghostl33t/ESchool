@@ -75,7 +75,7 @@ namespace server.Validations
             else
             {
                 validationResult = true;
-                message = "Grade to student added succesfuly!";
+                message = "Grade to student added successfuly!";
             }
             return message;
         }
@@ -107,7 +107,7 @@ namespace server.Validations
             else
             {
                 validationResult = true;
-                message = "Grade to student added succesfuly!";
+                message = "Grade to student added successfuly!";
             }
             return message;
         }

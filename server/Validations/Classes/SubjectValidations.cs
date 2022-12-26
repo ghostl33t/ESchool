@@ -77,7 +77,7 @@ namespace server.Validations.Classes
             }
             if(code !=0) { return false; }
             code = 201;
-            validationMessage = await Task.FromResult("Subject added succesfuly!");
+            validationMessage = await Task.FromResult("Subject added successfuly!");
             return true;
         }
         public async Task<bool> Validation(Models.DTOs.Subject.Update subject)
@@ -115,7 +115,7 @@ namespace server.Validations.Classes
             }
             if (code != 0) { return false; }
             code = 204;
-            validationMessage = "Subject updated succesfuly!";
+            validationMessage = "Subject updated successfuly!";
             return true;
         }
         public async Task<bool> Validation(long SubjectId, long AdministratorId)
@@ -137,7 +137,7 @@ namespace server.Validations.Classes
             }
             if(code != 0) { return false; }
             code = 204;
-            validationMessage = "Subject deleted succesfuly!";
+            validationMessage = "Subject deleted successfuly!";
             return true;
         }
     }

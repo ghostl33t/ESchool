@@ -89,7 +89,7 @@ namespace server.Validations.Classes
             if (code != 0) { return false; }
 
             code = 201;
-            validationMessage = "School added succesfuly!";
+            validationMessage = "School added successfuly!";
             return true;
         }
         public async Task<bool> Validation(Models.DTOs.SchoolList.PatchUpdate school)
@@ -137,7 +137,7 @@ namespace server.Validations.Classes
             if (code != 0) { return false; }
             code = 201;
             
-            validationMessage ="School updated succesfuly!";
+            validationMessage ="School updated successfuly!";
             return true;
         }
         public async Task<bool> Validation(long schoolId, long AdministratorId)
@@ -159,7 +159,7 @@ namespace server.Validations.Classes
                 }
             }
             if(code != 0) { return false; }
-            validationMessage = "School deleted succesfuly!";
+            validationMessage = "School deleted successfuly!";
             code = 204;
             return true;
 
