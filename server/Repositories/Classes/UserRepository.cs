@@ -45,6 +45,7 @@ namespace server.Repositories.Classes
             {
                 newUser.CreatedDate = DateTime.Now;
                 newUser.Deleted = 0;
+                newUser.CreatedBy = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newUser.CreatedBy.Id);
                 await _dbMain.Users.AddAsync(newUser);
                 await _dbMain.SaveChangesAsync();
                 return newUser.Id;
@@ -54,16 +55,17 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<long> UpdateUserAsync(User user)
+        public async Task<long> UpdateUserAsync(long Id, User user)
         {
-            var userExist = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == user.Id);
-            if(userExist != null)
+            //var existUser = await _dbMain.Users.FirstAsync(s => s.Id == Id);
+            if(user != null)
             {
-                _dbMain.Users.Update(user);
-                //DbMain.Entry(userExist).State = EntityState.Modified;
+                user.Id = Id;
+                //_dbMain.Entry(user).Property(x => x.Id).IsModified = false;
+                _dbMain.Update(user);
                 await _dbMain.SaveChangesAsync();
             }
-            return userExist.Id;
+            return user.Id;
         }
         public async Task<bool> DeleteUserAsync(long UserId, long AdministratorId)
         {

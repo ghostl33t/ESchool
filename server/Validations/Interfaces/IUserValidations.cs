@@ -15,6 +15,6 @@ public interface IUserValidations
     public Task<bool> ValidateUserPhoneUnique(string phone);
     public Task<bool> Validate(Models.DTOs.UsersDTO.PostUser user);
 
-    public Task<bool> Validate(Models.DTOs.UsersDTO.PatchUser user);
+    public Task<bool> Validate(long Id, Models.DTOs.UsersDTO.PatchUser user);
     public Task<bool> Validate(long UserId, long AdministratorId);
 }

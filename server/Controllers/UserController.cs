@@ -53,7 +53,7 @@ namespace server.Controllers
         }
         [HttpPost]
         [Route("create-user")]
-        public async Task<IActionResult> CreateUserAsync(Models.DTOs.UsersDTO.PostUser newUser)
+        public async Task<IActionResult> CreateUserAsync(PostUser newUser)
         {
 
             if(await _userValidations.Validate(newUser) == true)
@@ -64,13 +64,13 @@ namespace server.Controllers
             return await _functions.Response(_userValidations.code, _userValidations.validationMessage);
         }
         [HttpPatch]
-        [Route("update-user")]
-        public async Task<IActionResult> UpdateUserAsync(Models.DTOs.UsersDTO.PatchUser userDto)
+        [Route("update-user/{Id}")]
+        public async Task<IActionResult> UpdateUserAsync(long Id, PatchUser userDto)
         {
-            if (await _userValidations.Validate(userDto) == true)
+            if (await _userValidations.Validate(Id,userDto) == true)
             {
                 var user = _mapper.Map<User>(userDto);
-                await _userrepo.UpdateUserAsync(user);
+                await _userrepo.UpdateUserAsync(Id,user);
             }
             return await _functions.Response(_userValidations.code, _userValidations.validationMessage);
         }

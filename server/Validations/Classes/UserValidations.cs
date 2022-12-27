@@ -20,7 +20,7 @@ public class UserValidations : IUserValidations
     }
     public async Task<bool> ValidateUserNameUnique(string username)
     {
-        var userExistWithUserName = await _dbMain.Users.FirstOrDefaultAsync(s => s.UserName == username);
+        var userExistWithUserName = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.UserName == username);
         if (userExistWithUserName != null)
         {
             return await Task.FromResult(false);
@@ -54,7 +54,7 @@ public class UserValidations : IUserValidations
     }
     public async Task<bool> ValidateUserOIBUnique(string OIB)
     {
-        var userExists = await _dbMain.Users.FirstOrDefaultAsync(s => s.OIB == OIB);
+        var userExists = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.OIB == OIB);
         if (userExists != null)
         {
             return await Task.FromResult(false);
@@ -69,7 +69,7 @@ public class UserValidations : IUserValidations
     public async Task<bool> ValidateUserPhoneUnique(string phone)
     {
 
-        var userExists = await _dbMain.Users.FirstOrDefaultAsync(s => s.Phone == phone);
+        var userExists = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Phone == phone);
         if (userExists != null)
         {
             return await Task.FromResult(false);
@@ -81,16 +81,19 @@ public class UserValidations : IUserValidations
         code = 0;
         if (user != null)
         {
-            var creatorType = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == user.CreatedById);
+            var creatorType = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == user.CreatedById);
             if (creatorType == null)
             {
                 code = 401;
                 validationMessage = "You don't have permission to create new user!";
             }
-            if (await ValidateCreateUserByType(creatorType.UserType, user.UserType) == false)
+            else
             {
-                code = 401;
-                validationMessage = "You don't have permission to create new user!";
+                if (await ValidateCreateUserByType(creatorType.UserType, user.UserType) == false)
+                {
+                    code = 401;
+                    validationMessage = "You don't have permission to create new user!";
+                }
             }
             if (await ValidateUserNameLength(user.UserName) == false)
             {
@@ -149,21 +152,27 @@ public class UserValidations : IUserValidations
         return true;
     }
 
-    public async Task<bool> Validate(Models.DTOs.UsersDTO.PatchUser user)
+    public async Task<bool> Validate(long Id, Models.DTOs.UsersDTO.PatchUser user)
     {
-        var creatorType = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == user.UpdatedById);
-        var userExist = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == user.Id);
+        //Ovdje bila errorcina koja se manifestovala na repozitoriju zbog AsNoTracking = False :D 
+        var creatorType = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == user.UpdatedById);
+        var userExist = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id);
+
         code = 0;
         if(creatorType == null)
         {
             code = 401;
             validationMessage = "You don't have permission to create new user!";
         }
-        if (await ValidateCreateUserByType(creatorType.UserType, user.UserType) == false)
+        else
         {
-            code = 401;
-            validationMessage = "You don't have permission to create new user!";
+            if (await ValidateCreateUserByType(creatorType.UserType, user.UserType) == false)
+            {
+                code = 401;
+                validationMessage = "You don't have permission to create new user!";
+            }
         }
+        
         if (user == null || userExist == null)
         {
             code = 400;
@@ -236,8 +245,8 @@ public class UserValidations : IUserValidations
     }
     public  async Task<bool> Validate(long UserId, long AdministratorId)
     {
-        var admin = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == AdministratorId);
-        var userExist = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == UserId);
+        var admin = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == AdministratorId);
+        var userExist = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == UserId);
         code = 401;
         if(admin != null && userExist != null)
         {

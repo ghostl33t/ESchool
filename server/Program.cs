@@ -1,9 +1,7 @@
-using AutoMapper.Configuration.Conventions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using server.Database;
-using server.Services.DataService;
 using server.Services.LoginService;
 using server.Services.ResponseService;
 using server.Validations.Classes;
