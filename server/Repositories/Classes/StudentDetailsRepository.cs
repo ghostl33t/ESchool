@@ -2,7 +2,7 @@
 
 namespace server.Repositories.Classes
 {
-    public class StudentDetails : IStudentDetails
+    public class StudentDetailsRepository : IStudentDetails
     {
 
     }

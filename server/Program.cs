@@ -59,8 +59,8 @@ builder.Services.AddScoped<IClassDepartmentValidations, ClassDepartmentValidatio
 builder.Services.AddScoped<server.Repositories.Interfaces.ICDSP, server.Repositories.Classes.CDSPRepository>();
 builder.Services.AddScoped<ICDSPValidations, CDSPValidations>();
 /* STUDENT GRADES */
-builder.Services.AddScoped<server.Repositories.Interfaces.IStudentGrades, server.Repositories.Classes.StudentGrades>();
-builder.Services.AddScoped<server.Validations.IStudentGradesValidations, server.Validations.StudentGradesValidations>();
+builder.Services.AddScoped<server.Repositories.Interfaces.IStudentGrades, server.Repositories.Classes.StudentGradesReposiory>();
+builder.Services.AddScoped<IStudentGradesValidations, StudentGradesValidations>();
 /* SUBJECTS */
 builder.Services.AddScoped<server.Repositories.Interfaces.ISubjects, server.Repositories.Classes.SubjectRepository>();
 builder.Services.AddScoped<server.Validations.Interfaces.ISubjectValidations, server.Validations.Classes.SubjectValidations>();

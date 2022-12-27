@@ -1,34 +1,72 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using server.Models.Domain;
+using server.Models.DTOs.StudentGrades;
 using server.Repositories.Interfaces;
-using server.Validations;
-namespace server.Controllers
+using server.Services.ResponseService;
+using server.Validations.Interfaces;
+using System.Runtime.InteropServices;
+
+namespace server.Controllers;
+[Authorize]
+[ApiController]
+[Route("[controller]")]
+public class StudentGradesController : Controller
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class StudentGradesController : Controller
+    private readonly IStudentGrades _studentGrades;
+    private readonly IStudentGradesValidations _studentgradesvalidations;
+    private readonly IResponseService _clfunctions;
+    private readonly IMapper _mapper;
+    public StudentGradesController(IStudentGrades studentGrades, IStudentGradesValidations studentgradesvalidations, IResponseService clfunctions, IMapper mapper)
     {
-        private readonly IStudentGrades studentGrades;
-        private readonly IStudentGradesValidations studentgradesvalidations;
+        _studentGrades = studentGrades;
+        _studentgradesvalidations = studentgradesvalidations;
+        _clfunctions = clfunctions;
+        _mapper = mapper;
+    }
 
-        public StudentGradesController(IStudentGrades studentGrades, IStudentGradesValidations studentgradesvalidations )
+    [HttpGet]
+    [Route("get-student-grades/{Id}")]
+    public async Task<IActionResult> GetStudentGradesAsync(long Id)
+    {
+        var grades = await _studentGrades.GetGradesForStudent(Id);
+        if(grades != null)
         {
-            this.studentGrades = studentGrades;
-            this.studentgradesvalidations = studentgradesvalidations;
+            return await _clfunctions.Response(200, grades);
         }
-
-        [HttpGet]
-        [Route("get-student-grades/{Id}")]
-        public async Task<IActionResult> GetStudentGradesAsync(long Id)
+        return await _clfunctions.Response(400, "Grades not found");
+    }
+    [HttpPost]
+    [Route("add-student-grade")]
+    public async Task<IActionResult> CreateGradeAsync(PostStudentGrades grade)
+    {
+        if(await _studentgradesvalidations.Validations(grade) == true)
         {
-            var grades = await studentGrades.GetGradesForStudent(Id);
-            return Ok(grades);
+            var newGrade = _mapper.Map<StudentGrades>(grade);
+            await _studentGrades.CreateGradeAsync(newGrade);
         }
-        [HttpPost]
-        [Route("add-student-grade")]
-        public async Task<IActionResult> CreateGradeAsync(server.Models.DTOs.StudentGrades.PostStudentGrades create)
+        return await _clfunctions.Response(_studentgradesvalidations.code, _studentgradesvalidations.validationMessage);
+    }
+    [HttpPatch]
+    [Route("modify-student-grade")]
+    public async Task<IActionResult> UpdateGradeAsync(PatchStudentGrades grade)
+    {
+        if (await _studentgradesvalidations.Validations(grade) == true)
         {
-            await studentGrades.CreateGradeAsync(create);
-            return Ok();
+            var newGrade = _mapper.Map<StudentGrades>(grade);
+            await _studentGrades.UpdateGradeAsync(newGrade);
         }
+        return await _clfunctions.Response(_studentgradesvalidations.code, _studentgradesvalidations.validationMessage);
+    }
+    [HttpPatch]
+    [Route("delete-student-grade")]
+    public async Task<IActionResult> DeleteGradeAsync(long gradeId, long professorId)
+    {
+        if (await _studentgradesvalidations.Validations(gradeId, professorId) == true)
+        {
+            await _studentGrades.DeleteGradeAsync(gradeId, professorId);
+        }
+        return await _clfunctions.Response(_studentgradesvalidations.code, _studentgradesvalidations.validationMessage);
     }
 }

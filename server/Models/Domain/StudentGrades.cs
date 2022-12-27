@@ -9,13 +9,18 @@ namespace server.Models.Domain
         [Key]
         [Column(TypeName = "bigint")]
         public long Id { get; set; }
+        [NotMapped]
+        public long StudId { get; set; }
         public User? Student { get; set; }
         [Column(TypeName ="smallint")]
         public int Grade { get; set; }
+
+        [NotMapped]
+        public long CDSPId { get; set; }
         public ClassDepartmentSubjectProfessor? ClassDepartmentSubjectProfessor { get; set; }
         [Column(TypeName = "nvarchar")]
         [MaxLength(150)]
-        public string Description { get; set; } = "";
+        public string Description { get; set; } = String.Empty;
         [Column(TypeName = "smallint")]
         public int Validated { get; set; } = 0;
         [Column(TypeName = "bigint")]
