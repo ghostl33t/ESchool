@@ -37,13 +37,13 @@ namespace server.Controllers
             return await _functions.Response(_cdspValidatons.code, _cdspValidatons.validationMessage);
         }
         [HttpPatch]
-        [Route("update-cdsp")]
-        public async Task<IActionResult> ModifyCDSPAsync(PatchCDSP cdspdto)
+        [Route("update-cdsp/{Id}")]
+        public async Task<IActionResult> ModifyCDSPAsync(long Id, PatchCDSP cdspdto)
         {
             var cdsp = _mapper.Map<ClassDepartmentSubjectProfessor>(cdspdto);
             if (await _cdspValidatons.Validate(cdsp.CreatedById, cdsp.SubjectID, cdsp.ProfessorId, cdsp.ClassDepId) == true)
             {
-                var res = await _cdsp.ModifyCDSP(cdsp);
+                var res = await _cdsp.ModifyCDSP(Id,cdsp);
             }
             return await _functions.Response(_cdspValidatons.code, _cdspValidatons.validationMessage);
         }

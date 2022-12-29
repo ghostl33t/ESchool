@@ -21,7 +21,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> ValidateCreator(long createdById)
         {
-            var user = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == createdById);
+            var user = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == createdById);
             if (user == null || user.UserType != 0 || user.UserType != 1)
             {
                 return false;
@@ -30,7 +30,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> ValidateSubject(long subjectId)
         {
-            var subject = await _dbRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == subjectId);
+            var subject = await _dbRegistries.Subjects.AsNoTracking().FirstOrDefaultAsync(s => s.Id == subjectId);
             if (subject == null)
             {
                 return false;
@@ -39,7 +39,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> ValidateProfessor(long professorId)
         {
-            var user = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == professorId);
+            var user = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == professorId);
             if (user == null || user.UserType != 1)
             {
                 return false;
@@ -48,7 +48,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> ValidateClassDepartment(long classDepId)
         {
-            var classDep = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == classDepId);
+            var classDep = await _dbMain.ClassDepartments.AsNoTracking().FirstOrDefaultAsync(s => s.ID == classDepId);
             if (classDep == null)
             {
                 return false;
@@ -89,7 +89,7 @@ namespace server.Validations.Classes
         public async Task<bool> Validate(long Id, long administratorId)
         {
             code = 0;
-            var exist = await _dbMain.ClassDepartmentSubjectProfessors.FirstOrDefaultAsync(s => s.Id == Id && s.Deleted == 0);
+            var exist = await _dbMain.ClassDepartmentSubjectProfessors.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id && s.Deleted == 0);
             if (exist == null)
             {
                 code = 400;

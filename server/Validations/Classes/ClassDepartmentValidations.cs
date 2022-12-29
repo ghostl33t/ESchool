@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using server.Database;
+using server.Models.DTOs.ClassDepartment;
 using server.Validations.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
@@ -77,7 +78,7 @@ namespace server.Validations.Classes
             }
             return await Task.FromResult(true);
         }
-        public async Task<bool> Validation(Models.DTOs.ClassDepartment.PostClassDepartment classDepartment)
+        public async Task<bool> Validation(PostClassDepartment classDepartment)
         {
             validationMessage = "";
             code = 0;
@@ -112,7 +113,7 @@ namespace server.Validations.Classes
             validationMessage = "OK";
             return true;
         }
-        public async Task<bool> Validation(Models.DTOs.ClassDepartment.PatchClassDepartment classDepartment)
+        public async Task<bool> Validation(long Id, PatchClassDepartment classDepartment)
         {
             validationMessage = "";
             code = 0;

@@ -79,7 +79,7 @@ public class StudentGradesValidations : IStudentGradesValidations
         validationMessage = "Grade added succesfuly";
         return true;
     }
-    public async Task<bool> Validations(Models.DTOs.StudentGrades.PatchStudentGrades grade)
+    public async Task<bool> Validations(long Id, Models.DTOs.StudentGrades.PatchStudentGrades grade)
     {
         code = 0;
         if (await StudentExist(grade.StudentId) == false)
@@ -99,7 +99,7 @@ public class StudentGradesValidations : IStudentGradesValidations
         }
         if (code != 0) { return false; }
         code = 200;
-        validationMessage = "Grade added succesfuly";
+        validationMessage = "Grade updated successfuly";
         return true;
     }
     public async Task<bool> Validations(long gradeId, long professorId)
@@ -122,7 +122,7 @@ public class StudentGradesValidations : IStudentGradesValidations
         }
         if (code != 0) { return false; }
         code = 201;
-        validationMessage = "Grade added succesfuly";
+        validationMessage = "Grade deleted successfuly";
         return true;
     }
 }

@@ -5,7 +5,6 @@ namespace server.Models.DTOs.ClassDepartment;
 
 public class PatchClassDepartment
 {
-    public long ID { get; set; }
     public string SerialNumber { get; set; } = "";
     public string Name { get; set; } = "";
     public long SchoolListId { get; set; }

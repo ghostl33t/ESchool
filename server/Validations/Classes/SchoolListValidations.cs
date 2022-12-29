@@ -92,9 +92,9 @@ namespace server.Validations.Classes
             validationMessage = "School added successfuly!";
             return true;
         }
-        public async Task<bool> Validation(Models.DTOs.SchoolList.PatchUpdate school)
+        public async Task<bool> Validation(long Id, Models.DTOs.SchoolList.PatchUpdate school)
         {
-            var schoolexist = await _dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == school.Id);
+            var schoolexist = await _dbRegistries.SchoolList.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id);
             code = 0;
             if (await ValidateSchoolCreator(school.UpdatedById) == false)
             {
@@ -142,8 +142,8 @@ namespace server.Validations.Classes
         }
         public async Task<bool> Validation(long schoolId, long AdministratorId)
         {
-            var school = await this._dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == schoolId);
-            var Administrator = await this._dbMain.Users.FirstOrDefaultAsync(s => s.Id == AdministratorId);
+            var school = await this._dbRegistries.SchoolList.AsNoTracking().FirstOrDefaultAsync(s => s.Id == schoolId);
+            var Administrator = await this._dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == AdministratorId);
             code = 0;
             if (Administrator != null)
             {

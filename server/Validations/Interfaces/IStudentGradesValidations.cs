@@ -8,7 +8,7 @@ public interface IStudentGradesValidations
     public Task<bool> ValidateProfessor(long studentid, long professorId);
     public bool CheckIfGradeIsValidated(int validatedGrade);
     public Task<bool> Validations(Models.DTOs.StudentGrades.PostStudentGrades create);
-    public Task<bool> Validations(Models.DTOs.StudentGrades.PatchStudentGrades create);
+    public Task<bool> Validations(long Id, Models.DTOs.StudentGrades.PatchStudentGrades grade);
     public Task<bool> Validations(long gradeId, long professorId);
 
 }

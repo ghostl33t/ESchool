@@ -7,7 +7,7 @@ namespace server.Repositories.Interfaces
         public Task<List<SchoolList>> GetSchoolsList();
         public Task<SchoolList> GetSchoolById(long Id);
         public Task<long> CreateSchoolAsync(SchoolList newSchool);
-        public Task<long> ModifySchoolAsync(SchoolList school);
+        public Task<long> ModifySchoolAsync(long Id,SchoolList school);
         public Task<long> DeleteSchoolAsync(long SchoolId, long AdministratorId);
     }
 }

@@ -2,7 +2,6 @@
 {
     public class PatchStudentGrades
     {
-        public long Id { get; set; }
         public server.Models.Domain.User? Student { get; set; }
         public long StudentId { get; set; }
         public int Grade { get; set; }

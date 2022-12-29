@@ -84,11 +84,12 @@ namespace server.Repositories.Classes
             
         }
 
-        public async Task<ClassDepartment> ModifyClassDepartmentAsync(ClassDepartment updatedclassdep)
+        public async Task<ClassDepartment> ModifyClassDepartmentAsync(long Id,ClassDepartment updatedclassdep)
         {
             try
             {
-                _dbMain.ClassDepartments.Update(updatedclassdep);
+                updatedclassdep.ID = Id;
+                 _dbMain.ClassDepartments.Update(updatedclassdep);
                 return updatedclassdep;
             }
             catch (Exception)

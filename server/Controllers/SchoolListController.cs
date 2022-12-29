@@ -50,13 +50,13 @@ namespace server.Controllers
             return await _functions.Response(_schoolListValidation.code, _schoolListValidation.validationMessage);
         }
         [HttpPatch]
-        [Route("update-school")]
-        public async Task<IActionResult> UpdateUserAsync(Models.DTOs.SchoolList.PatchUpdate schoolDto)
+        [Route("update-school/{Id}")]
+        public async Task<IActionResult> UpdateUserAsync(long Id,Models.DTOs.SchoolList.PatchUpdate schoolDto)
         {
-            if (await _schoolListValidation.Validation(schoolDto) == true)
+            if (await _schoolListValidation.Validation(Id, schoolDto) == true)
             {
                 var school = _mapper.Map<SchoolList>(schoolDto);
-                await _schoolListRepo.ModifySchoolAsync(school);
+                await _schoolListRepo.ModifySchoolAsync(Id,school);
             }
             return await _functions.Response(_schoolListValidation.code, _schoolListValidation.validationMessage);
         }

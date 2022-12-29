@@ -63,16 +63,17 @@ namespace server.Controllers
             }
             return await _functions.Response(_subjectValidations.code, _subjectValidations.validationMessage);
         }
-        [Route("update-subject")]
+        [Route("update-subject/{Id}")]
         [HttpPatch]
-        public async Task<IActionResult> Update(Models.DTOs.Subject.PatchSubject subjectDto)
+        public async Task<IActionResult> Update(long Id, Models.DTOs.Subject.PatchSubject subjectDto)
         {
             if (subjectDto != null)
             {
-                if (await _subjectValidations.Validation(subjectDto) == true)
+                if (await _subjectValidations.Validation(Id,subjectDto) == true)
                 {
                     var subject = _mapper.Map<Subject>(subjectDto);
-                    await _subjectRepo.ModifySubject(subject);
+                    subject.Id = Id;
+                    await _subjectRepo.ModifySubject(Id,subject);
                 }
             }
             return await _functions.Response(_subjectValidations.code, _subjectValidations.validationMessage);

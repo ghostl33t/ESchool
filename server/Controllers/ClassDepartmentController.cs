@@ -7,91 +7,90 @@ using server.Repositories.Interfaces;
 using server.Services.ResponseService;
 using server.Validations.Interfaces;
 
-namespace server.Controllers
+namespace server.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+[Authorize]
+public class ClassDepartmentController : Controller
 {
-    [ApiController]
-    [Route("[controller]")]
-    [Authorize]
-    public class ClassDepartmentController : Controller
+    private readonly IClassDepartment _classDepartmentRepository;
+    private readonly IClassDepartmentValidations _classDepartmentValidations;
+    private readonly IResponseService _functions;
+    private readonly IMapper _mapper;
+    public ClassDepartmentController(IClassDepartment IClassDepartment, IClassDepartmentValidations IClassDepartmentValidations, IResponseService functions, IMapper mapper)
     {
-        private readonly IClassDepartment _classDepartmentRepository;
-        private readonly IClassDepartmentValidations _classDepartmentValidations;
-        private readonly IResponseService _functions;
-        private readonly IMapper _mapper;
-        public ClassDepartmentController(IClassDepartment IClassDepartment, IClassDepartmentValidations IClassDepartmentValidations, IResponseService functions, IMapper mapper)
+        this._classDepartmentRepository = IClassDepartment;
+        this._classDepartmentValidations = IClassDepartmentValidations;
+        this._functions = functions;
+        this._mapper = mapper;
+    }
+    [Route("get-all")]
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        var classList = await _classDepartmentRepository.GetAllClassDepartmentsAsync();
+        if(classList != null)
         {
-            this._classDepartmentRepository = IClassDepartment;
-            this._classDepartmentValidations = IClassDepartmentValidations;
-            this._functions = functions;
-            this._mapper = mapper;
+            var classListDTO = _mapper.Map<List<GetClassDepartment>>(classList);
+            return await _functions.Response(200, classListDTO);
         }
-        [Route("get-all")]
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        return await _functions.Response(400, "No data found!");
+    }
+    [Route("get-by-id/{Id}")]
+    [HttpGet]
+    public async Task<IActionResult> GetByIdAsync(long Id )
+    {
+        var classd = await _classDepartmentRepository.GetClassDepartmentByIdAsync(Id);
+        if(classd != null)
         {
-            var classList = await _classDepartmentRepository.GetAllClassDepartmentsAsync();
-            if(classList != null)
-            {
-                var classListDTO = _mapper.Map<List<GetClassDepartment>>(classList);
-                return await _functions.Response(200, classListDTO);
-            }
-            return await _functions.Response(400, "No data found!");
+            var classLDTO = _mapper.Map<GetClassDepartment>(classd);
+            return await _functions.Response(200, classLDTO);
         }
-        [Route("get-by-id/{Id}")]
-        [HttpGet]
-        public async Task<IActionResult> GetByIdAsync(long Id )
+        return await _functions.Response(400,"No data found!");
+    }
+    [Route("get-students-inclass/{Id}")]
+    [HttpGet]
+    public async Task<IActionResult> GetStudentsInClassAsync(long Id)
+    {
+        var studentsInClassList = await _classDepartmentRepository.GetStudentsPerClassDetailsAsync(Id);
+        int code = 400;
+        if(studentsInClassList != null)
         {
-            var classd = await _classDepartmentRepository.GetClassDepartmentByIdAsync(Id);
-            if(classd != null)
-            {
-                var classLDTO = _mapper.Map<GetClassDepartment>(classd);
-                return await _functions.Response(200, classLDTO);
-            }
-            return await _functions.Response(400,"No data found!");
+            code = 200;
         }
-        [Route("get-students-inclass/{Id}")]
-        [HttpGet]
-        public async Task<IActionResult> GetStudentsInClassAsync(long Id)
+        return await _functions.Response(code, ((studentsInClassList != null) ? studentsInClassList : "No data found!") );//studentsInClassList);
+    }
+    [Route("create-department")]
+    [HttpPost]
+    public async Task<IActionResult> Create(PostClassDepartment newClassDTO)
+    {
+        if (await _classDepartmentValidations.Validation(newClassDTO) == true)
         {
-            var studentsInClassList = await _classDepartmentRepository.GetStudentsPerClassDetailsAsync(Id);
-            int code = 400;
-            if(studentsInClassList != null)
-            {
-                code = 200;
-            }
-            return await _functions.Response(code, ((studentsInClassList != null) ? studentsInClassList : "No data found!") );//studentsInClassList);
+            var newclass = _mapper.Map<ClassDepartment>(newClassDTO);
+            var res = await _classDepartmentRepository.CreateClassDepartmentAsync(newclass);
         }
-        [Route("create-department")]
-        [HttpPost]
-        public async Task<IActionResult> Create(Models.DTOs.ClassDepartment.PostClassDepartment newClassDTO)
+        return await _functions.Response(_classDepartmentValidations.code, _classDepartmentValidations.validationMessage);
+    }
+    [Route("update-department/{Id}")]
+    [HttpPatch]
+    public async Task<IActionResult> Update(long Id, PatchClassDepartment classdep)
+    {
+        if (await _classDepartmentValidations.Validation(Id, classdep) == true)
         {
-            if (await _classDepartmentValidations.Validation(newClassDTO) == true)
-            {
-                var newclass = _mapper.Map<ClassDepartment>(newClassDTO);
-                var res = await _classDepartmentRepository.CreateClassDepartmentAsync(newclass);
-            }
-            return await _functions.Response(_classDepartmentValidations.code, _classDepartmentValidations.validationMessage);
+            var classDepartmentExist = _mapper.Map<ClassDepartment>(classdep);
+            var res = await _classDepartmentRepository.ModifyClassDepartmentAsync(Id,classDepartmentExist);
         }
-        [Route("update-department")]
-        [HttpPatch]
-        public async Task<IActionResult> Update(Models.DTOs.ClassDepartment.PatchClassDepartment classdep)
+        return await _functions.Response(_classDepartmentValidations.code, _classDepartmentValidations.validationMessage);
+    }
+    [Route("delete-department/{Id}/{AdministratorId}")]
+    [HttpPatch]
+    public async Task<IActionResult> Delete(long Id,long AdministratorId)
+    {
+        if (await _classDepartmentValidations.Validation(Id, AdministratorId) == true)
         {
-            if (await _classDepartmentValidations.Validation(classdep) == true)
-            {
-                var classDepartmentExist = _mapper.Map<ClassDepartment>(classdep);
-                var res = await _classDepartmentRepository.ModifyClassDepartmentAsync(classDepartmentExist);
-            }
-            return await _functions.Response(_classDepartmentValidations.code, _classDepartmentValidations.validationMessage);
+            var res = await _classDepartmentRepository.DeleteClassDepartmentAsync(Id, AdministratorId);
         }
-        [Route("delete-department/{Id}/{AdministratorId}")]
-        [HttpPatch]
-        public async Task<IActionResult> Delete(long Id,long AdministratorId)
-        {
-            if (await _classDepartmentValidations.Validation(Id, AdministratorId) == true)
-            {
-                var res = await _classDepartmentRepository.DeleteClassDepartmentAsync(Id, AdministratorId);
-            }
-            return await _functions.Response(_classDepartmentValidations.code, _classDepartmentValidations.validationMessage);
-        }
-}
+        return await _functions.Response(_classDepartmentValidations.code, _classDepartmentValidations.validationMessage);
+    }
 }

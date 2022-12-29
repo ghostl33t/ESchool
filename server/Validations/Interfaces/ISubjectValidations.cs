@@ -9,7 +9,7 @@
         public Task<bool> ValidateSerialNumberLength(string serialNumber);
         public Task<bool> ValidateSubjectName(string name);
         public Task<bool> Validation(Models.DTOs.Subject.PostSubject school);
-        public Task<bool> Validation(Models.DTOs.Subject.PatchSubject school);
+        public Task<bool> Validation(long Id,Models.DTOs.Subject.PatchSubject school);
         public Task<bool> Validation(long SubjectId, long AdministratorId);
     }
 }

@@ -71,17 +71,16 @@ public class SubjectRepository : ISubjects
             throw;
         }
     }
-    public async Task<long> ModifySubject(Subject subject)
+    public async Task<long> ModifySubject(long Id, Subject subject)
     {
         try
         {
-            var subjectExist = await this._dbRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == subject.Id);
-            if(subjectExist != null)
+            if(subject != null)
             {
                 _dbRegistries.Subjects.Update(subject);
                 await this._dbRegistries.SaveChangesAsync();
             }
-            return subjectExist.Id;
+            return subject.Id;
         }
         catch (Exception)
         {

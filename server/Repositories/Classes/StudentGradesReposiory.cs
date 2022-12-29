@@ -28,13 +28,14 @@ namespace server.Repositories.Classes;
                 throw;
             }
         }
-        public async Task<long> UpdateGradeAsync(StudentGrades grade)
+        public async Task<long> UpdateGradeAsync(long Id, StudentGrades grade)
         {
             try
             {
-            _dbMain.StudentsGrades.Update(grade);
-            await _dbMain.SaveChangesAsync();
-            return grade.Id; 
+                grade.Id = Id;
+                _dbMain.StudentsGrades.Update(grade);
+                await _dbMain.SaveChangesAsync();
+                return grade.Id; 
             }
             catch (Exception)
             {

@@ -49,18 +49,18 @@ public class StudentGradesController : Controller
         return await _clfunctions.Response(_studentgradesvalidations.code, _studentgradesvalidations.validationMessage);
     }
     [HttpPatch]
-    [Route("modify-student-grade")]
-    public async Task<IActionResult> UpdateGradeAsync(PatchStudentGrades grade)
+    [Route("modify-student-grade/{Id}")]
+    public async Task<IActionResult> UpdateGradeAsync(long Id, PatchStudentGrades grade)
     {
-        if (await _studentgradesvalidations.Validations(grade) == true)
+        if (await _studentgradesvalidations.Validations(Id,grade) == true)
         {
             var newGrade = _mapper.Map<StudentGrades>(grade);
-            await _studentGrades.UpdateGradeAsync(newGrade);
+            await _studentGrades.UpdateGradeAsync(Id,newGrade);
         }
         return await _clfunctions.Response(_studentgradesvalidations.code, _studentgradesvalidations.validationMessage);
     }
     [HttpPatch]
-    [Route("delete-student-grade")]
+    [Route("delete-student-grade/{gradeId}/{professorId}")]
     public async Task<IActionResult> DeleteGradeAsync(long gradeId, long professorId)
     {
         if (await _studentgradesvalidations.Validations(gradeId, professorId) == true)

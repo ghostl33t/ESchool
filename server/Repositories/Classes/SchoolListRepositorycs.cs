@@ -61,10 +61,11 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<long> ModifySchoolAsync(SchoolList school)
+        public async Task<long> ModifySchoolAsync(long Id, SchoolList school)
         {
             try
             {
+                school.Id = Id;
                 _dbRegistries.SchoolList.Update(school);
                 await _dbRegistries.SaveChangesAsync();
                 return school.Id;

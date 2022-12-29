@@ -32,10 +32,11 @@ public class CDSPRepository : ICDSP
             throw;
         }   
     }
-    public async Task<long> ModifyCDSP(ClassDepartmentSubjectProfessor cdsp)
+    public async Task<long> ModifyCDSP(long Id, ClassDepartmentSubjectProfessor cdsp)
     {
         try
         {
+            cdsp.Id = Id;
             cdsp.UserProfessor = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == cdsp.ProfessorId);
             cdsp.ClassDepartment = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == cdsp.ClassDepId);
             _dbMain.ClassDepartmentSubjectProfessors.Update(cdsp);
