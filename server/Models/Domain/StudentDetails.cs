@@ -9,7 +9,11 @@ namespace server.Models.Domain
         [Key]
         [Column(TypeName = "bigint")]
         public long Id { get; set; }
+        [NotMapped]
+        public long StudId { get; set; }
         public User? Student{ get; set; }
+        [NotMapped]
+        public long ClassDepId { get; set; }
         public ClassDepartment? ClassDepartment { get; set; }
         [Column(TypeName = "smallint")]
         public int? StudentDiscipline { get; set; } = 5; //vladanje po defaultu = 5

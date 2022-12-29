@@ -7,8 +7,8 @@ namespace server.Models.DTOs.StudentDetails
 {
     public class PatchStudentDetails
     {
-        public User? Student { get; set; }
-        public server.Models.Domain.ClassDepartment? ClassDepartment { get; set; }
+        public long StudId { get; set; }
+        public long ClassDepId { get; set; }
         public int? StudentDiscipline { get; set; }
     }
 }

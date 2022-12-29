@@ -268,6 +268,41 @@ namespace server.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("server.Models.Domain.tempEmail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("EmailHeader")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("EmailText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("RecipientEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<long>("RecipientId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("SenderEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tempEmails");
+                });
+
             modelBuilder.Entity("server.Models.Domain.ClassDepartment", b =>
                 {
                     b.HasOne("server.Models.Domain.User", "CreatedBy")

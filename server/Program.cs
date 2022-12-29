@@ -62,9 +62,13 @@ builder.Services.AddScoped<IStudentGradesValidations, StudentGradesValidations>(
 /* SUBJECTS */
 builder.Services.AddScoped<server.Repositories.Interfaces.ISubjects, server.Repositories.Classes.SubjectRepository>();
 builder.Services.AddScoped<server.Validations.Interfaces.ISubjectValidations, server.Validations.Classes.SubjectValidations>();
- 
+/* STUDENT DETAILS */
+builder.Services.AddScoped<server.Repositories.Interfaces.IStudentDetails, server.Repositories.Classes.StudentDetailsRepository>();
+
 /* FUNCTIONS */
-builder.Services.AddSingleton<IResponseService, ResponseService>(); 
+builder.Services.AddSingleton<IResponseService, ResponseService>();
+/* SERVICES */
+builder.Services.AddScoped<server.Services.AEmailService.IAEmailService, server.Services.AEmailService.AEmailService>();
 /* AUTOMAPPER */
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 /* TOKEN */

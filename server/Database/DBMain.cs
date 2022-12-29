@@ -14,5 +14,6 @@ namespace server.Database
         public DbSet<Models.Domain.ClassDepartmentSubjectProfessor> ClassDepartmentSubjectProfessors { get; set; }
         public DbSet<Models.Domain.StudentDetails> StudentsDetails { get; set; }
         public DbSet<Models.Domain.StudentGrades> StudentsGrades { get; set; }
+        public DbSet<Models.Domain.tempEmail> tempEmails { get; set; }
     }
 }
