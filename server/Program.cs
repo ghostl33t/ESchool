@@ -53,18 +53,14 @@ builder.Services.AddScoped<ISchoolListValidations, SchoolListValidations>();
 /* CLASS DEPARTMENTS */
 builder.Services.AddScoped<server.Repositories.Interfaces.IClassDepartment, server.Repositories.Classes.ClassDepartmentRepository>();
 builder.Services.AddScoped<IClassDepartmentValidations, ClassDepartmentValidations>();
-/* CDSP */
-builder.Services.AddScoped<server.Repositories.Interfaces.ICDSP, server.Repositories.Classes.CDSPRepository>();
-builder.Services.AddScoped<ICDSPValidations, CDSPValidations>();
-/* STUDENT GRADES */
-builder.Services.AddScoped<server.Repositories.Interfaces.IStudentGrades, server.Repositories.Classes.StudentGradesReposiory>();
-builder.Services.AddScoped<IStudentGradesValidations, StudentGradesValidations>();
 /* SUBJECTS */
 builder.Services.AddScoped<server.Repositories.Interfaces.ISubjects, server.Repositories.Classes.SubjectRepository>();
 builder.Services.AddScoped<server.Validations.Interfaces.ISubjectValidations, server.Validations.Classes.SubjectValidations>();
 /* STUDENT DETAILS */
 builder.Services.AddScoped<server.Repositories.Interfaces.IStudentDetails, server.Repositories.Classes.StudentDetailsRepository>();
-
+/* PROFESSORS SUBJECTS*/
+builder.Services.AddScoped<server.Repositories.Interfaces.IProfessorSubjectsRepository, server.Repositories.Classes.ProfessorSubjectsRepository>();
+builder.Services.AddScoped<server.Validations.Interfaces.IProfessorSubjectsValidation, server.Validations.Classes.ProfessorSubjectsValidations>();
 /* FUNCTIONS */
 builder.Services.AddSingleton<IResponseService, ResponseService>();
 /* SERVICES */
