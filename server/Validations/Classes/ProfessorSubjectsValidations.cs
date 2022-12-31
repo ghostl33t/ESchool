@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.EntityFrameworkCore;
 using server.Database;
 using server.Models.Domain;
 using server.Models.DTOs.ProfessorSubjects;
@@ -102,6 +103,58 @@ public class ProfessorSubjectsValidations : IProfessorSubjectsValidation
         if(code != 0) { return false;}
         code = 201;
         validationMessage = String.Format("Relation between professor '{0}' and subject '{1}' created!",professorSubj.ProfessorId_, professorSubj.SubjectId_);
+        return true;
+    }
+    public async Task<bool> Validate(long Id, PatchProfessorSubjects professorSubj)
+    {
+        code = 0;
+        if(await _dbMain.ProfessorSubjects.AsNoTracking().FirstOrDefaultAsync(s=>s.ID == Id) == null)
+        {
+            code = 400;
+            validationMessage = "No relation!";
+        }
+        if (await ValidateCreator(professorSubj.UpdatedById) == false)
+        {
+            code = 401;
+            validationMessage = "Unauthorized";
+        }
+        else if (await ValidateProfessorType(professorSubj.ProfessorId_) == false)
+        {
+            code = 400;
+            validationMessage = "Invalid professor id ";
+        }
+        else if (await ValidateProfessorRepeating(1, professorSubj.ProfessorId_, professorSubj.SubjectId_) == false)
+        {
+            code = 400;
+            validationMessage = "Professor for this subject is already defined";
+        }
+        else if (await ValidateSubject(professorSubj.SubjectId_) == false)
+        {
+            code = 400;
+            validationMessage = "Invalid subject!";
+        }
+        if (code != 0) { return false; }
+        code = 201;
+        validationMessage = String.Format("Relation between professor '{0}' and subject '{1}' updated!", professorSubj.ProfessorId_, professorSubj.SubjectId_);
+        return true;
+    }
+    public async Task<bool> Validate(long Id, long AdministratorId)
+    {
+        code = 0;
+        var profsubj = await _dbMain.ProfessorSubjects.AsNoTracking().FirstOrDefaultAsync(s => s.ID == Id);
+        if(profsubj == null)
+        {
+            code = 400;
+            validationMessage = "Relation doesn't exists in database";
+        }
+        if(await ValidateCreator(AdministratorId) == false)
+        {
+            code = 401;
+            validationMessage = "Unauthorized";
+        }
+        if (code != 0) { return false; }
+        code = 201;
+        validationMessage = String.Format("Relation between professor '{0}' and subject '{1}' deleted!", profsubj.Professor.Id, profsubj.SubjectId);
         return true;
     }
 }

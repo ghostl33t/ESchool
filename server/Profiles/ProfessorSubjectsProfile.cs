@@ -10,5 +10,6 @@ public class ProfessorSubjectsProfile : Profile
     {
         CreateMap<ProfessorSubjects, GetProfessorSubjects>();
         CreateMap<ProfessorSubjects, PostProfessorSubjects>().ReverseMap();
+        CreateMap<ProfessorSubjects, PatchProfessorSubjects>().ReverseMap();
     }
 }

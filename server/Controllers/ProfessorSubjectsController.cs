@@ -39,7 +39,7 @@ namespace server.Controllers
         }
         //Create
         [HttpPost]
-        [Route("create")]
+        [Route("create-professor-subject")]
         public async Task<IActionResult> CreateProfessorSubjectAsync(PostProfessorSubjects newProfSubjDto)
         {
             if(await _professorSubjectValidations.Validate(newProfSubjDto) == true)
@@ -53,7 +53,28 @@ namespace server.Controllers
             return await _clFunctions.Response(_professorSubjectValidations.code, _professorSubjectValidations.validationMessage);
         }
         //Patch
-        //Patch(delete)
-
+        [HttpPatch]
+        [Route("update-professor-subject/{Id}")]
+        public async Task<IActionResult> UpdateProfessorSubjectAsync(long Id, PatchProfessorSubjects profSubjDto)
+        {
+            if(await _professorSubjectValidations.Validate(Id, profSubjDto) == true)
+            {
+                    var profsubj = _mapper.Map<ProfessorSubjects>(profSubjDto);
+                    profsubj.ID = Id;
+                    await _professorSubjectRepository.UpdateProfSubj(profsubj);
+            }
+            return await _clFunctions.Response(_professorSubjectValidations.code, _professorSubjectValidations.validationMessage);
+        }
+        //Patch(delete) 
+        [HttpPatch]
+        [Route("delete-professor-subject/{Id}/{AdministratorId}")]
+        public async Task<IActionResult> DeleteProfessorSubjectAsync(long Id, long AdministratorId)
+        {
+            if (await _professorSubjectValidations.Validate(Id, AdministratorId) == true)
+            {
+                    await _professorSubjectRepository.DeleteProfSubj(Id, AdministratorId);
+            }
+            return await _clFunctions.Response(_professorSubjectValidations.code, _professorSubjectValidations.validationMessage);
+        }
     }
 }

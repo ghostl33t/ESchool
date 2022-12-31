@@ -17,4 +17,6 @@ public interface IProfessorSubjectsValidation
     public Task<bool> ValidateSubject(long subjectId);
 
     public Task<bool> Validate(PostProfessorSubjects professorSubj);
+    public Task<bool> Validate(long Id, PatchProfessorSubjects professorSubj);
+    public Task<bool> Validate(long Id, long AdministratorId);
 }

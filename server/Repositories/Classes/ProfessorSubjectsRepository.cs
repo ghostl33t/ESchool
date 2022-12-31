@@ -31,6 +31,38 @@ namespace server.Repositories.Classes
             
             
         }
+        public async Task<long> UpdateProfSubj(ProfessorSubjects profSubj)
+        {
+            try
+            {
+                _dbMain.ProfessorSubjects.Update(profSubj);
+                await _dbMain.SaveChangesAsync();
+                return profSubj.ID;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<long> DeleteProfSubj(long Id, long AdministratorId)
+        {
+            try
+            {
+                var profsubj = await _dbMain.ProfessorSubjects.FirstOrDefaultAsync(s => s.ID == Id);
+                profsubj.Deleted = 1;
+                profsubj.DeletedDate = DateTime.Now;
+                profsubj.DeletedById = AdministratorId;
+                _dbMain.ProfessorSubjects.Update(profsubj);
+                await _dbMain.SaveChangesAsync();
+                return Id;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public async Task<List<GetProfessorSubjects>> GetProfessorsAndSubjects()
         {
             try
