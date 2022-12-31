@@ -58,6 +58,7 @@ builder.Services.AddScoped<server.Repositories.Interfaces.ISubjects, server.Repo
 builder.Services.AddScoped<server.Validations.Interfaces.ISubjectValidations, server.Validations.Classes.SubjectValidations>();
 /* STUDENT DETAILS */
 builder.Services.AddScoped<server.Repositories.Interfaces.IStudentDetails, server.Repositories.Classes.StudentDetailsRepository>();
+builder.Services.AddScoped<server.Validations.Interfaces.IStudentDetailsValidations, server.Validations.Classes.StudentDetailsValidations>();
 /* PROFESSORS SUBJECTS*/
 builder.Services.AddScoped<server.Repositories.Interfaces.IProfessorSubjectsRepository, server.Repositories.Classes.ProfessorSubjectsRepository>();
 builder.Services.AddScoped<server.Validations.Interfaces.IProfessorSubjectsValidation, server.Validations.Classes.ProfessorSubjectsValidations>();

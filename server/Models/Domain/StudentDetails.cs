@@ -16,7 +16,7 @@ namespace server.Models.Domain
         public long ClassDepId { get; set; }
         public ClassDepartment? ClassDepartment { get; set; }
         [Column(TypeName = "smallint")]
-        public int? StudentDiscipline { get; set; } = 5; //vladanje po defaultu = 5
+        public int StudentDiscipline { get; set; } = 5; //vladanje po defaultu = 5
 
         [Column(TypeName = "bigint")]
         public long CreatedById { get; set; }
@@ -31,5 +31,8 @@ namespace server.Models.Domain
         public DateTime? DeletedDate { get; set; }
         [Column(TypeName = "bigint")]
         public long DeletedById { get; set; }
+
+        public long ParId1 { get; set; }
+        public long ParId2 { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using server.Models.Domain;
+using server.Models.DTOs.StudentDetails;
 
 namespace server.Profiles
 {
@@ -6,7 +8,8 @@ namespace server.Profiles
     {
         public StudentDetailsProfiles()
         {
-            CreateMap<Models.Domain.StudentDetails, Models.DTOs.StudentDetails.PostStudentDetails>().ReverseMap();
+            CreateMap<StudentDetails, PostStudentDetails>().ReverseMap();
+            CreateMap<StudentDetails, PatchStudentDetails>().ReverseMap();
         }
     }
 }
