@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace server.Database
 {
@@ -16,8 +15,11 @@ namespace server.Database
         public DbSet<Models.Domain.tempEmail> tempEmails { get; set; }
 
         public DbSet<Models.Domain.ProfessorSubjects> ProfessorSubjects { get; set; }
+        public DbSet<Models.Domain.ClassSubjects> ClassSubjects { get; set; }
+        
+        /* VIEWS  FROM REGISTRIES*/
         public DbSet<Models.Domain.Subject> Subjects { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Models.Domain.Subject>()
