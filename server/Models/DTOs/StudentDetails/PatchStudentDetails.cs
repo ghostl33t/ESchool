@@ -11,7 +11,7 @@ namespace server.Models.DTOs.StudentDetails
         public long ClassDepId { get; set; }
         public int? StudentDiscipline { get; set; }
         public long UpdatedById { get; set; }
-        public long ParId1 { get; set; }
-        public long ParId2 { get; set; }
+        public long ParentId1 { get; set; }
+        public long ParentId2 { get; set; }
     }
 }

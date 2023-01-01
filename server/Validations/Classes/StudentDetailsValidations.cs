@@ -84,9 +84,9 @@ namespace server.Validations.Classes
                 code = 400;
                 validationMessage = "Class department is not defined";
             }
-            if(studentDetails.ParId1 != 0 || studentDetails.ParId2 != 0)
+            if(studentDetails.ParentId1 != 0 || studentDetails.ParentId2 != 0)
             {
-                if (await ValidateParent(studentDetails.ParId1) == false && await ValidateParent(studentDetails.ParId2) == false)
+                if (await ValidateParent(studentDetails.ParentId1) == false && await ValidateParent(studentDetails.ParentId2) == false)
                 {
                     code = 400;
                     validationMessage = "Parent is not defined";
@@ -130,9 +130,9 @@ namespace server.Validations.Classes
                 code = 400;
                 validationMessage = "Class department is not defined";
             }
-            if (studentDetails.ParId1 != 0 || studentDetails.ParId2 != 0)
+            if (studentDetails.ParentId1 != 0 || studentDetails.ParentId2 != 0)
             {
-                if (await ValidateParent(studentDetails.ParId1) == false && await ValidateParent(studentDetails.ParId2) == false)
+                if (await ValidateParent(studentDetails.ParentId1) == false && await ValidateParent(studentDetails.ParentId1) == false)
                 {
                     code = 400;
                     validationMessage = "Parent is not defined";

@@ -80,7 +80,7 @@ public class ProfessorSubjectsValidations : IProfessorSubjectsValidation
     public async Task<bool> Validate(PostProfessorSubjects professorSubj)
     {
         code = 0;
-        if( await ValidateCreator(professorSubj.CreatedById) == false)
+        if( await ValidateCreator(professorSubj.CreatedById_) == false)
         {
             code = 401;
             validationMessage = "Unauthorized";
@@ -90,19 +90,19 @@ public class ProfessorSubjectsValidations : IProfessorSubjectsValidation
             code = 400;
             validationMessage = "Invalid professor id ";
         }
-        else if (await ValidateProfessorRepeating(0,professorSubj.ProfessorId_, professorSubj.SubjectId_) == false)
+        else if (await ValidateProfessorRepeating(0,professorSubj.ProfessorId_, professorSubj.SubjectId) == false)
         {
             code = 400;
             validationMessage = "Professor for this subject is already defined";
         }
-        else if (await ValidateSubject(professorSubj.SubjectId_) == false)
+        else if (await ValidateSubject(professorSubj.SubjectId) == false)
         {
             code = 400;
             validationMessage = "Invalid subject!";
         }
         if(code != 0) { return false;}
         code = 201;
-        validationMessage = String.Format("Relation between professor '{0}' and subject '{1}' created!",professorSubj.ProfessorId_, professorSubj.SubjectId_);
+        validationMessage = String.Format("Relation between professor '{0}' and subject '{1}' created!",professorSubj.ProfessorId_, professorSubj.SubjectId);
         return true;
     }
     public async Task<bool> Validate(long Id, PatchProfessorSubjects professorSubj)
@@ -123,19 +123,19 @@ public class ProfessorSubjectsValidations : IProfessorSubjectsValidation
             code = 400;
             validationMessage = "Invalid professor id ";
         }
-        else if (await ValidateProfessorRepeating(1, professorSubj.ProfessorId_, professorSubj.SubjectId_) == false)
+        else if (await ValidateProfessorRepeating(1, professorSubj.ProfessorId_, professorSubj.SubjectId) == false)
         {
             code = 400;
             validationMessage = "Professor for this subject is already defined";
         }
-        else if (await ValidateSubject(professorSubj.SubjectId_) == false)
+        else if (await ValidateSubject(professorSubj.SubjectId) == false)
         {
             code = 400;
             validationMessage = "Invalid subject!";
         }
         if (code != 0) { return false; }
         code = 201;
-        validationMessage = String.Format("Relation between professor '{0}' and subject '{1}' updated!", professorSubj.ProfessorId_, professorSubj.SubjectId_);
+        validationMessage = String.Format("Relation between professor '{0}' and subject '{1}' updated!", professorSubj.ProfessorId_, professorSubj.SubjectId);
         return true;
     }
     public async Task<bool> Validate(long Id, long AdministratorId)

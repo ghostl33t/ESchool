@@ -12,7 +12,7 @@ namespace server.Models.DTOs.StudentDetails
         public int? StudentDiscipline { get; set; } = 5; 
         public long CreatedById { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public long ParId1 { get; set; }
-        public long ParId2 { get; set; }
+        public long ParentId1 { get; set; }
+        public long ParentId2 { get; set; }
     }
 }

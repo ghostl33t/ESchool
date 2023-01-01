@@ -32,7 +32,7 @@ namespace server.Models.Domain
         [Column(TypeName = "bigint")]
         public long DeletedById { get; set; }
 
-        public long ParId1 { get; set; }
-        public long ParId2 { get; set; }
+        public long ParentId1 { get; set; }
+        public long ParentId2 { get; set; }
     }
 }

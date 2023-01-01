@@ -20,6 +20,7 @@ namespace server.Repositories.Classes
             try
             {
                 newProfSubj.Professor = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newProfSubj.ProfessorId_);
+                newProfSubj.CreatedBy = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newProfSubj.ProfessorId_);
                 await _dbMain.ProfessorSubjects.AddAsync(newProfSubj);
                 await _dbMain.SaveChangesAsync();
                 return newProfSubj.ID;
@@ -69,7 +70,7 @@ namespace server.Repositories.Classes
             {
                 var query = from profsubjects in _dbMain.ProfessorSubjects
                             join professors in _dbMain.Users on profsubjects.Professor.Id equals professors.Id
-                            join subjects in _dbRegistries.Subjects on profsubjects.SubjectId equals subjects.Id
+                            join subjects in _dbMain.Subjects on profsubjects.SubjectId equals subjects.Id
                             select new
                             {
                                 ProfessorNameAndSurname = professors.Name + " " + professors.LastName,
