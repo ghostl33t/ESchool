@@ -62,8 +62,15 @@ builder.Services.AddScoped<server.Validations.Interfaces.IStudentDetailsValidati
 /* PROFESSORS SUBJECTS*/
 builder.Services.AddScoped<server.Repositories.Interfaces.IProfessorSubjectsRepository, server.Repositories.Classes.ProfessorSubjectsRepository>();
 builder.Services.AddScoped<server.Validations.Interfaces.IProfessorSubjectsValidation, server.Validations.Classes.ProfessorSubjectsValidations>();
+/* CLASS SUBJECTS */
+builder.Services.AddScoped<server.Repositories.Interfaces.IClassSubjects, server.Repositories.Classes.ClassSubjectsRepository>();
+builder.Services.AddScoped<server.Validations.Interfaces.IClassSubjectsValidations, server.Validations.Classes.ClassSubjectsValidations>();
+/* CLASS PROFESSORS */
+builder.Services.AddScoped<server.Repositories.Interfaces.IClassProfessor, server.Repositories.Classes.ClassProfessorRepository>();
+builder.Services.AddScoped<server.Validations.Interfaces.IClassProfessorsValidations, server.Validations.Classes.ClassProfessorsValidations>();
 /* FUNCTIONS */
 builder.Services.AddSingleton<IResponseService, ResponseService>();
+
 /* SERVICES */
 builder.Services.AddScoped<server.Services.AEmailService.IAEmailService, server.Services.AEmailService.AEmailService>();
 /* AUTOMAPPER */
