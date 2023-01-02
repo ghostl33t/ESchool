@@ -74,12 +74,12 @@ namespace server.Validations.Classes
                 code = 401;
                 validationMessage = "Unauthorized!";
             }
-            if(await ValidateStudent(studentDetails.StudId) == false)
+            if(await ValidateStudent(studentDetails.StudentId_) == false)
             {
                 code = 400;
                 validationMessage = "Invalid student Id !";
             }
-            if(await ValidateClassDepartment(studentDetails.ClassDepId) == false)
+            if(await ValidateClassDepartment(studentDetails.ClassDepartmentId_) == false)
             {
                 code = 400;
                 validationMessage = "Class department is not defined";
@@ -120,12 +120,12 @@ namespace server.Validations.Classes
                 code = 401;
                 validationMessage = "Unauthorized!";
             }
-            if (await ValidateStudent(studentDetails.StudId) == false)
+            if (await ValidateStudent(studentDetails.StudentId_) == false)
             {
                 code = 400;
                 validationMessage = "Invalid student Id !";
             }
-            if (await ValidateClassDepartment(studentDetails.ClassDepId) == false)
+            if (await ValidateClassDepartment(studentDetails.ClassDepartmentId_) == false)
             {
                 code = 400;
                 validationMessage = "Class department is not defined";

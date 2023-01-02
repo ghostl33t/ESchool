@@ -8,18 +8,18 @@ namespace server.Repositories.Classes;
 public class SubjectRepository : ISubjects
 {
     private readonly DBMain _dbMain;
-    private readonly DBRegistries _dbRegistries;
-    public SubjectRepository(DBMain dbMain,DBRegistries dbRegistries)
+    //private readonly DBRegistries _dbRegistries;
+    public SubjectRepository(DBMain dbMain)
     {
         this._dbMain = dbMain;
-        this._dbRegistries = dbRegistries;
+        //this._dbRegistries = dbRegistries;
     }
     public async Task<long> CreateSubjectAsync(Subject newSubject)
     {
         try
         {
-            await _dbRegistries.Subjects.AddAsync(newSubject);
-            await _dbRegistries.SaveChangesAsync();
+            await _dbMain.Subjects.AddAsync(newSubject);
+            await _dbMain.SaveChangesAsync();
             return newSubject.Id;
         }
         catch (Exception)
@@ -33,11 +33,11 @@ public class SubjectRepository : ISubjects
     {
         try
         {
-            var subject = await this._dbRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == SubjectId);
+            var subject = await this._dbMain.Subjects.FirstOrDefaultAsync(s => s.Id == SubjectId);
             subject.Deleted = 1;
             subject.DeletedDate = DateTime.Today;
             subject.DeletedById = AdministratorId;
-            await this._dbRegistries.SaveChangesAsync();
+            await this._dbMain.SaveChangesAsync();
             return subject.Id;
         }
         catch (Exception)
@@ -50,7 +50,7 @@ public class SubjectRepository : ISubjects
     {
         try
         {
-            var subject = await this._dbRegistries.Subjects.FirstOrDefaultAsync(s => s.Id == Id);
+            var subject = await this._dbMain.Subjects.FirstOrDefaultAsync(s => s.Id == Id);
             return subject;
         }
         catch (Exception)
@@ -63,7 +63,7 @@ public class SubjectRepository : ISubjects
     {
         try
         {
-            var subjects = await this._dbRegistries.Subjects.Where(s=>s.Deleted == 0).ToListAsync();
+            var subjects = await this._dbMain.Subjects.Where(s=>s.Deleted == 0).ToListAsync();
             return subjects;
         }
         catch (Exception)
@@ -77,8 +77,8 @@ public class SubjectRepository : ISubjects
         {
             if(subject != null)
             {
-                _dbRegistries.Subjects.Update(subject);
-                await this._dbRegistries.SaveChangesAsync();
+                _dbMain.Subjects.Update(subject);
+                await this._dbMain.SaveChangesAsync();
             }
             return subject.Id;
         }

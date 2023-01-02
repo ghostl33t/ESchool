@@ -2,8 +2,6 @@
 using server.Database;
 using server.Models.Domain;
 using server.Repositories.Interfaces;
-using System.ComponentModel.DataAnnotations;
-
 namespace server.Repositories.Classes
 {
     public class StudentDetailsRepository : IStudentDetails
@@ -17,9 +15,9 @@ namespace server.Repositories.Classes
         {
             try
             {
-                var student = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == studentdet.StudId);
+                var student = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == studentdet.StudentId_);
                 studentdet.Student = student;
-                studentdet.ClassDepartment = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == studentdet.ClassDepId);
+                studentdet.ClassDepartment = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == studentdet.ClassDepartmentId_);
                 await _dbMain.StudentsDetails.AddAsync(studentdet);
                 await _dbMain.SaveChangesAsync();
                 return studentdet.Id;
@@ -31,16 +29,18 @@ namespace server.Repositories.Classes
                 throw;
             }
         }
-        public async Task<long> UpdateStudentDetails( StudentDetails studentdet)
+        public async Task<long> UpdateStudentDetails(long Id, StudentDetails studentdet)
         {
             try
             {
                 if(studentdet != null)
                 {
+                    studentdet.Id = Id;
+                    studentdet.ClassDepartment = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == studentdet.ClassDepartmentId_);
                     _dbMain.StudentsDetails.Update(studentdet);
                     await _dbMain.SaveChangesAsync();
                 }
-                return studentdet.Id;
+                return Id;
             }
             catch (Exception)
             {
@@ -55,7 +55,7 @@ namespace server.Repositories.Classes
                 var validadmin = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == AdministratorId && s.Deleted == 0 && s.UserType == 0);
                 if(validadmin != null)
                 {
-                    var studentDetails = await _dbMain.StudentsDetails.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id);
+                    var studentDetails = await _dbMain.StudentsDetails.FirstOrDefaultAsync(s => s.Id == Id);
                     studentDetails.Deleted = 1;
                     studentDetails.DeletedDate = DateTime.Now;
                     studentDetails.DeletedById = AdministratorId;

@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using server.Models.Domain;
+using System.Data;
 
 namespace server.Database
 {
@@ -18,13 +20,19 @@ namespace server.Database
         public DbSet<Models.Domain.ClassSubjects> ClassSubjects { get; set; }
         public DbSet<Models.Domain.ClassProfessors> ClassProfessors { get; set; }
 
+
         /* VIEWS  FROM REGISTRIES*/
         public DbSet<Models.Domain.Subject> Subjects { get; set; }
-        
+        public DbSet<Models.Domain.SchoolList> SchoolList { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Models.Domain.Subject>()
                 .ToView(nameof(Subjects))
+                .ToTable(nameof(DBRegistries.Subjects))
+                .HasKey(s => s.Id);
+            modelBuilder.Entity<Models.Domain.SchoolList>()
+                .ToView(nameof(SchoolList))
+                .ToTable(nameof(DBRegistries.SchoolList))
                 .HasKey(s => s.Id);
         }
     }

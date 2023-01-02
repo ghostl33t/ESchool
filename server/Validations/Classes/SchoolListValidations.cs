@@ -8,13 +8,11 @@ namespace server.Validations.Classes
     public class SchoolListValidations : ISchoolListValidations
     {
         private readonly DBMain _dbMain;
-        private readonly DBRegistries _dbRegistries;
         public string validationMessage { get; set; } = String.Empty;
         public int code { get; set; }
-        public SchoolListValidations(DBMain dbMain, DBRegistries dbRegistries)
+        public SchoolListValidations(DBMain dbMain)
         {
             this._dbMain = dbMain;
-            this._dbRegistries = dbRegistries;
         }
 
         public async Task<bool> ValidateSchoolCreator(long CreatedById)
@@ -28,7 +26,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> ValidateSerialUnique(string serialNumber)
         {
-            var schoolExists = _dbRegistries.SchoolList.FirstOrDefault(s => s.SerialNumber == serialNumber && s.Deleted == 0);
+            var schoolExists = _dbMain.SchoolList.FirstOrDefault(s => s.SerialNumber == serialNumber && s.Deleted == 0);
             if (schoolExists != null)
             {
                 return await Task.FromResult(false);
@@ -94,7 +92,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> Validation(long Id, Models.DTOs.SchoolList.PatchUpdate school)
         {
-            var schoolexist = await _dbRegistries.SchoolList.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id);
+            var schoolexist = await _dbMain.SchoolList.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id);
             code = 0;
             if (await ValidateSchoolCreator(school.UpdatedById) == false)
             {
@@ -142,7 +140,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> Validation(long schoolId, long AdministratorId)
         {
-            var school = await this._dbRegistries.SchoolList.AsNoTracking().FirstOrDefaultAsync(s => s.Id == schoolId);
+            var school = await this._dbMain.SchoolList.AsNoTracking().FirstOrDefaultAsync(s => s.Id == schoolId);
             var Administrator = await this._dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == AdministratorId);
             code = 0;
             if (Administrator != null)

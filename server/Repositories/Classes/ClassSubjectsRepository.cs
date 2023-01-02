@@ -3,8 +3,6 @@ using server.Database;
 using server.Models.Domain;
 using server.Models.DTOs.ClassSubjects;
 using server.Repositories.Interfaces;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography.X509Certificates;
 
 namespace server.Repositories.Classes;
 public class ClassSubjectsRepository : IClassSubjects
@@ -25,8 +23,8 @@ public class ClassSubjectsRepository : IClassSubjects
                         join subject in _dbMain.Subjects on classSubject.Subject.Id equals subject.Id
                         join classdep in _dbMain.ClassDepartments on classSubject.ClassDepartment.ID equals classdep.ID
                         join professorsubjects in _dbMain.ProfessorSubjects on subject.Id equals professorsubjects.SubjectId
-
                         join professor in _dbMain.Users on professorsubjects.Professor.Id equals professor.Id
+                        join professorclassdep in _dbMain.ClassProfessors on professor.Id equals professorclassdep.Professor.Id
                         where classSubject.ClassDepartment.ID == classDepartmentId
                         select new
                         {
@@ -57,6 +55,9 @@ public class ClassSubjectsRepository : IClassSubjects
     {
         try
         {
+            classSubject.Subject = await _dbMain.Subjects.FirstOrDefaultAsync(s => s.Id == classSubject.SubjectId_);
+            classSubject.ClassDepartment = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == classSubject.ClassDepartmentId_);
+            classSubject.CreatedBy = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == classSubject.CreatedById_);
             await _dbMain.ClassSubjects.AddAsync(classSubject);
             await _dbMain.SaveChangesAsync();
             return classSubject.ID;
@@ -72,8 +73,8 @@ public class ClassSubjectsRepository : IClassSubjects
         try
         {
             classSubjects.ID = Id;
-            classSubjects.Subject = await _dbMain.Subjects.AsNoTracking().FirstOrDefaultAsync(s => s.Id == classSubjects.SubjectId_);
-            classSubjects.ClassDepartment = await _dbMain.ClassDepartments.AsNoTracking().FirstOrDefaultAsync(s => s.ID == classSubjects.ClassDepartmentId_);
+            classSubjects.Subject = await _dbMain.Subjects.FirstOrDefaultAsync(s => s.Id == classSubjects.SubjectId_);
+            classSubjects.ClassDepartment = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == classSubjects.ClassDepartmentId_);
             _dbMain.ClassSubjects.Update(classSubjects);
             await _dbMain.SaveChangesAsync();
             return Id;
@@ -88,7 +89,7 @@ public class ClassSubjectsRepository : IClassSubjects
     {
         try
         {
-            var classSubject = await _dbMain.ClassSubjects.AsNoTracking().FirstOrDefaultAsync(s => s.ID == classSubjectId);
+            var classSubject = await _dbMain.ClassSubjects.FirstOrDefaultAsync(s => s.ID == classSubjectId);
             classSubject.Deleted = 1;
             classSubject.DeletedDate = DateTime.Now;
             classSubject.DeletedById = leaderId;

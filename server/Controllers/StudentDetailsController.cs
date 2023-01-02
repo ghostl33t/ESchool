@@ -44,7 +44,7 @@ namespace server.Controllers
             {
                 var studentdetails = _mapper.Map<StudentDetails>(studentDetailsDto);
                 studentdetails.Id = Id;
-                var res = await _studentDetailsRepo.UpdateStudentDetails( studentdetails);
+                var res = await _studentDetailsRepo.UpdateStudentDetails(Id, studentdetails);
             }
             return await _clFunctions.Response(_studentDetailsValidation.code, _studentDetailsValidation.validationMessage);
         }

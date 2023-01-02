@@ -7,14 +7,12 @@ namespace server.Validations.Classes
     public class SubjectValidations : ISubjectValidations
     {
         private readonly DBMain _dbMain;
-        private readonly DBRegistries _dbRegistries;
 
         public string validationMessage { get; set; } = String.Empty;
         public int code { get; set; }
-        public SubjectValidations(DBMain dbMain, DBRegistries dBRegistries)
+        public SubjectValidations(DBMain dbMain )
         {
             this._dbMain = dbMain;
-            this._dbRegistries = dBRegistries;
         }
 
         public async Task<bool> ValidateCreator(long CreatedById)
@@ -28,7 +26,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> ValidateSerialUnique(string serialNumber)
         {
-            var subjectExist = _dbRegistries.Subjects.AsNoTracking().FirstOrDefault(s => s.SerialNumber == serialNumber && s.Deleted == 0);
+            var subjectExist = _dbMain.Subjects.AsNoTracking().FirstOrDefault(s => s.SerialNumber == serialNumber && s.Deleted == 0);
             if (subjectExist != null)
             {
                 return await Task.FromResult(false);
@@ -83,7 +81,7 @@ namespace server.Validations.Classes
         public async Task<bool> Validation(long Id,Models.DTOs.Subject.PatchSubject subject)
         {
             code = 0;
-            var subjectExist = await this._dbRegistries.Subjects.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id);
+            var subjectExist = await this._dbMain.Subjects.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id);
             if (await ValidateCreator(subject.UpdatedById) == false)
             {
                 code = 401;
@@ -120,7 +118,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> Validation(long SubjectId, long AdministratorId)
         {
-            var subject = await _dbRegistries.Subjects.AsNoTracking().FirstOrDefaultAsync(s => s.Id == SubjectId);
+            var subject = await _dbMain.Subjects.AsNoTracking().FirstOrDefaultAsync(s => s.Id == SubjectId);
             var Administrator = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == AdministratorId);
             if(Administrator != null)
             {

@@ -82,7 +82,7 @@ namespace server.Validations.Classes
         {
             validationMessage = "";
             code = 0;
-            if (await ValidateCreator(classDepartment.CreatorId) == false)
+            if (await ValidateCreator(classDepartment.CreatedById_) == false)
             {
                 code = 401;
                 validationMessage = await Task.FromResult("You don't have permision to create class!");

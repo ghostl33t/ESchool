@@ -19,7 +19,7 @@ namespace server.Validations.Classes
 
         public async Task<bool> ValidateCreator(long leaderId, long classDepId)
         {
-            var classDep = await _dbMain.ClassDepartments.AsNoTracking().FirstOrDefaultAsync(s => s.ID == classDepId && s.Deleted == 0);
+            var classDep = await _dbMain.ClassDepartments.AsNoTracking().Include(s=>s.LeaderProfessor).FirstOrDefaultAsync(s => s.ID == classDepId && s.Deleted == 0);
             if(classDep != null)
             {
                 if(classDep.LeaderProfessor.Id != leaderId) { return false; }

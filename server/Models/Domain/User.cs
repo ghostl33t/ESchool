@@ -27,6 +27,14 @@ namespace server.Models.Domain
         [MaxLength(25)]
         public string? LastName { get; set; }
 
+        [Column(TypeName = "nvarchar")]
+        [MaxLength(30)]
+        public string? Email { get; set; } = "";
+
+        [Column(TypeName = "nvarchar")]
+        [MaxLength(12)]
+        public string? Phone { get; set; }
+
         [Column(TypeName ="smallint")]
         public int UserType { get; set; }
         [Column(TypeName ="date")]
@@ -35,10 +43,6 @@ namespace server.Models.Domain
         [MinLength(13)]
         [MaxLength(13)]
         public string? OIB { get; set; }
-
-        [Column(TypeName ="nvarchar")]
-        [MaxLength(12)]
-        public string? Phone { get; set; }
         [Column(TypeName ="datetime")]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         [Column(TypeName = "datetime")]
@@ -49,8 +53,6 @@ namespace server.Models.Domain
         [Column(TypeName ="smallint")]
         public int? Deleted { get; set; }
 
-        [Column(TypeName = "nvarchar")]
-        [MaxLength(30)]
-        public string? Email { get; set; } = "";
+        
     }
 }

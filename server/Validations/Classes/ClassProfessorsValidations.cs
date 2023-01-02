@@ -18,7 +18,7 @@ public class ClassProfessorsValidations : IClassProfessorsValidations
 
     public async Task<bool> ValidateCreator(long leaderId, long classDepId)
     {
-        var classDep = await _dbMain.ClassDepartments.AsNoTracking().FirstOrDefaultAsync(s => s.ID == classDepId && s.Deleted == 0);
+        var classDep = await _dbMain.ClassDepartments.AsNoTracking().Include(s=> s.LeaderProfessor).FirstOrDefaultAsync(s => s.ID == classDepId && s.Deleted == 0);
         if (classDep != null)
         {
             if (classDep.LeaderProfessor.Id != leaderId) { return false; }
@@ -95,8 +95,8 @@ public class ClassProfessorsValidations : IClassProfessorsValidations
     }
     public async Task<bool> Validate(long Id, long leaderId)
     {
-        var classProfessor = await _dbMain.ClassSubjects.AsNoTracking().FirstOrDefaultAsync(s => s.ID == Id);
-        var classDep = await _dbMain.ClassDepartments.AsNoTracking().FirstOrDefaultAsync(s => s.LeaderProfessor.Id == leaderId && Id == classProfessor.ClassDepartmentId_);
+        var classProfessor = await _dbMain.ClassProfessors.AsNoTracking().FirstOrDefaultAsync(s => s.ID == Id);
+        var classDep = await _dbMain.ClassDepartments.AsNoTracking().FirstOrDefaultAsync(s => s.LeaderProfessor.Id == leaderId && Id == classProfessor.ClassDepartment.ID);
         if (classProfessor == null || classDep == null)
         {
             code = 401;
@@ -104,7 +104,7 @@ public class ClassProfessorsValidations : IClassProfessorsValidations
         }
         if (code != 0) { return false; }
         code = 200;
-        validationMessage = String.Format("Relation between Class department '{0}' & classProfessors '{1}' deleted successfuly!", classProfessor.ClassDepartmentId_, classProfessor.ProfessorId_);
+        validationMessage = String.Format("Relation between Class department '{0}' & classProfessors '{1}' deleted successfuly!", classProfessor.ClassDepartment.ID, classProfessor.Professor.Id);
         return true;
     }
 }

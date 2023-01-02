@@ -11,6 +11,6 @@ public class PatchClassDepartment
     public long UpdatedById { get; set; }
 
     public int Year { get; set; }
-    public long LeaderProfessorId { get; set; }
+    public long LeaderProfessorId_ { get; set; }
 
 }

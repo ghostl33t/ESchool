@@ -9,19 +9,17 @@ namespace server.Repositories.Classes
     public class ClassDepartmentRepository : IClassDepartment
     {
         private readonly DBMain _dbMain;
-        private readonly DBRegistries _dbRegistries;
         
-        public ClassDepartmentRepository(DBMain dbMain, DBRegistries dbRegistries)
+        public ClassDepartmentRepository(DBMain dbMain)
         {
             this._dbMain = dbMain;
-            this._dbRegistries = dbRegistries;
         }
         public async Task<long> CreateClassDepartmentAsync(ClassDepartment newclassdepp)
         {
             try
             {
-                newclassdepp.CreatedBy = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newclassdepp.CreatorId);
-                newclassdepp.LeaderProfessor = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newclassdepp.ProfessorId);
+                newclassdepp.CreatedBy = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newclassdepp.CreatedById_);
+                newclassdepp.LeaderProfessor = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newclassdepp.LeaderProfessorId_);
                 await _dbMain.ClassDepartments.AddAsync(newclassdepp);
 
                 await _dbMain.SaveChangesAsync();
@@ -89,6 +87,7 @@ namespace server.Repositories.Classes
             try
             {
                 updatedclassdep.ID = Id;
+                updatedclassdep.LeaderProfessor = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == updatedclassdep.LeaderProfessorId_);
                  _dbMain.ClassDepartments.Update(updatedclassdep);
                 return updatedclassdep;
             }
@@ -98,56 +97,61 @@ namespace server.Repositories.Classes
             }
             
         }
-
-        //d)	Kreirati metodu koja ce za odredjeni razred vratiti listu svih studenata koji se nalaze u njemu
-        // Ime (ime roditelja) Prezime | Vrsta skole | Razred | 
-
         public async Task<List<GetStudentDetails>> GetStudentsPerClassDetailsAsync(long id)
         {
-            var classExist = await this._dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == id && s.Deleted == 0);
-            if (classExist == null)
+            try
             {
-                return null;
+                var classExist = await this._dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == id && s.Deleted == 0);
+                if (classExist == null)
+                {
+                    return null;
+                }
+                string classGrade = "";
+                switch (classExist.Year)
+                {
+                    case 1:
+                        classGrade = "I";
+                        break;
+                    case 2:
+                        classGrade = "II";
+                        break;
+                    case 3:
+                        classGrade = "III";
+                        break;
+                    case 4:
+                        classGrade = "IV";
+                        break;
+                    default:
+                        break;
+                }
+                var query = from students in _dbMain.StudentsDetails
+                            join users in _dbMain.Users on students.Student.Id equals users.Id
+                            join classDep in _dbMain.ClassDepartments on students.ClassDepartment.ID equals classDep.ID
+                            join schoolList in _dbMain.SchoolList on classDep.SchoolListId equals schoolList.Id
+                            where students.ClassDepartment.ID == id
+                            select new
+                            {
+                                Name = users.Name + ' ' + users.LastName,
+                                SchoolType = schoolList.Name + " - " + classDep.SerialNumber + " - " + classDep.Name,
+                                ClassGrade = classGrade
+                            };
+                List<GetStudentDetails> studentsList = new List<GetStudentDetails>();
+                foreach (var row in query)
+                {
+                    GetStudentDetails student = new GetStudentDetails();
+                    student.Name = row.Name;
+                    student.SchoolType = row.SchoolType;
+                    student.ClassGrade = row.ClassGrade;
+                    studentsList.Add(student);
+                }
+                return studentsList;
             }
-            string classGrade = "";
-            switch (classExist.Year)
+            catch (Exception)
             {
-                case 1:
-                    classGrade = "I";
-                    break;
-                case 2:
-                    classGrade = "II";
-                    break;
-                case 3:
-                    classGrade = "III";
-                    break;
-                case 4:
-                    classGrade = "IV";
-                    break;
-                default:
-                    break ;
+
+                throw;
             }
-            var studentsFromClassList = await this._dbMain.StudentsDetails.Where(s => s.ClassDepartment.ID == id && s.Deleted == 0).ToListAsync();
-            var usersList = await this._dbMain.Users.Where(s => s.Deleted == 0 && s.UserType == 2).ToListAsync();
-            var schoolsType = await this._dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Deleted == 0 && s.Id == classExist.SchoolListId);
-            var query = from students in studentsFromClassList
-                        join users in usersList on students.Student.Id equals users.Id
-                        select new
-                        {
-                            Name = users.Name + ' ' + users.LastName,
-                            SchoolType = schoolsType.Name,
-                            ClassGrade = classGrade 
-                        };
-            List<GetStudentDetails> studentsList = new List<GetStudentDetails>();
-            foreach(var row in query)
-            {
-                GetStudentDetails student = new GetStudentDetails();
-                student.Name = row.Name;
-                student.SchoolType = row.SchoolType;
-                student.ClassGrade = row.ClassGrade;
-                studentsList.Add(student);
-            }
-            return studentsList;
+          
         }
 
     }

@@ -8,20 +8,18 @@ namespace server.Repositories.Classes
 {
     public class SchoolListRepositorycs : ISchoolList
     {
-        private readonly DBRegistries _dbRegistries;
         private readonly DBMain _dbMain;
         private readonly IMapper _mapper;
-        public SchoolListRepositorycs(DBRegistries dbRegistries, IMapper mapper,DBMain dbMain)
+        public SchoolListRepositorycs(IMapper mapper,DBMain dbMain)
         {
             this._dbMain = dbMain;
-            this._dbRegistries = dbRegistries;
             this._mapper = mapper;
         }
         public async Task<List<SchoolList>> GetSchoolsList()
         {
             try
             {
-                var schoolList = await _dbRegistries.SchoolList.Where(s => s.Deleted == 0).ToListAsync();
+                var schoolList = await _dbMain.SchoolList.Where(s => s.Deleted == 0).ToListAsync();
                 return schoolList;
             }
             catch (Exception)
@@ -36,7 +34,7 @@ namespace server.Repositories.Classes
         {
             try
             {
-                var school = await _dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == Id);
+                var school = await _dbMain.SchoolList.FirstOrDefaultAsync(s => s.Id == Id);
                 return school;
 
             }
@@ -51,8 +49,8 @@ namespace server.Repositories.Classes
             try
             {
                 newSchool.CreatedDate = DateTime.Today;
-                await _dbRegistries.SchoolList.AddAsync(newSchool);
-                await _dbRegistries.SaveChangesAsync();
+                await _dbMain.SchoolList.AddAsync(newSchool);
+                await _dbMain.SaveChangesAsync();
                 return newSchool.Id;
             }
             catch (Exception)
@@ -66,8 +64,8 @@ namespace server.Repositories.Classes
             try
             {
                 school.Id = Id;
-                _dbRegistries.SchoolList.Update(school);
-                await _dbRegistries.SaveChangesAsync();
+                _dbMain.SchoolList.Update(school);
+                await _dbMain.SaveChangesAsync();
                 return school.Id;
             }
             catch (Exception)
@@ -80,11 +78,11 @@ namespace server.Repositories.Classes
         {
             try
             {
-                var school = await _dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == SchoolId);
+                var school = await _dbMain.SchoolList.FirstOrDefaultAsync(s => s.Id == SchoolId);
                 school.Deleted = 1;
                 school.DeletedById = AdministratorId;
                 school.DeletedDate = DateTime.Today;
-                await _dbRegistries.SaveChangesAsync();
+                await _dbMain.SaveChangesAsync();
                 return school.Id;
             }
             catch (Exception)

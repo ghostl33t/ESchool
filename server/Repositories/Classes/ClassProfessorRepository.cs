@@ -20,6 +20,9 @@ public class ClassProfessorRepository : IClassProfessor
     {
         try
         {
+            classProfessor.Professor = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == classProfessor.ProfessorId_);
+            classProfessor.ClassDepartment = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == classProfessor.ClassDepartmentId_);
+            classProfessor.CreatedBy = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == classProfessor.CreatedById_);
             await _dbMain.ClassProfessors.AddAsync(classProfessor);
             await _dbMain.SaveChangesAsync();
             return classProfessor.ID;
@@ -35,6 +38,8 @@ public class ClassProfessorRepository : IClassProfessor
     {
         try
         {
+            classProfessor.Professor = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == classProfessor.ProfessorId_);
+            classProfessor.ClassDepartment = await _dbMain.ClassDepartments.FirstOrDefaultAsync(s => s.ID == classProfessor.ClassDepartmentId_);
             classProfessor.ID = Id;
             _dbMain.ClassProfessors.Update(classProfessor);
             await _dbMain.SaveChangesAsync();
@@ -51,7 +56,7 @@ public class ClassProfessorRepository : IClassProfessor
     {
         try
         {
-            var classProf = await _dbMain.ClassProfessors.AsNoTracking().FirstOrDefaultAsync(s => s.ID == classProfId);
+            var classProf = await _dbMain.ClassProfessors.FirstOrDefaultAsync(s => s.ID == classProfId);
             classProf.Deleted = 1;
             classProf.DeletedById = leaderId;
             classProf.DeletedDate = DateTime.Now;

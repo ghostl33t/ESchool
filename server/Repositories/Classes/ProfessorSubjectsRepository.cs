@@ -20,7 +20,7 @@ namespace server.Repositories.Classes
             try
             {
                 newProfSubj.Professor = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newProfSubj.ProfessorId_);
-                newProfSubj.CreatedBy = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newProfSubj.ProfessorId_);
+                newProfSubj.CreatedBy = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == newProfSubj.CreatedById_);
                 await _dbMain.ProfessorSubjects.AddAsync(newProfSubj);
                 await _dbMain.SaveChangesAsync();
                 return newProfSubj.ID;
@@ -36,6 +36,7 @@ namespace server.Repositories.Classes
         {
             try
             {
+                profSubj.Professor = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == profSubj.ProfessorId_);
                 _dbMain.ProfessorSubjects.Update(profSubj);
                 await _dbMain.SaveChangesAsync();
                 return profSubj.ID;

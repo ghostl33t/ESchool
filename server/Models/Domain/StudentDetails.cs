@@ -9,11 +9,9 @@ namespace server.Models.Domain
         [Key]
         [Column(TypeName = "bigint")]
         public long Id { get; set; }
-        [NotMapped]
-        public long StudId { get; set; }
+        
         public User? Student{ get; set; }
-        [NotMapped]
-        public long ClassDepId { get; set; }
+        
         public ClassDepartment? ClassDepartment { get; set; }
         [Column(TypeName = "smallint")]
         public int StudentDiscipline { get; set; } = 5; //vladanje po defaultu = 5
@@ -31,8 +29,13 @@ namespace server.Models.Domain
         public DateTime? DeletedDate { get; set; }
         [Column(TypeName = "bigint")]
         public long DeletedById { get; set; }
-
         public long ParentId1 { get; set; }
         public long ParentId2 { get; set; }
+
+        //NotMapped objects
+        [NotMapped]
+        public long StudentId_ { get; set; }
+        [NotMapped]
+        public long ClassDepartmentId_ { get; set; }
     }
 }

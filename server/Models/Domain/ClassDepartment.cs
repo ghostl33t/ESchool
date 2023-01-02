@@ -19,19 +19,23 @@ namespace server.Models.Domain
         public long SchoolListId { get; set; }
 
         public int Year { get; set; }
-        [NotMapped]
-        public long ProfessorId { get; set; }
+        
         public User? LeaderProfessor { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         [Column(TypeName = "datetime")]
-        [NotMapped]
-        public long CreatorId { get; set; }
+        
         public User? CreatedBy { get; set; }
         public long DeletedById { get; set; }
         public DateTime? DeletedDate { get; set; }
         [Column(TypeName = "smallint")]
         public int? Deleted { get; set; }
+
+        //Not mapped objects
+        [NotMapped]
+        public long CreatedById_ { get; set; }
+        [NotMapped]
+        public long LeaderProfessorId_ { get; set; }
 
     }
 }
