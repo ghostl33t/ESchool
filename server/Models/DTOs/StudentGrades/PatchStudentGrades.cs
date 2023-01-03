@@ -2,9 +2,9 @@
 {
     public class PatchStudentGrades
     {
-        public long StudentId_ { get; set; }
-        public long ProfessorId_ { get; set; }
-        public long SubjectId_ { get; set; }
+        public long StudentId { get; set; }
+        public long ProfessorId { get; set; }
+        public long SubjectId { get; set; }
         public int Grade { get; set; }
         public string Description { get; set; } = String.Empty;
 

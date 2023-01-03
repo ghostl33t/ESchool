@@ -19,7 +19,7 @@ namespace server.Database
         public DbSet<Models.Domain.ProfessorSubjects> ProfessorSubjects { get; set; }
         public DbSet<Models.Domain.ClassSubjects> ClassSubjects { get; set; }
         public DbSet<Models.Domain.ClassProfessors> ClassProfessors { get; set; }
-
+        public DbSet<Models.Domain.StudentGrades> StudentGrades { get; set; }
 
         /* VIEWS  FROM REGISTRIES*/
         public DbSet<Models.Domain.Subject> Subjects { get; set; }

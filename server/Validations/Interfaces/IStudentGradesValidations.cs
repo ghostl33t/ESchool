@@ -6,10 +6,7 @@ public interface IStudentGradesValidations
 {
     public int code { get; set; }
     public string validationMessage { get; set; }
-
-    public Task<bool> ValidateCreatorAndSubject(long professorId, long subjectId);
     public Task<bool> ValidateGrade(int grade);
-    public Task<bool> ValidateStudent(long studentId);
     public Task<bool> ValidateDescription(string description);
     public Task<bool> Validate(PostStudentGrades studentGrade);
     public Task<bool> Validate(long Id, PatchStudentGrades studentGrade);
