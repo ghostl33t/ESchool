@@ -30,6 +30,9 @@ public class StudentGradesValidations : IStudentGradesValidations
     {
         code = 0;
         var student = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == studentGrade.StudentId);
+        if(student != null){
+
+        
         var studentDetails = await _dbMain.StudentsDetails.AsNoTracking().Include(s=>s.ClassDepartment).FirstOrDefaultAsync(s => s.StudentId_ == student.Id);
         if(studentDetails != null)
         {
@@ -61,6 +64,12 @@ public class StudentGradesValidations : IStudentGradesValidations
         {
             code = 400;
             validationMessage = "Invalid data";
+        }
+        }
+        else{
+                code = 400;
+                validationMessage = "Invalid data";
+            
         }
         if(await ValidateGrade(studentGrade.Grade) == false)
         {

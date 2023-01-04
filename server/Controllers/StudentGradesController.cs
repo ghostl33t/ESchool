@@ -26,7 +26,7 @@ public class StudentGradesController : Controller
         _clFunctions = clFunctions;
     }
     //get
-
+     
     //post
     [HttpPost]
     [Route("create-grade")]

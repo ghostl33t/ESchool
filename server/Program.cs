@@ -68,6 +68,9 @@ builder.Services.AddScoped<server.Validations.Interfaces.IClassSubjectsValidatio
 /* CLASS PROFESSORS */
 builder.Services.AddScoped<server.Repositories.Interfaces.IClassProfessor, server.Repositories.Classes.ClassProfessorRepository>();
 builder.Services.AddScoped<server.Validations.Interfaces.IClassProfessorsValidations, server.Validations.Classes.ClassProfessorsValidations>();
+builder.Services.AddScoped<server.Repositories.Interfaces.IStudentGrades, server.Repositories.Classes.StudentGradesRepository>();
+builder.Services.AddScoped<server.Validations.Interfaces.IStudentGradesValidations, server.Validations.Classes.StudentGradesValidations>();
+
 /* FUNCTIONS */
 builder.Services.AddSingleton<IResponseService, ResponseService>();
 
