@@ -17,13 +17,13 @@ namespace server.Controllers
         private readonly IStudentDetails _studentDetailsRepo;
         private readonly IMapper _mapper;
         private readonly IStudentDetailsValidations _studentDetailsValidation;
-        private readonly IResponseService _clFunctions;
-        public StudentDetailsController(IStudentDetails studentDetailsRepo, IMapper mapper, IStudentDetailsValidations studentDetailsValidation, IResponseService clFunctions)
+        private readonly IResponseService _responseService;
+        public StudentDetailsController(IStudentDetails studentDetailsRepo, IMapper mapper, IStudentDetailsValidations studentDetailsValidation, IResponseService responseService)
         {
             _studentDetailsRepo = studentDetailsRepo;
             _mapper = mapper;
             _studentDetailsValidation = studentDetailsValidation;
-            _clFunctions = clFunctions;
+            _responseService = responseService;
         }
         [HttpPost]
         [Route("add-student-details")]
@@ -34,7 +34,7 @@ namespace server.Controllers
                 var studentdetails = _mapper.Map<StudentDetails>(newstudentdetailsdto);
                 var res = await _studentDetailsRepo.CreateStudentDetails(studentdetails);
             }
-            return await _clFunctions.Response(_studentDetailsValidation.code, _studentDetailsValidation.validationMessage);
+            return await _responseService.Response(_studentDetailsValidation.code, _studentDetailsValidation.validationMessage);
         }
         [HttpPatch]
         [Route("update-student-details/{Id}")]
@@ -46,7 +46,7 @@ namespace server.Controllers
                 studentdetails.Id = Id;
                 var res = await _studentDetailsRepo.UpdateStudentDetails(Id, studentdetails);
             }
-            return await _clFunctions.Response(_studentDetailsValidation.code, _studentDetailsValidation.validationMessage);
+            return await _responseService.Response(_studentDetailsValidation.code, _studentDetailsValidation.validationMessage);
         }
         [HttpPatch]
         [Route("delete-student-details/{Id}/{AdministratorId}")]
@@ -56,7 +56,7 @@ namespace server.Controllers
             {
                 var res = await _studentDetailsRepo.DeleteStudentDetails(Id, AdministratorId);
             }
-            return await _clFunctions.Response(_studentDetailsValidation.code, _studentDetailsValidation.validationMessage);
+            return await _responseService.Response(_studentDetailsValidation.code, _studentDetailsValidation.validationMessage);
         }
     }
 }

@@ -10,12 +10,12 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
-/* DATABASE SETUP */
+/* DATABASE */
 builder.Services.AddDbContext<DBMain>(options =>
 {
     var mainConnectionString = builder.Configuration.GetConnectionString("DBConnection");
@@ -68,14 +68,13 @@ builder.Services.AddScoped<server.Validations.Interfaces.IClassSubjectsValidatio
 /* CLASS PROFESSORS */
 builder.Services.AddScoped<server.Repositories.Interfaces.IClassProfessor, server.Repositories.Classes.ClassProfessorRepository>();
 builder.Services.AddScoped<server.Validations.Interfaces.IClassProfessorsValidations, server.Validations.Classes.ClassProfessorsValidations>();
+/* STUDENT GRADES */
 builder.Services.AddScoped<server.Repositories.Interfaces.IStudentGrades, server.Repositories.Classes.StudentGradesRepository>();
 builder.Services.AddScoped<server.Validations.Interfaces.IStudentGradesValidations, server.Validations.Classes.StudentGradesValidations>();
 
-/* FUNCTIONS */
-builder.Services.AddSingleton<IResponseService, ResponseService>();
-
 /* SERVICES */
 builder.Services.AddScoped<server.Services.AEmailService.IAEmailService, server.Services.AEmailService.AEmailService>();
+builder.Services.AddSingleton<IResponseService, ResponseService>();
 /* AUTOMAPPER */
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 /* TOKEN */
@@ -95,9 +94,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-}
+//if (app.Environment.IsDevelopment())
+//{
+//}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

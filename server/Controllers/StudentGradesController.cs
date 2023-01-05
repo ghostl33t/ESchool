@@ -16,14 +16,14 @@ public class StudentGradesController : Controller
     private readonly IStudentGrades _studentGradesRepo;
     private readonly IStudentGradesValidations _studentGradesValidation;
     private readonly IMapper _mapper;
-    private readonly IResponseService _clFunctions;
+    private readonly IResponseService _responseService;
 
-    public StudentGradesController  (IStudentGrades studentGradesRepo, IStudentGradesValidations studentGradesValidation, IMapper mapper, IResponseService clFunctions)
+    public StudentGradesController  (IStudentGrades studentGradesRepo, IStudentGradesValidations studentGradesValidation, IMapper mapper, IResponseService responseService)
     {
         _studentGradesRepo = studentGradesRepo;
         _studentGradesValidation = studentGradesValidation;
         _mapper = mapper;
-        _clFunctions = clFunctions;
+        _responseService = responseService;
     }
     //get
      
@@ -37,7 +37,7 @@ public class StudentGradesController : Controller
             var grade = _mapper.Map<StudentGrades>(gradeDto);
             await _studentGradesRepo.CreateGrade(grade);
         }
-        return await _clFunctions.Response(_studentGradesValidation.code, _studentGradesValidation.validationMessage);
+        return await _responseService.Response(_studentGradesValidation.code, _studentGradesValidation.validationMessage);
     }
     //patch
     [HttpPatch]
@@ -50,7 +50,7 @@ public class StudentGradesController : Controller
             grade.Id = Id;
             await _studentGradesRepo.UpdateGrade(Id,grade);
         }
-        return await _clFunctions.Response(_studentGradesValidation.code, _studentGradesValidation.validationMessage);
+        return await _responseService.Response(_studentGradesValidation.code, _studentGradesValidation.validationMessage);
     }
     //Delete
     [HttpDelete]
@@ -61,6 +61,6 @@ public class StudentGradesController : Controller
         {
             await _studentGradesRepo.DeleteGrade(Id, ProfessorId);
         }
-        return await _clFunctions.Response(_studentGradesValidation.code, _studentGradesValidation.validationMessage);
+        return await _responseService.Response(_studentGradesValidation.code, _studentGradesValidation.validationMessage);
     }
 }

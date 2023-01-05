@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Database;
+using server.Models.Domain;
 using server.Validations.Interfaces;
 
 namespace server.Validations.Classes
@@ -18,7 +19,7 @@ namespace server.Validations.Classes
         public async Task<bool> ValidateCreator(long CreatedById)
         {
             var creator = _dbMain.Users.AsNoTracking().FirstOrDefault(s => s.Id == CreatedById && s.Deleted == 0);
-            if (creator == null || creator.UserType != 0)
+            if (creator == null || creator.UserType != UserType .Administrator)
             {
                 return await Task.FromResult(false);
             }
@@ -122,7 +123,7 @@ namespace server.Validations.Classes
             var Administrator = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == AdministratorId);
             if(Administrator != null)
             {
-                if (Administrator.UserType != 0)
+                if (Administrator.UserType != UserType.Administrator)
                 {
                     code = 401;
                     validationMessage = "Unauthorized!";

@@ -14,13 +14,13 @@ public class ClassProfessorsController : Controller
     private readonly IClassProfessor _classProfessorsRepo;
     private readonly IClassProfessorsValidations _classProfessorValidations;
     private readonly IMapper _mapper;
-    private readonly IResponseService _clFunctions;
-    public ClassProfessorsController(IClassProfessor classProfessorRepo, IClassProfessorsValidations classProfessorValidations, IMapper mapper, IResponseService clFunctions)
+    private readonly IResponseService _responseService;
+    public ClassProfessorsController(IClassProfessor classProfessorRepo, IClassProfessorsValidations classProfessorValidations, IMapper mapper, IResponseService responseService)
     {
         _classProfessorsRepo = classProfessorRepo;
         _classProfessorValidations = classProfessorValidations;
         _mapper = mapper;
-        _clFunctions = clFunctions;
+        _responseService = responseService;
     }
 
     //[HttpGet]
@@ -37,7 +37,7 @@ public class ClassProfessorsController : Controller
             var classProfessor = _mapper.Map<ClassProfessors>(classProfessordto);
             var res = await _classProfessorsRepo.CreateClassProfessor(classProfessor);
         }
-        return await _clFunctions.Response(_classProfessorValidations.code, _classProfessorValidations.validationMessage);
+        return await _responseService.Response(_classProfessorValidations.code, _classProfessorValidations.validationMessage);
     }
     [HttpPatch]
     [Route("update-class-professor/{Id}")]
@@ -48,7 +48,7 @@ public class ClassProfessorsController : Controller
             var classProfessor = _mapper.Map<ClassProfessors>(classProfessordto);
             var res = await _classProfessorsRepo.UpdateClassProfessor(Id,classProfessor);
         }
-        return await _clFunctions.Response(_classProfessorValidations.code, _classProfessorValidations.validationMessage);
+        return await _responseService.Response(_classProfessorValidations.code, _classProfessorValidations.validationMessage);
     }
     [HttpPatch]
     [Route("delete-class-professor/{Id}/{LeaderId}")]
@@ -58,6 +58,6 @@ public class ClassProfessorsController : Controller
         {
             var res = await _classProfessorsRepo.DeleteClassProfessor(Id, LeaderId);
         }
-        return await _clFunctions.Response(_classProfessorValidations.code, _classProfessorValidations.validationMessage);
+        return await _responseService.Response(_classProfessorValidations.code, _classProfessorValidations.validationMessage);
     }
 }

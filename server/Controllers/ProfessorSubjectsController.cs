@@ -18,13 +18,13 @@ namespace server.Controllers
         private readonly IProfessorSubjectsRepository _professorSubjectRepository;
         private readonly IProfessorSubjectsValidation _professorSubjectValidations;
         private readonly IMapper _mapper;
-        private readonly IResponseService _clFunctions;
-        public ProfessorSubjectsController(IProfessorSubjectsRepository professorSubjectsRepository, IProfessorSubjectsValidation professorSubjectsValidation, IMapper mapper, IResponseService clFunctions)
+        private readonly IResponseService _responseService;
+        public ProfessorSubjectsController(IProfessorSubjectsRepository professorSubjectsRepository, IProfessorSubjectsValidation professorSubjectsValidation, IMapper mapper, IResponseService responseService)
         {
             _professorSubjectRepository = professorSubjectsRepository;
             _professorSubjectValidations = professorSubjectsValidation;
             _mapper = mapper;
-            _clFunctions = clFunctions;
+            _responseService = responseService;
         }
         //Get
         [HttpGet]
@@ -33,9 +33,9 @@ namespace server.Controllers
             var data = await _professorSubjectRepository.GetProfessorsAndSubjects();
             if(data != null)
             {
-                return await _clFunctions.Response(200, data);
+                return await _responseService.Response(200, data);
             }
-            return await _clFunctions.Response(400, "data not found");
+            return await _responseService.Response(400, "data not found");
         }
         //Create
         [HttpPost]
@@ -50,7 +50,7 @@ namespace server.Controllers
                     await _professorSubjectRepository.CreateProfSubj(newProfSubj);
                 }
             }
-            return await _clFunctions.Response(_professorSubjectValidations.code, _professorSubjectValidations.validationMessage);
+            return await _responseService.Response(_professorSubjectValidations.code, _professorSubjectValidations.validationMessage);
         }
         //Patch
         [HttpPatch]
@@ -63,7 +63,7 @@ namespace server.Controllers
                     profsubj.ID = Id;
                     await _professorSubjectRepository.UpdateProfSubj(profsubj);
             }
-            return await _clFunctions.Response(_professorSubjectValidations.code, _professorSubjectValidations.validationMessage);
+            return await _responseService.Response(_professorSubjectValidations.code, _professorSubjectValidations.validationMessage);
         }
         //Patch(delete) 
         [HttpPatch]
@@ -74,7 +74,7 @@ namespace server.Controllers
             {
                     await _professorSubjectRepository.DeleteProfSubj(Id, AdministratorId);
             }
-            return await _clFunctions.Response(_professorSubjectValidations.code, _professorSubjectValidations.validationMessage);
+            return await _responseService.Response(_professorSubjectValidations.code, _professorSubjectValidations.validationMessage);
         }
     }
 }

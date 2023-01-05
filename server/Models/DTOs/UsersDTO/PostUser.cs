@@ -8,7 +8,7 @@ namespace server.Models.DTOs.UsersDTO
         public string Password { get; set; } = String.Empty;
         public string Name { get; set; } = String.Empty;
         public string LastName { get; set; } = String.Empty;
-        public int UserType { get; set; } 
+        public UserType UserType { get; set; } 
         public DateTime DateOfBirth { get; set; } 
         public string OIB { get; set; } = String.Empty;
         public string Phone { get; set; } = String.Empty;

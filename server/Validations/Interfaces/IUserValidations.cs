@@ -1,4 +1,6 @@
-﻿namespace server.Validations.Interfaces;
+﻿using server.Models.Domain;
+
+namespace server.Validations.Interfaces;
 
 public interface IUserValidations
 {
@@ -7,7 +9,7 @@ public interface IUserValidations
     public Task<bool> ValidateUserNameLength(string username);
     public Task<bool> ValidateUserNameUnique(string username);
     public Task<bool> ValidateUserPassword(string password);
-    public Task<bool> ValidateCreateUserByType(int creatorType, int creationType);
+    public Task<bool> ValidateCreateUserByType(UserType creatorType, UserType creationType);
     public Task<bool> ValidateUserNameAndLastName(string nameOrLastName);
     public Task<bool> ValidateUserOIB(string OIB);
     public Task<bool> ValidateUserOIBUnique(string OIB);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Database;
+using server.Models.Domain;
 using server.Models.DTOs.ClassProfessors;
 using server.Validations.Interfaces;
 
@@ -31,8 +32,8 @@ public class ClassProfessorsValidations : IClassProfessorsValidations
     }
     public async Task<bool> ValidateProfessor(long Id)
     {
-        var subject = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id && s.Deleted == 0);
-        if (subject == null)
+        var professor = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id && s.Deleted == 0 && s.UserType == UserType.Professor);
+        if (professor == null)
         {
             return false;
         }

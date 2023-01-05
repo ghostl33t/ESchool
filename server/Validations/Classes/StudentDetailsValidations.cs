@@ -19,27 +19,24 @@ namespace server.Validations.Classes
             _dbMain = dbMain;
             _dbRegistries = dbRegistries;
         }
-        //Validiranje da li je kreator administrator
         public async Task<bool> ValidateCreator(long creatorId)
         {
             var creator = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == creatorId && s.Deleted == 0);
-            if (creator == null || creator.UserType != 0)
+            if (creator == null || creator.UserType != UserType.Administrator)
             {
                 return false;
             }
             return true;
         }
-        //Validiranje da li postoji student
         public async Task<bool> ValidateStudent(long studId)
         {
             var student = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == studId && s.Deleted == 0);
-            if (student == null || student.UserType != 2)
+            if (student == null || student.UserType != UserType.Student)
             {
                 return false;
             }
             return true;
         }
-        //Validiranje da li postoji ClassDepartment
         public async Task<bool> ValidateClassDepartment(long cdId)
         {
             var classdep = await _dbMain.ClassDepartments.AsNoTracking().FirstOrDefaultAsync(s => s.ID == cdId && s.Deleted == 0);
@@ -49,17 +46,15 @@ namespace server.Validations.Classes
             }
             return true;
         }
-        //Validiranje roditelja 1 i 2 samo pozivat 2 put metode 
         public async Task<bool> ValidateParent(long parentId)
         {
             var parent = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == parentId && s.Deleted == 0);
-            if (parent == null || parent.UserType != 3)
+            if (parent == null || parent.UserType != UserType.Parent)
             {
                 return false;
             }
             return true;
         }
-        //Validiranje discipline od 1 do 5 
         public async Task<bool> ValidateDiscipline(int? discipline)
         {
             if(discipline < 1 || discipline > 5) { return false; }

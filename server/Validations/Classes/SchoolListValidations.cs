@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Database;
+using server.Models.Domain;
 using server.Validations.Interfaces;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
@@ -18,7 +19,7 @@ namespace server.Validations.Classes
         public async Task<bool> ValidateSchoolCreator(long CreatedById)
         {
             var creator = await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == CreatedById && s.Deleted == 0);
-            if (creator == null || creator.UserType != 0)
+            if (creator == null || creator.UserType != UserType.Administrator)
             {
                 return await Task.FromResult(false);
             }
@@ -145,7 +146,7 @@ namespace server.Validations.Classes
             code = 0;
             if (Administrator != null)
             {
-                if (Administrator.UserType != 0)
+                if (Administrator.UserType != UserType.Administrator)
                 {
                     code = 401;
                     validationMessage = await Task.FromResult("Unauthorized!");

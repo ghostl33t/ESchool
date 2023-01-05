@@ -9,37 +9,33 @@ namespace server.Validations.Classes;
 
 public class ProfessorSubjectsValidations : IProfessorSubjectsValidation
 {
-    private readonly DBMain _dbMain;
-    private readonly DBRegistries _dbRegistries;
-    public ProfessorSubjectsValidations(DBMain dbMain,DBRegistries dbRegistries)
-    {
-        _dbMain = dbMain;
-        _dbRegistries = dbRegistries;
-    }
-    public string validationMessage { get; set; }
+    public string validationMessage { get; set; } = String.Empty;
     public int code { get; set; }
 
-    //Onaj koji dodaje mora biti administrator
+    private readonly DBMain _dbMain;
+    public ProfessorSubjectsValidations(DBMain dbMain)
+    {
+        _dbMain = dbMain;
+    }
     public async Task<bool> ValidateCreator(long creatorId)
     {
         var creator = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == creatorId && s.Deleted == 0);
         if(creator != null)
         {
-            if (creator.UserType != 0)
+            if (creator.UserType != UserType.Administrator)
             {
                 return false;
             }
         }
         else { return false; }
         return true;
-    }
-    //Moguce dodati samo korisnike koji su tipa 1					
+    }				
     public async Task<bool> ValidateProfessorType(long profID)
     {
         var prof = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == profID && s.Deleted == 0);
         if(prof != null)
         {
-            if(prof.UserType != 1)
+            if(prof.UserType != UserType.Administrator)
             {
                 return false;
             }
@@ -47,7 +43,6 @@ public class ProfessorSubjectsValidations : IProfessorSubjectsValidation
         else { return false; }
         return true;
     }
-    //Nije moguce dodati 2 puta istog profesora za isti predmet
     public async Task<bool> ValidateProfessorRepeating(long professorSubjectId, long professorId, long subjectId)
     {
         if(professorSubjectId != 0)
@@ -68,10 +63,9 @@ public class ProfessorSubjectsValidations : IProfessorSubjectsValidation
         }
         return true;
     }
-    //Validacija predmeta
     public async Task<bool> ValidateSubject(long subjectId)
     {
-        if( await _dbRegistries.Subjects.AsNoTracking().FirstOrDefaultAsync(s => s.Id == subjectId && s.Deleted == 0) == null)
+        if( await _dbMain.Subjects.AsNoTracking().FirstOrDefaultAsync(s => s.Id == subjectId && s.Deleted == 0) == null)
         {
             return false;
         }

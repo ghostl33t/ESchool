@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Database;
+using server.Models.Domain;
 using server.Validations.Interfaces;
 namespace server.Validations.Classes;
 
@@ -34,9 +35,9 @@ public class UserValidations : IUserValidations
         return await Task.FromResult(true);
 
     }
-    public async Task<bool> ValidateCreateUserByType(int creatorType, int creationType)
+    public async Task<bool> ValidateCreateUserByType(UserType creatorType, UserType creationType)
     {
-        if (creatorType <= creationType && creatorType != 0 && creationType != 0)
+        if (creatorType <= creationType && creatorType != UserType.Administrator )
         {
             return await Task.FromResult(false);
         }
@@ -154,7 +155,6 @@ public class UserValidations : IUserValidations
 
     public async Task<bool> Validate(long Id, Models.DTOs.UsersDTO.PatchUser user)
     {
-        //Ovdje bila errorcina koja se manifestovala na repozitoriju zbog AsNoTracking = False :D 
         var creatorType = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == user.UpdatedById);
         var userExist = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == Id);
 
@@ -250,7 +250,7 @@ public class UserValidations : IUserValidations
         code = 401;
         if(admin != null && userExist != null)
         {
-            if (admin.UserType == 0)
+            if (admin.UserType == UserType.Administrator)
             {
                 code = 204;
             }

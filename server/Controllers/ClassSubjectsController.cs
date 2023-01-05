@@ -17,13 +17,13 @@ namespace server.Controllers
     {
         private readonly IClassSubjects _classSubjectsRepo;
         private readonly  IMapper _mapper;
-        private readonly IResponseService _clFunctions;
+        private readonly IResponseService _responseService;
         private readonly IClassSubjectsValidations _classSubjectsValidations;
-        public ClassSubjectsController(IClassSubjects classSubjectsRepo, IMapper mapper, IResponseService clFunctions, IClassSubjectsValidations classsubjectValidations)
+        public ClassSubjectsController(IClassSubjects classSubjectsRepo, IMapper mapper, IResponseService responseService, IClassSubjectsValidations classsubjectValidations)
         {
             _classSubjectsRepo = classSubjectsRepo;
             _mapper = mapper;
-            _clFunctions = clFunctions;
+            _responseService = responseService;
             _classSubjectsValidations = classsubjectValidations;
         }
 
@@ -35,9 +35,9 @@ namespace server.Controllers
             var res = await _classSubjectsRepo.GetSubjectsPerClass(classDepartmentId);
             if(res == null)
             {
-                return await _clFunctions.Response(400, "No data found");
+                return await _responseService.Response(400, "No data found");
             }
-            return await _clFunctions.Response(200, res);
+            return await _responseService.Response(200, res);
         }
         //post
         [HttpPost]
@@ -49,7 +49,7 @@ namespace server.Controllers
                 var classSubject = _mapper.Map<ClassSubjects>(classSubjectDto);
                 await _classSubjectsRepo.CreateClassSubjects(classSubject);
             }
-            return await _clFunctions.Response(_classSubjectsValidations.code, _classSubjectsValidations.validationMessage);
+            return await _responseService.Response(_classSubjectsValidations.code, _classSubjectsValidations.validationMessage);
         }
         //patch
         [HttpPatch]
@@ -61,7 +61,7 @@ namespace server.Controllers
                 var classSubject = _mapper.Map<ClassSubjects>(classSubjectdto);
                 await _classSubjectsRepo.UpdateClassSubjects(Id,classSubject);
             }
-            return await _clFunctions.Response(_classSubjectsValidations.code, _classSubjectsValidations.validationMessage);
+            return await _responseService.Response(_classSubjectsValidations.code, _classSubjectsValidations.validationMessage);
         }
         //delete-patch
         [HttpPatch]
@@ -72,7 +72,7 @@ namespace server.Controllers
             {
                 await _classSubjectsRepo.DeleteClassSubjects(Id, classLeaderId);
             }
-            return await _clFunctions.Response(_classSubjectsValidations.code, _classSubjectsValidations.validationMessage);
+            return await _responseService.Response(_classSubjectsValidations.code, _classSubjectsValidations.validationMessage);
         }
     }
 }

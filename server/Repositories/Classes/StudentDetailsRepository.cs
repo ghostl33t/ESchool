@@ -52,7 +52,7 @@ namespace server.Repositories.Classes
         {
             try
             {
-                var validadmin = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == AdministratorId && s.Deleted == 0 && s.UserType == 0);
+                var validadmin = await _dbMain.Users.AsNoTracking().FirstOrDefaultAsync(s => s.Id == AdministratorId && s.Deleted == 0 && s.UserType == UserType.Administrator);
                 if(validadmin != null)
                 {
                     var studentDetails = await _dbMain.StudentsDetails.FirstOrDefaultAsync(s => s.Id == Id);

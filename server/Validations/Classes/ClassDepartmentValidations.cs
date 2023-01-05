@@ -1,22 +1,18 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using server.Database;
+using server.Models.Domain;
 using server.Models.DTOs.ClassDepartment;
 using server.Validations.Interfaces;
-using System.ComponentModel.DataAnnotations;
-
 namespace server.Validations.Classes
 {
     public class ClassDepartmentValidations : IClassDepartmentValidations
     {
         private readonly DBMain _dbMain;
-        private readonly DBRegistries _dbRegistries;
-        public string validationMessage { get; set; }
+        public string validationMessage { get; set; } = String.Empty;
         public int code { get; set; }
-        public ClassDepartmentValidations(DBMain DbMain, DBRegistries dBRegistries)
+        public ClassDepartmentValidations(DBMain DbMain)
         {
             this._dbMain = DbMain;
-            this._dbRegistries = dBRegistries;
         }
 
         public async Task<bool> ValidateCreator(long CreatedById)
@@ -24,7 +20,7 @@ namespace server.Validations.Classes
             try
             {
                 var creator =  await _dbMain.Users.FirstOrDefaultAsync(s => s.Id == CreatedById && s.Deleted == 0);
-                if (creator == null || creator.UserType != 0)
+                if (creator == null || creator.UserType != UserType.Administrator)
                 {
                     return await Task.FromResult(false);
                 }
@@ -71,7 +67,7 @@ namespace server.Validations.Classes
         }
         public async Task<bool> ValidateSchoolListId(long schoollistId) //TODO ovdje kontrolisati da li tip skole postoji u registrima
         {
-            var schoollist = await _dbRegistries.SchoolList.FirstOrDefaultAsync(s => s.Id == schoollistId);
+            var schoollist = await _dbMain.SchoolList.FirstOrDefaultAsync(s => s.Id == schoollistId);
             if (schoollist == null)
             {
                 return await Task.FromResult(false);
@@ -155,7 +151,7 @@ namespace server.Validations.Classes
             code = 0;
             if (Administrator != null)
             {
-                if (Administrator.UserType != 0)
+                if (Administrator.UserType != UserType.Administrator)
                 {
                     code = 401;
                     validationMessage =  await Task.FromResult("Unauthorized!");
