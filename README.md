@@ -166,3 +166,4 @@ Validira da li je user kreiran u bazi podataka. Ako jeste vraća JWTBearer token
 Na osnovu proslijeđenog status code-a vraća response. (koristi se u kontrolerima).
 ###### AEMAIL
 /-----------------------------------/
+
