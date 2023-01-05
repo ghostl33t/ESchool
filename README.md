@@ -47,8 +47,7 @@ Kontroleri ako su validacije zadovoljene pozivaju repozitorij. <br />
 10. ClassDepartmentController<br />
 
 ### REPOZITORIJI
-Repozitoriji su zaduženi za komunikaciju sa bazom podataka.
-Svaki repozitorij sadrži osnovne CRUD operacije. 
+Svaki repozitorij izvršava osnovne CRUD operacije. 
 
 ##### Prikaz "složenijih podataka"
 
