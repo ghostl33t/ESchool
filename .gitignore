@@ -8,4 +8,4 @@ server/obj/
 server/bin/
 
 #ignore migrations
-#server/Migrations/
+server/Migrations/

@@ -16,28 +16,6 @@ MSSQL SERVER
 -AutoMapper
 -AutoMapper.Extension.Microsoft.DependencyInjection
 
-
-# Baza podataka
-Aplikacija koristi 2 baze podataka. <br />
-1.Glavna baza u kojoj će se upisivati ocjene, odjeljenja, korisnici...<br />
-2.Baza registara u kojoj se nalazi tabela predmeta, vrsta škola.<br />
-### Podešavanje baze
-1. Pokrenuti komande u "Package Manager" konzoli:<br />
-`add-migration NazivMigracije --context DBRegistries`<br />
-na primjer:<br />
-`add-migration CreateDBRegistries --context DBRegistries`<br />
-Uraditi update baze registara<br />
-`update-database --context DBRegistries`<br />
-2. Pokrenuti komande u "Package Manager" konzoli:<br />
-`add-migration NazivMigracije --context DBMain`<br />
-na primjer:<br />
-`add-migration CreateDBMain --context DBMain`<br />
-Uraditi update glavne baze<br />
-`update-database --context DBMain`<br />
-3. Pokrenuti komandu u "Package Manager" konzoli za kreiranje pogleda iz DBRegistries u DBMain (pogledi na predmete i vrste skola):<br />
-`update-database -target AddViewSchoolList --context DBMain`<br />
-`update-database -target AddViewSubjects --context DBMain`<br />
-
 # Struktura 
 ### MODELI
 ###### BAZA: DBREGISTRIES
