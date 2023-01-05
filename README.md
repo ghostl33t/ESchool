@@ -1,20 +1,20 @@
 # ESCHOOL - ASP NET CORE API
 
-API namijenjen za evidenciju rada učenika u školama. 
+API namijenjen za evidenciju rada učenika u školama. <br />
 
 #### TEHNOLOGIJE
-C# - ASP NET CORE 6.0
-MSSQL SERVER
+C# - ASP NET CORE 6.0 <br />
+MSSQL SERVER 
 
 
 #### NUGET PAKETI
--Microsoft.EntityFrameworkCore.SqlServer
--Microsoft.EntityFrameworkCore.Tools
--Microsoft.AspNetCore.Authentication.JwtBearer
--Microsoft.IdenityModel.Tokens
--System.IdentityModel.Tokens.Jwt
--AutoMapper
--AutoMapper.Extension.Microsoft.DependencyInjection
+-Microsoft.EntityFrameworkCore.SqlServer <br />
+-Microsoft.EntityFrameworkCore.Tools <br />
+-Microsoft.AspNetCore.Authentication.JwtBearer <br />
+-Microsoft.IdenityModel.Tokens <br />
+-System.IdentityModel.Tokens.Jwt <br />
+-AutoMapper <br />
+-AutoMapper.Extension.Microsoft.DependencyInjection <br />
 
 # Struktura 
 ### MODELI
