@@ -1,12 +1,11 @@
 ﻿using EmailService.Interface;
 using MimeKit;
 using server.EmailService.Configuration;
-using server.DomainModels;
+using EmailService.DomainModels;
 using MailKit.Net.Smtp;
 using server.ServerConnection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-
 namespace EmailService.Classes;
 
 public class GradesEmail :   IGradesEmail
@@ -25,34 +24,76 @@ public class GradesEmail :   IGradesEmail
     }
     public async Task<bool> GetListOfEmails()
     {
-        using(var scope = _scopeFactory.CreateScope())
+        try
         {
-            var dbContext = scope.ServiceProvider.GetRequiredService<DBMain>();
-            var listofEmails = await dbContext.tempEmails.ToListAsync();
-            if (listofEmails.Count > 0)
+            using (var scope = _scopeFactory.CreateScope())
             {
-                string[] logMessage = new string[listofEmails.Count];
-                foreach (var item in listofEmails.Select((value, i) => new { i, value }))
+                var dbContext = scope.ServiceProvider.GetRequiredService<DBMain>();
+                var listofEmails = await dbContext.tempEmails.ToListAsync();
+                if (listofEmails.Count > 0)
                 {
-                    if (await SendGradesEmail(item.value))
+                    string[] logMessage = new string[listofEmails.Count];
+                    foreach (var item in listofEmails.Select((value, i) => new { i, value }))
                     {
-                        logMessage[item.i] = String.Format("EMAIL INFO: Email sent to '{0}' successfuly!", item.value.RecipientEmail);
-                        //Zapisat u log sve iz ovog niza stringova
-
-                        //Obrisi emailove iz tempa
-
+                        if (await SendGradesEmail(item.value))
+                        {
+                            logMessage[item.i] = String.Format("EMAIL INFO: Email sent to '{0}' successfuly!", item.value.RecipientEmail);
+                            await DeleteTemp(dbContext, item.value);
+                        }
+                        else
+                        {
+                            logMessage[item.i] = String.Format("EMAIL INFO: Email is not sent to '{0}' successfuly!", item.value.RecipientEmail);
+                        }
+                        Console.WriteLine(logMessage[item.i]);
+                        EmailLog emailLog = new()
+                        {
+                            LogMessage = logMessage[item.i],
+                            RecipientEmail = item.value.RecipientEmail,
+                            SenderEmail = item.value.SenderEmail,
+                            RecipientId = item.value.RecipientId
+                        };
+                        await WriteLog(dbContext, emailLog);
                     }
-                    else
-                    {
-                        logMessage[item.i] = String.Format("EMAIL INFO: Email is not sent to '{0}' successfuly!", item.value.RecipientEmail);
-                    }
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        
+    }
+    public async Task<bool> WriteLog(DBMain dbMain, EmailLog emailLog)
+    {
+        try
+        {
+            await dbMain.EmailLog.AddAsync(emailLog);
+            await dbMain.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+    public async Task<bool> DeleteTemp(DBMain dbMain, tempEmail tmpMail)
+    {
+        try
+        {
+            dbMain.tempEmails.Remove(tmpMail);
+            await dbMain.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
     public async Task<bool> SendGradesEmail(tempEmail newEmail)

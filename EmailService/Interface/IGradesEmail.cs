@@ -1,4 +1,5 @@
-﻿using server.DomainModels;
+﻿using EmailService.DomainModels;
+using server.ServerConnection;
 
 namespace EmailService.Interface
 {
@@ -7,6 +8,7 @@ namespace EmailService.Interface
         //SendEmail
         public Task<bool> Execute();
         public Task<bool> SendGradesEmail(tempEmail newEmail);
+        public Task<bool> WriteLog(DBMain dbMain, EmailLog emailLog);
         public Task<bool> GetListOfEmails();
     }
 }

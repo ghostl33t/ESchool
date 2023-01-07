@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using server.Database;
 using server.Models.Domain;
+using server.Models.DTOs.StudentGrades;
 using server.Repositories.Interfaces;
 using server.Services.AEmailService;
 
@@ -17,6 +17,49 @@ namespace server.Repositories.Classes
             _emailService = emailService;
         }
         //get
+        public async Task<List<GetStudentGrades>> GetGradesForStudent(long Id)
+        {
+            try
+            {
+                var query = from grades in _dbMain.StudentGrades
+                            join professors in _dbMain.Users on grades.ProfessorId equals professors.Id
+                            join subjects in _dbMain.Subjects on grades.SubjectId equals subjects.Id
+                            where grades.StudentId == Id
+                            orderby subjects.Name, grades.GradeDate 
+                            select new
+                            {
+                                SubjectName = subjects.Name,
+                                GradesDate = grades.GradeDate,
+                                GradeDescription = grades.Description,
+                                Grade = grades.Grade,
+                                ProfessorNameAndSurname = professors.Name + " " + professors.LastName 
+                            };
+                if(!query.Any())
+                {
+                    List<GetStudentGrades> studentGrades = new();
+                    foreach (var row in query)
+                    {
+                        GetStudentGrades grade = new()
+                        {
+                            SubjectName = row.SubjectName,
+                            GradesDate = row.GradesDate,
+                            GradeDescription = row.GradeDescription,
+                            Grade = row.Grade,
+                            ProfessorNameAndSurname = row.ProfessorNameAndSurname
+                        };
+                        studentGrades.Add(grade);
+                    }
+                    return await Task.FromResult(studentGrades);
+                }
+                throw new Exception("No grades found");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         //post
         public async Task<long> CreateGrade(StudentGrades grade)
         {

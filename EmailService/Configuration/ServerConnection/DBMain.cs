@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using server.DomainModels;
-using System.Data;
-
+﻿using EmailService.DomainModels;
+using Microsoft.EntityFrameworkCore;
 namespace server.ServerConnection
 {
     public class DBMain : DbContext
@@ -11,5 +9,6 @@ namespace server.ServerConnection
 
         }
         public DbSet<tempEmail> tempEmails { get; set; }
+        public DbSet<EmailLog> EmailLog { get; set; }
     }
 }

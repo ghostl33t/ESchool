@@ -26,7 +26,13 @@ public class StudentGradesController : Controller
         _responseService = responseService;
     }
     //get
-     
+    [HttpGet]
+    [Route("get/{StudentId}")]
+    public async Task<IActionResult> GetGradesForStudent(long StudentId)
+    {
+        var res = await _studentGradesRepo.GetGradesForStudent(StudentId);
+        return await _responseService.Response(200, res);
+    }
     //post
     [HttpPost]
     [Route("create-grade")]
