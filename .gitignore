@@ -9,3 +9,4 @@ server/bin/
 
 #ignore migrations
 server/Migrations/
+EmailService/appsettings.json

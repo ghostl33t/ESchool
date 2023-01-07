@@ -1,5 +1,3 @@
-using EmailService.Classes;
-using EmailService.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -9,10 +7,9 @@ using server.Services.ResponseService;
 using server.Validations.Classes;
 using server.Validations.Interfaces;
 using System.Text;
+
+
 var builder = WebApplication.CreateBuilder(args);
-
-
-
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
