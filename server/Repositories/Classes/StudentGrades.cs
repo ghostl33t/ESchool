@@ -1,16 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using server.Database;
 using server.Models.Domain;
 using server.Repositories.Interfaces;
+using server.Services.AEmailService;
 
 namespace server.Repositories.Classes
 {
     public class StudentGradesRepository : IStudentGrades
     {
         private readonly DBMain _dbMain;
-        public StudentGradesRepository(DBMain dbMain)
+        private readonly IAEmailService _emailService;
+        public StudentGradesRepository(DBMain dbMain, IAEmailService emailService)
         {
             _dbMain = dbMain;
+            _emailService = emailService;
         }
         //get
         //post
@@ -20,6 +24,16 @@ namespace server.Repositories.Classes
             {
                 await _dbMain.StudentGrades.AddAsync(grade);
                 await _dbMain.SaveChangesAsync();
+                tempEmail mail = new()
+                {
+                    SenderEmail = "jasim.alibegovic@outlook.com",
+                    RecipientEmail = await _dbMain.Users.Where(s => s.Id == grade.StudentId).Select(s => s.Email).FirstOrDefaultAsync(),
+                    RecipientId = grade.StudentId,
+                    EmailHeader = "Email Header",
+                    EmailText = "Email Text",
+                    CreatedDate = DateTime.Today
+                };
+                await _emailService.PrepareEmail(mail);
                 return grade.Id;
             }
             catch (Exception)

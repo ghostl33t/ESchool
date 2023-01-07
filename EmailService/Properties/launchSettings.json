@@ -1,0 +1,8 @@
+﻿{
+  "profiles": {
+    "EmailService": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+    }
+  }
+}

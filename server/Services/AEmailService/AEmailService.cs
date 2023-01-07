@@ -1,4 +1,7 @@
-﻿using server.Database;
+﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
+using MimeKit;
+using server.Database;
 using server.Models.Domain;
 
 namespace server.Services.AEmailService
@@ -23,6 +26,5 @@ namespace server.Services.AEmailService
                 throw;
             }
         }
-
     }
 }

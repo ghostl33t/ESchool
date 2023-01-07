@@ -1,3 +1,5 @@
+using EmailService.Classes;
+using EmailService.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +9,6 @@ using server.Services.ResponseService;
 using server.Validations.Classes;
 using server.Validations.Interfaces;
 using System.Text;
-
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -92,11 +93,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     }); 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
