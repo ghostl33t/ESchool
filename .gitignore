@@ -10,4 +10,7 @@ server/bin/
 #ignore migrations
 server/Migrations/
 #ignore emailServiceSettings
-EmailService/appsettings.json
+EmailService/appsettings
+
+#ignore client
+client/node_modules/
