@@ -14,3 +14,4 @@ EmailService/appsettings
 
 #ignore client
 client/node_modules/
+client/.angular/
