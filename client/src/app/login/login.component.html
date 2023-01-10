@@ -1,0 +1,52 @@
+<div *ngIf="currentUser$ | async">
+    <nav>
+      <div>
+        <ul>
+          <div>
+            <li><a href="#Dashboard">Dashboard</a></li>
+          </div>
+          <div>
+            <li><a href="#MyProfile">My profile</a></li>
+          </div>
+          <div>
+            <li><a href="#MyClass">My class</a></li>
+          </div>
+          <div>
+            <li><a href="#MyStats">My stats</a></li>
+          </div>
+          <div>
+            <li><a href="#LogOut" (click)="logout()">Log out</a></li>
+          </div>
+        </ul>
+    </div>
+    </nav>
+  </div>
+
+<div *ngIf="!(currentUser$ | async)">
+    <h1>LOGIN FORM</h1>
+    <div>
+        <form #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off">
+            <div>
+                <label>Username</label><br>
+                <input 
+                    name="username"
+                    [(ngModel)] = "model.username"
+                    type="text"
+                >
+            </div>
+            
+            <div>
+                <label>Password</label><br>
+                <input 
+                    name="password"
+                    [(ngModel)] = "model.password"
+                    type="text"
+                >
+            </div>
+            
+            <div>
+                <button type="submit">LOGIN</button>
+            </div>
+        </form>
+    </div>
+</div>

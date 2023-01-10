@@ -9,7 +9,7 @@ using server.Validations.Interfaces;
 
 namespace server.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : Controller

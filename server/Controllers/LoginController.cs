@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using server.Models.DTOs.Login;
 using server.Repositories.Interfaces;
 using server.Services.LoginService;
+using server.Services.ResponseService;
 
 namespace server.Controllers
 {
@@ -10,10 +13,12 @@ namespace server.Controllers
     {
         private readonly ILoginService _loginService;
         private readonly ITokenHandler _tokenHandler;
-        public LoginController(ILoginService loginService, ITokenHandler tokenHandler)
+        private readonly IResponseService _responseService;
+        public LoginController(ILoginService loginService, ITokenHandler tokenHandler, IResponseService responseService)
         {
             this._loginService = loginService;
             this._tokenHandler = tokenHandler;
+            this._responseService = responseService;
         }
         [HttpPost]
         public async Task<IActionResult> LoginAsync(Models.DTOs.UsersDTO.Login user)
@@ -21,11 +26,17 @@ namespace server.Controllers
             var validUser = await _loginService.Login(user);
             if(validUser != null)
             {
-                return Ok(await _tokenHandler.CreateTokenAsync(validUser));
+                LoginDTO loginResponse = new()
+                {
+                    Username = user.UserName,
+                    Token = await _tokenHandler.CreateTokenAsync(validUser)
+                };
+                
+                return await _responseService.Response(200,loginResponse);
             }
             else
             {
-                return BadRequest("Unable to valid user!");
+                return await _responseService.Response(401, "Unauthorized!");
             }
         }
 
