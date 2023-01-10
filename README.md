@@ -137,6 +137,8 @@ Validacije se pozivaju iz kontrolera aplikacije. Svaka validacija ima sljedeće 
 Validira da li je user kreiran u bazi podataka. Ako jeste vraća JWTBearer token.
 ###### RESPONSE SERVICE 
 Na osnovu proslijeđenog status code-a vraća response. (koristi se u kontrolerima).
-###### AEMAIL
-/-----------------------------------/
+###### EMAIL SERVIS
+-Nakon unosa ocjene studenta, evidentira se podatak u tabeli tempEmail. <br />
+-Servis "EmailServis" ce svakih 5 minuta vršiti provjeru da li u tabeli tempEmail postoji podatak. Ako podatak postoji isti će biti proslijeđen na mail. <br />
+-Nakon slanja emaila, ukoliko je uspješno, izvršit će se brisanje iz tabele tempEmail, a upis u tabelu EmailLog. <br />
 
