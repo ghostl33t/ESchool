@@ -4,7 +4,7 @@ API namijenjen za evidenciju rada učenika u školama. <br />
 
 #### TEHNOLOGIJE
 C# - ASP NET CORE 6.0 <br />
-MSSQL SERVER 
+MSSQL SERVER <br />
 ANGULAR
 
 #### NUGET PAKETI
