@@ -11,9 +11,5 @@ namespace server.Repositories.Interfaces
         public Task<long> UpdateUserAsync(long Id, User user);
         public Task<bool> DeleteUserAsync(long UserId, long AdministratorId);
 
-        // Dashboard
-        public Task<UserStudentDashboard> GetUserStudentDashboard(long Id);
-        public Task<float> AverageGrade(long classDepartmentId, long studentId);
-
     }
 }

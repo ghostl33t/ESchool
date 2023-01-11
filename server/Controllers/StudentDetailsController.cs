@@ -6,6 +6,7 @@ using server.Models.DTOs.StudentDetails;
 using server.Models.Domain;
 using server.Services.ResponseService;
 using server.Validations.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace server.Controllers
 {
@@ -57,6 +58,18 @@ namespace server.Controllers
                 var res = await _studentDetailsRepo.DeleteStudentDetails(Id, AdministratorId);
             }
             return await _responseService.Response(_studentDetailsValidation.code, _studentDetailsValidation.validationMessage);
+        }
+
+        [HttpGet]
+        [Route("get-dashboard/{Id}")]
+        public async Task<IActionResult> GetDashboardForStudent(long Id)
+        {
+            var userDashboard = await _studentDetailsRepo.GetUserStudentDashboard(Id);
+            if (userDashboard != null)
+            {
+                return await _responseService.Response(200, userDashboard);
+            }
+            return await _responseService.Response(400, "User not found");
         }
     }
 }

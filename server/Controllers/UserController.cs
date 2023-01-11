@@ -9,7 +9,7 @@ using server.Validations.Interfaces;
 
 namespace server.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : Controller
@@ -48,17 +48,6 @@ namespace server.Controllers
             {
                 var userdto = _mapper.Map<GetUser>(user);
                 return await _functions.Response(200,userdto);
-            }
-            return await _functions.Response(400, "User not found");
-        }
-        [HttpGet]
-        [Route("get-dashboard/{Id}")]
-        public async Task<IActionResult> GetDashboardAsync(long Id)
-        {
-            var userDashboard = await _userrepo.GetUserStudentDashboard(Id);
-            if (userDashboard != null)
-            {
-                return await _functions.Response(200, userDashboard);
             }
             return await _functions.Response(400, "User not found");
         }

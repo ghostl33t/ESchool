@@ -4,6 +4,7 @@ using server.Models.Domain;
 using server.Models.DTOs.StudentGrades;
 using server.Repositories.Interfaces;
 using server.Services.AEmailService;
+using System.Data;
 
 namespace server.Repositories.Classes
 {
@@ -115,6 +116,95 @@ namespace server.Repositories.Classes
 
                 throw;
             }
+        }
+
+        //average grade for student
+        public async Task<float> AverageGrade(long classDepartmentId, long studentId)
+        {
+            var subjects = _dbMain.ClassSubjects.Include(s => s.Subject).Where(s => s.ClassDepartment.ID == classDepartmentId).ToList(); //
+            var grades = _dbMain.StudentGrades.Where(s => s.StudentId == studentId);
+
+            float[] avgForSubjects = new float[subjects.Count];
+            int gradeCounter = 0;
+            float avgGrade = 0;
+            foreach (var item in subjects.Select((value,i) => new { i, value }))
+            {
+                float avgForSubject = 0;
+                gradeCounter = 0;
+                foreach (var grade in grades)
+                {
+                    if (grade.SubjectId == item.value.Subject.Id)
+                    {
+                        avgForSubject += grade.Grade;
+                        gradeCounter++;
+                    }
+                }
+                avgForSubjects[item.i] = avgForSubject / gradeCounter;
+            }
+            foreach (var grade in avgForSubjects)
+            {
+                avgGrade += grade;
+            }
+            float result = avgGrade / avgForSubjects.Length;
+            return await Task.FromResult(result);
+        }
+        //best worst grades 
+        public async Task<float[,]> BestWorstSubjectGrade(long classDepartmentId, long studentId)
+        {
+            var subjects = _dbMain.ClassSubjects.Include(s => s.Subject).Where(s => s.ClassDepartment.ID == classDepartmentId).ToList(); //
+            var grades = _dbMain.StudentGrades.Where(s => s.StudentId == studentId);
+            int gradeCounter = 0;
+            //0 -> Grade ; 1 -> SujectId
+            float[,] tmpResult = new float[subjects.Count,2];
+            foreach (var item in subjects.Select((value, i) => new { i, value }))
+            {
+                float avgForSubject = 0;
+                gradeCounter = 0;
+                foreach (var grade in grades)
+                {
+                    if (grade.SubjectId == item.value.Subject.Id)
+                    {
+                        avgForSubject += grade.Grade;
+                        gradeCounter++;
+                    }
+                }
+                tmpResult[item.i,0] =  (avgForSubject / gradeCounter) ;
+                tmpResult[item.i, 1] = item.value.Subject.Id;
+            }
+            if(tmpResult.GetLength(0) > 1)
+            {
+                for (int i = 0; i < (subjects.Count - 1) - 1; i++)
+                {
+                    for (int j = 0; j < (subjects.Count - 1) - 1 - i; j++)
+                    {
+                        if (tmpResult[j, 0] < tmpResult[j + 1, 0])
+                        {
+                            float[,] tempValue = new float[1, 2];
+                            tempValue[0, 0] = tmpResult[j, 0];
+                            tempValue[0, 1] = tmpResult[j, 1];
+
+                            tmpResult[j, 0] = tmpResult[j + 1, 0];
+                            tmpResult[j, 0] = tmpResult[j + 1, 1];
+
+                            tmpResult[j + 1, 0] = tempValue[0, 0];
+                            tmpResult[j + 1, 1] = tempValue[0, 1];
+                        }
+                    }
+                }
+            }
+            
+            float[,] result = new float[2, 2] { { 0,0}, { 0,0} };
+
+            result[0, 0] = tmpResult[0, 0];
+            result[0, 1] = tmpResult[0, 1];
+            if(tmpResult.GetLength(0) > 1)
+            {
+                result[1, 0] = tmpResult[1, 0];
+                result[1, 1] = tmpResult[1, 1];
+            }
+            
+            return await Task.FromResult(result);
+
         }
     }
 }
