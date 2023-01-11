@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Database;
 using server.Models.Domain;
+using server.Models.DTOs.UsersDTO;
+using System.Runtime.CompilerServices;
 
 namespace server.Repositories.Classes
 {
@@ -87,6 +89,63 @@ namespace server.Repositories.Classes
             {
                 throw;
             } 
+        }
+        public async Task<float> AverageGrade(long classDepartmentId, long studentId)
+        {
+            var subjects = _dbMain.ClassSubjects.Include(s=>s.Subject).Where(s => s.ClassDepartment.ID == classDepartmentId).ToList(); //
+            var grades = _dbMain.StudentGrades.Where(s => s.StudentId == studentId);
+
+            List<float> avgForSubjects = new();
+            int gradeCounter = 0;
+            float avgGrade = 0;
+            foreach (var subject in subjects)
+            {
+                float avgForSubject = 0;
+                gradeCounter = 0;
+                foreach (var grade in grades)
+                {
+                    if (grade.SubjectId == subject.Subject.Id)
+                    {
+                        avgForSubject += grade.Grade;
+                        gradeCounter++;
+                    }
+                }
+                avgForSubjects.Add(avgForSubject / gradeCounter);
+            }
+            foreach (var grade in avgForSubjects)
+            {
+                avgGrade += grade;
+            }
+            return avgGrade / avgForSubjects.Count;
+        }
+        public async Task<UserStudentDashboard> GetUserStudentDashboard(long Id)
+        {
+            
+            try
+            {
+                var queryT = _dbMain.StudentsDetails
+                    .Include(s => s.Student)
+                    .Include(s => s.ClassDepartment)
+                    .Where(s => s.Student.Id == Id);
+                UserStudentDashboard userStudentDashboard = new();
+                float averageGr = await AverageGrade(queryT.First().ClassDepartment.ID, Id);
+                userStudentDashboard = new()
+                {
+                    NameAndSurname = queryT.First().Student.Name + queryT.First().Student.LastName,
+                    Department = queryT.First().ClassDepartment.Name,
+                    AverageGrade = String.Format("Average grade: {0}", averageGr),
+                    Discipline = String.Format("Student discipline: {0}",queryT.First().StudentDiscipline),
+
+                    BestInSubject = "Best in Subject",
+                    WorstInSubject = "Worst in Subject"
+                };
+                return userStudentDashboard;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

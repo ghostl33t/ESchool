@@ -19,4 +19,14 @@ namespace server.Models.DTOs.UsersDTO
         public int? Deleted { get; set; }
         public string Email { get; set; }
     }
+    public class UserStudentDashboard
+    {
+        public string NameAndSurname { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
+        public string Discipline { get; set; } = string.Empty;
+        public string AverageGrade { get; set; } = string.Empty;
+        public string BestInSubject { get; set; } = string.Empty;
+        public string WorstInSubject { get; set; } = string.Empty;
+
+    }
 }
