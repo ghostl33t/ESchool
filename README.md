@@ -49,23 +49,6 @@ Kontroleri ako su validacije zadovoljene pozivaju repozitorij. <br />
 ### REPOZITORIJI
 Svaki repozitorij izvršava osnovne CRUD operacije. 
 
-##### Prikaz "složenijih podataka"
-
-###### IProfessorSubjectsRepository.cs
-`GetProfessorsAndSubjects()` - Vraća listu objekata tipa **GetprofessorSubjects** (putanja: Models.DTOs.ProfessorSubjects). 
-1.Ime profesora 
-2.Predmet koji profesor predaje.
-
-###### IClassSubjects.cs
-`GetSubjectsPerClass(classDepartmentId)` - Vraća listu objekata tipa **GetClassSubject** (Putanja Models.DTOs.ClassSubjects).
-U listi se nalaze predmeti koje određeno odjeljenje ima. 
-
-###### IClassDepartment.cs
-`GetStudentsPerClassDetailsAsync(classDepartmentId)` - Vraća listu objekata tipa **GetStudentDetails**(putanja: Models.DTOs.StudentDetails).
-1.  Ime i prezime studenta
-2. Vrsta škole
-3. Razred
-
 ### VALIDACIJE
 Sve validacije se nalaze u folderu: '  Validations ' .
 Validacije se pozivaju iz kontrolera aplikacije. Svaka validacija ima sljedeće objekte:
